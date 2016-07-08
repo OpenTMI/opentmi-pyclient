@@ -5,7 +5,6 @@ MIT
 """
 
 from __future__ import print_function
-import os
 import sys
 import json
 import argparse
@@ -93,7 +92,7 @@ class OpentTMIClientCLI:
                         help='Campaigns')
 
       parser_list.add_argument('--builds',
-                        dest='campaigns',
+                        dest='builds',
                         action='store_true', 
                         default=None,
                         help='Builds')
@@ -179,7 +178,7 @@ def opentmiclient_main():
         Function exits with success-code
     """
     cli = OpentTMIClientCLI()
-    exit(cli.execute())
+    sys.exit(cli.execute())
 
 
 if __name__ == '__main__':
