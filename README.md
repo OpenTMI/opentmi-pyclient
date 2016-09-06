@@ -55,12 +55,20 @@ result = {
     "sn": "123"
   }
 }
-client.upload_results(result) # require valid result json object, 
-                              # alternative you can set result_converter for OpenTmiClient constructor.
-                              # converter function will be used to convert application specific result object for opentmi suitable format. 
+client.upload_results(result) # require valid result json object or converter function
 ```
 
+Alternative you can set `result_converter` and `testcase_converter` for OpenTmiClient constructor.
+Converter functions will be used to convert application specific result object for opentmi suitable format. 
+
 Suitable result schema is described [here](https://github.com/OpenTMI/opentmi/blob/master/app/models/results.js#L15).
+
+Test case document schema is available [here](https://github.com/OpenTMI/opentmi/blob/master/app/models/testcase.js).
+
+**notes**
+
+* `tcid` -field have to be unique for each test cases. 
+* There is couple mandatory fields by default: `tcid` and `exec.verdict`. Allowed values for result verdict is: `pass`, `fail`, `inconclusive`, `blocked` and `error`. `upload_results()` -function also create test case document if it doesn't exists in database. 
 
 
 LICENSE: GPLv3
