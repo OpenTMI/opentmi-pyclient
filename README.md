@@ -37,8 +37,30 @@ from opentmi_client.opentmi_client import OpenTmiClient
 client = OpenTmiClient(host='127.0.0.1', port=3000) # defaults
 campaigns = client.get_campaigns()
 testcases = client.get_testcases()
-client.sendResult()
+result = {
+  "tcid": "test-case",
+  "campaign": "my-campaign",
+  "exec": { 
+    "verdict": "pass",
+    "duration": "8",
+  },
+  "sut": {
+    "gitUrl": "github.com/opentmi/opentmi",
+    "commitId": "123",
+  },
+  "dut": {
+    "type": "hw",
+    "vendor": "ABC",
+    "model": "platform#1",
+    "sn": "123"
+  }
+}
+client.upload_results(result) # require valid result json object, 
+                              # alternative you can set result_converter for OpenTmiClient constructor.
+                              # converter function will be used to convert application specific result object for opentmi suitable format. 
 ```
+
+Suitable result schema is described [here](https://github.com/OpenTMI/opentmi/blob/master/app/models/results.js#L15).
 
 
 LICENSE: GPLv3
