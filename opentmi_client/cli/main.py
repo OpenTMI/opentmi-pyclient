@@ -9,7 +9,7 @@ import sys
 import json
 import argparse
 import logging
-from opentmi_client import OpenTmiClient
+from ..api import OpenTmiClient
 
 EXIT_CODE_SUCCESS = 0
 EXIT_CODE_CONNECTION_ERROR = 60
@@ -61,6 +61,16 @@ class OpentTMIClientCLI:
                         default='localhost',
                         help='OpenTMI host, default: localhost')
 
+      parser.add_argument('--user',
+                          dest='user',
+                          default='user',
+                          help='username')
+
+      parser.add_argument('--password',
+                          dest='password',
+                          default='password',
+                          help='password')
+
       parser.add_argument('-p', '--port',
                         dest='port',
                         type=int,
@@ -81,26 +91,26 @@ class OpentTMIClientCLI:
 
       parser_list.add_argument('--testcases',
                         dest='testcases',
-                        action='store_true', 
+                        action='store_true',
                         default=None,
                         help='Testcases')
 
       parser_list.add_argument('--campaigns',
                         dest='campaigns',
-                        action='store_true', 
+                        action='store_true',
                         default=None,
                         help='Campaigns')
 
       parser_list.add_argument('--builds',
                         dest='builds',
-                        action='store_true', 
+                        action='store_true',
                         default=None,
                         help='Builds')
 
       parser_store = get_subparser(subparsers, 'store', func=None, help='Create something')
-      
+
       subsubparsers = parser_store.add_subparsers(title='subcommand', help='sub-command help', metavar='<subcommand>')
-      
+
       parser_store_testcase = get_subparser(subsubparsers, 'testcase', func=self.subcmd_store_testcase, help='Store Testcase')
       parser_store_result = get_subparser(subsubparsers, 'result', func=self.subcmd_store_result, help='Store Test Result')
       parser_store_build = get_subparser(subsubparsers, 'build', func=self.subcmd_store_build, help='Store Build')
@@ -150,7 +160,7 @@ class OpentTMIClientCLI:
     if args.testcases:
         testcases = client.get_testcases()
         if args.json:
-            print(json.dumps(testcases))    
+            print(json.dumps(testcases))
         for tc in testcases:
             print(tc['tcid'])
     elif args.campaigns:
