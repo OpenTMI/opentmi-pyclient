@@ -30,9 +30,8 @@ jobs:
       - run:
           name: install dependencies
           command: |
+            echo "source /path/to/virtualenv/bin/activate" >> $BASH_ENV
             python --version
-            chmod u+w .
-            echo configure venv
             python -m venv venv || virtualenv venv
             echo activate
             . venv/bin/activate
