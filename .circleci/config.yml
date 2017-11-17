@@ -1,26 +1,59 @@
+# Python CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+#
 version: 2
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test-3.6
+      - test-3.5
+      - test-2.7
 jobs:
-  build:
-    working_directory: ~/opentmi-pyclient
+  test-3.6: &test-template
     docker:
       - image: circleci/python:3.6.1
+
+    working_directory: ~/opentmi-pyclient
+
     steps:
       - checkout
+
+      # Download and cache dependencies
       - restore_cache:
-          key: deps1-{{ .Branch }}-{{ checksum "setup-py" }}
+          keys:
+          - v1-dependencies-{{ checksum "setup.py" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
       - run:
+          name: install dependencies
           command: |
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
+
       - save_cache:
-          key: deps1-{{ .Branch }}-{{ checksum "setup.py" }}
           paths:
-            - "venv"
+            - ./venv
+          key: v1-dependencies-{{ checksum "setup.py" }}
+
+      # run tests!
       - run:
+          name: run tests
           command: |
             . venv/bin/activate
             python setup.py test
+
       - store_artifacts:
-          path: test-reports/
-          destination: tr1
+          path: test-reports
+          destination: test-reports
+  test-3.5:
+    <<: *test-template
+    docker:
+      - image: circleci/python:3.5-jessie
+  test-2.7:
+    <<: *test-template
+    docker:
+      - image: circleci/python:2.7-jessie
