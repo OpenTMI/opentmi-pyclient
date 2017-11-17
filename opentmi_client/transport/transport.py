@@ -29,7 +29,7 @@ class Transport(object):
         if self.__token:
             headers["Authorization"] = "Bearer "+self.__token
 
-    def get_json(self, url, params):
+    def get_json(self, url, params={}):
         try:
             self.logger.debug("GET: %s" % url)
             response = requests.get(url,
@@ -41,8 +41,8 @@ class Transport(object):
             elif response.status_code == NOT_FOUND:
                 self.logger.warning("not found")
         except RequestException as e:
-            self.logger.warning("Connection error %s", e.message)
-            raise TransportException(e.message)
+            self.logger.warning("Connection error %s" % e)
+            raise TransportException(str(e))
         except (ValueError, TypeError) as error:
             raise TransportException(error.message)
         return None
@@ -63,7 +63,7 @@ class Transport(object):
                 raise TransportException(response.text, response.status_code)
         except RequestException as e:
             self.logger.warning(e)
-            raise TransportException(e.message)
+            raise TransportException(str(e))
         except (JSONDecodeError, TypeError, KeyError) as error:
             raise TransportException(error.message)
         except Exception as e:
@@ -85,7 +85,7 @@ class Transport(object):
                 raise TransportException(response.text, response.status_code)
         except RequestException as e:
             self.logger.warning(e)
-            raise TransportException(e.message)
+            raise TransportException(str(e))
         except (JSONDecodeError, TypeError) as error:
             raise TransportException(error.message)
         except Exception as e:
