@@ -17,8 +17,6 @@ jobs:
 
     working_directory: ~/opentmi-pyclient
 
-
-
     steps:
       - checkout
 
@@ -33,9 +31,6 @@ jobs:
           name: install dependencies
           command: |
             python --version
-
-            if [ ! -e '/home/ubuntu/virtualenvs/venv-2.7.5' ]; then mkdir -p '/home/ubuntu/virtualenvs'; pushd '/home/ubuntu/virtualenvs'; virtualenv venv-2.7.5; popd; fi
-
             python -m venv venv || virtualenv venv
             . venv/bin/activate
             pip install -r requirements.txt
