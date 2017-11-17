@@ -32,7 +32,7 @@ jobs:
           command: |
             python --version
             python -m venv venv || virtualenv venv
-            sudo . venv/bin/activate
+            . venv/bin/activate
             pip install -r requirements.txt
 
       - save_cache:
@@ -58,3 +58,5 @@ jobs:
     <<: *test-template
     docker:
       - image: circleci/python:2.7-jessie
+    pre:
+    - if [ ! -e '/home/ubuntu/virtualenvs/venv-2.7.5' ]; then mkdir -p '/home/ubuntu/virtualenvs'; pushd '/home/ubuntu/virtualenvs'; virtualenv venv-2.7.5; popd; fi
