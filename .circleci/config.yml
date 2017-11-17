@@ -17,6 +17,10 @@ jobs:
 
     working_directory: ~/opentmi-pyclient
 
+    pre:
+      - if [ ! -e '/home/ubuntu/virtualenvs/venv-2.7.5' ]; then mkdir -p '/home/ubuntu/virtualenvs'; pushd '/home/ubuntu/virtualenvs'; virtualenv venv-2.7.5; popd; fi
+
+
     steps:
       - checkout
 
@@ -58,5 +62,3 @@ jobs:
     <<: *test-template
     docker:
       - image: circleci/python:2.7-jessie
-    pre:
-    - if [ ! -e '/home/ubuntu/virtualenvs/venv-2.7.5' ]; then mkdir -p '/home/ubuntu/virtualenvs'; pushd '/home/ubuntu/virtualenvs'; virtualenv venv-2.7.5; popd; fi
