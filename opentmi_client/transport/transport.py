@@ -11,7 +11,7 @@ class Transport(object):
 
     __request_timeout = 10
 
-    def __init__(self, host, port):
+    def __init__(self, host='localhost', port=3000):
         self.logger = get_logger()
         self.__token = None
         self.__host = resolve_host(host, port)
