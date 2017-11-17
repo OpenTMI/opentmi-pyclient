@@ -31,8 +31,8 @@ jobs:
           name: install dependencies
           command: |
             python --version
+            chmod u+w .
             python -m venv venv || virtualenv venv
-            chmod u+x ./venv/bin/python
             . venv/bin/activate
             pip install -r requirements.txt
 
