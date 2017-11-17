@@ -6,6 +6,8 @@ DESCRIPTION = "opentmi-client"
 OWNER_NAMES = 'Jussi Vatjus-Anttila'
 OWNER_EMAILS = 'jussiva@gmail.com'
 
+with open('requirements.txt') as f:
+    required = f.read().splitlines()
 
 # Utility function to cat in a file (used for the README)
 def read(fname):
@@ -31,9 +33,5 @@ setup(name='opentmi_client',
               "opentmi=opentmi_client:opentmiclient_main",
           ]
       },
-      install_requires=[
-          "requests",
-          "jsonmerge",
-          "six"
-      ]
+      install_requires=required
     )
