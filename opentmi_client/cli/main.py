@@ -181,8 +181,6 @@ class OpentTMIClientCLI(object):
         elif self.args.verbose >= 3:
             self.console_handler.setLevel('DEBUG')
             self.logger.setLevel('DEBUG')
-        else:
-            self.logger.critical("UNEXPLAINED NEGATIVE COUNT!")
 
     def subcmd_version_handler(self, _args):
         """
@@ -242,6 +240,7 @@ def subcmd_list_handler(args):
         else:
             for campaign in campaigns:
                 print(campaign)
+    return 0
 
 def opentmiclient_main():
     """
