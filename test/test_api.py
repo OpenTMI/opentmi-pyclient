@@ -1,8 +1,7 @@
 import unittest
 from mock import MagicMock, patch, call
 from opentmi_client.api import Client, create
-from opentmi_client.utils import TransportException, \
-    OpentmiException, NotFoundException
+from opentmi_client.utils import TransportException, OpentmiException
 from opentmi_client.transport.transport import Transport
 
 
