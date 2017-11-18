@@ -1,5 +1,4 @@
 import unittest
-from .mock import MagicMock
 from opentmi_client.transport import Transport
 from opentmi_client.utils.exceptions import TransportException
 from requests import Response

@@ -1,5 +1,5 @@
 import unittest
-from .mock import MagicMock
+from mock import MagicMock
 from opentmi_client.api import Client
 from opentmi_client.transport.transport import Transport
 
