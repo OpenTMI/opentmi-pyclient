@@ -5,7 +5,6 @@ from requests import Response
 
 
 class TestRequest(unittest.TestCase):
-
     def test_is_success(self):
         resp = Response()
         resp.status_code = 200
@@ -34,16 +33,22 @@ class TestRequest(unittest.TestCase):
 
     def test_get_json(self):
         transport = Transport()
+        transport.set_token("mytoken")
         url = "https://jsonplaceholder.typicode.com/posts"
         self.assertIsInstance(transport.get_json(url), list)
+
+    def test_get_post_not_found(self):
+        transport = Transport()
+        url = "https://jsonplaceholder.typicode.com/posts/a"
+        self.assertEqual(transport.get_json(url), None)
 
     def test_post_json(self):
         transport = Transport()
         url = "https://jsonplaceholder.typicode.com/posts"
         data = {
-          "title": "foo",
-          "body": 'bar',
-          "userId": 1
+            "title": "foo",
+            "body": 'bar',
+            "userId": 1
         }
         self.assertIsInstance(transport.post_json(url, data), dict)
 
@@ -51,8 +56,8 @@ class TestRequest(unittest.TestCase):
         transport = Transport()
         url = "https://jsonplaceholder.typicode.com/posts/1"
         data = {
-          "title": "foo",
-          "body": 'bar',
-          "userId": 1
+            "title": "foo",
+            "body": 'bar',
+            "userId": 1
         }
         self.assertIsInstance(transport.put_json(url, data), dict)

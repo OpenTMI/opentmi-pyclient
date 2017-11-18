@@ -50,6 +50,7 @@ jobs:
             coverage run setup.py test
             coverage html
             coveralls
+            pylint opentmi_client
 
       - store_artifacts:
           path: htmlcov

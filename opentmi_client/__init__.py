@@ -1,5 +1,7 @@
 #!/usr/bin/env python
-
+"""
+Module to collect all public API's
+"""
 from .cli import opentmiclient_main
 from .api import create, Client, OpenTmiClient
 from .transport import Transport

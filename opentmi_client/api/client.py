@@ -1,23 +1,36 @@
+"""
+OpenTmiClient module
+"""
 import json
-import jsonmerge
-import re
 
-# Appliaction modules
-from ..utils import is_object_id, get_logger, resolve_host, TransportException
+
+# Application modules
+from ..utils import is_object_id, get_logger, OpentmiException, TransportException
 from ..transport import Transport
 
 REQUEST_TIMEOUT = 30
 
-# Generic API to construct Client Object
+#pylint: disable-msg=too-many-arguments
 def create(host='localhost', port=3000, result_converter=None, testcase_converter=None):
+    """
+    Generic create -api for Client
+    :param host:
+    :param port:
+    :param result_converter:
+    :param testcase_converter:
+    :return: OpenTmiClient
+    """
     return OpenTmiClient(host, port, result_converter, testcase_converter)
 
 
 class OpenTmiClient(object):
-
+    """
+    OpenTmiClient object
+    """
     __version = 0
     __api = "/api/v"
 
+    # pylint: disable-msg=too-many-arguments
     def __init__(self,
                  host='localhost',
                  port=3000,
@@ -33,8 +46,8 @@ class OpenTmiClient(object):
         :param transport: optional Transport layer. Mostly for testing purpose
         """
         self.logger = get_logger()
-        self.resultConverter = result_converter
-        self._tcConverter = testcase_converter
+        self.__result_converter = result_converter
+        self.__tc_converter = testcase_converter
         self.__transport = Transport(host, port) if not transport else transport
 
     def login(self, username, password):
@@ -48,7 +61,7 @@ class OpenTmiClient(object):
             "username": username,
             "password": password
         }
-        url = self.__transport.host+ "/login"
+        url = self.__transport.host + "/login"
         response = self.__transport.post_json(url, payload)
         token = response.get("token")
         self.logger.info("Login success. Token: %s", token)
@@ -56,21 +69,35 @@ class OpenTmiClient(object):
         return self
 
     def logout(self):
+        """
+        Logout
+        :return: OpenTmiClient
+        """
         self.__transport.set_token(None)
         return self
 
     def set_token(self, token):
+        """
+        Set authentication token for transport layer
+        :param token:
+        :return: OpenTmiClient
+        """
         self.__transport.set_token(token)
         return self
 
     def get_version(self):
-        """get client version number
         """
-        return "0.1" # todo
+        Get Client version
+        :return:
+        """
+        return self.__version
 
-
-    # Build
     def upload_build(self, build):
+        """
+        Upload build
+        :param build:
+        :return:
+        """
         payload = build
         url = self.__resolve_apiuri("/duts/builds")
         try:
@@ -79,77 +106,107 @@ class OpenTmiClient(object):
             return data
         except TransportException as error:
             self.logger.warning("Result upload failed: %s (status: %s)", error.message, error.code)
-        except Exception as e:
-            self.logger.warning(e)
+        except OpentmiException as error:
+            self.logger.warning(error)
+
     # Suite
     def get_suite(self, suite, options=''):
-        """get single suite informations
+        """
+        get single suite informations
+        :param suite:
+        :param options:
+        :return:
         """
         try:
             campaign_id = self.get_campaign_id(suite)
-        except Exception as err:
-            self.logger.warning("exception happened while resolving suite: %s" % (suite))
+        except OpentmiException as error:
+            self.logger.warning("exception happened while resolving suite: %s, %s",
+                                suite, error)
             return None
 
         if campaign_id is None:
-            self.logger.warning("could not resolve campaign id for suite: %s" % (suite))
+            self.logger.warning("could not resolve campaign id for suite: %s",
+                                suite)
             return None
 
         suite = self.__get_suite(campaign_id, options)
         return suite
 
     # Campaign
-    def get_campaign_id(self, campaignName):
-        """get campaign id from name
+    def get_campaign_id(self, campaign_name):
         """
-        if is_object_id(campaignName):
-            return campaignName
+        get campaign id from name
+        :param campaign_name:
+        :return: string
+        """
+        if is_object_id(campaign_name):
+            return campaign_name
 
-        for c in self.__get_campaigns():
-            if c['name'] == campaignName:
-                return c['_id']
+        for campaign in self.__get_campaigns():
+            if campaign['name'] == campaign_name:
+                return campaign['_id']
 
     def get_campaigns(self):
+        """
+        Get campaigns
+        :return:
+        """
         return self.__get_campaigns()
 
     def get_campaign_names(self):
+        """
+        Get campaign names
+        :return:
+        """
         campaigns = self.__get_campaigns()
         campaign_names = []
         for campaign in campaigns:
             campaign_names.append(campaign['name'])
         return campaign_names
 
-    # Testcase
-    def get_testcases(self, filters=''):
-        return self.__get_testcases()
+    def get_testcases(self, filters=None):
+        """
+        Get testcases
+        :param filters:
+        :return:
+        """
+        return self.__get_testcases(filters)
 
     def update_testcase(self, metadata):
-        tc = self.__lookup_testcase(metadata['name'])
-        if tc:
+        """
+        update test case
+        :param metadata:
+        :return:
+        """
+        testcase = self.__lookup_testcase(metadata['name'])
+        if testcase:
             self.logger.debug("Update existing TC")
-            self.__update_testcase(tc['id'], metadata)
+            self.__update_testcase(testcase['id'], metadata)
         else:
             self.logger.debug("Create new TC")
             self.__create_testcase(metadata)
+        return self
 
-    # Result
     def upload_results(self, result):
-        """send result to the server
         """
-        tc_meta = self._tcConverter(result.tc_metadata) if self._tcConverter else result
-        tc = self.__lookup_testcase(tc_meta['tcid'])
-        if not tc:
-            tc = self.__create_testcase(tc_meta)
-            if not tc:
+        Upload result
+        :param result:
+        :return:
+        """
+        tc_meta = self.__tc_converter(result.tc_metadata) if self.__tc_converter else result
+        test_case = self.__lookup_testcase(tc_meta['tcid'])
+        if not test_case:
+            test_case = self.__create_testcase(tc_meta)
+            if not test_case:
                 self.logger.warning("TC creation failed")
                 return None
 
-        payload = self.resultConverter(result) if self.resultConverter else result
+        payload = self.__result_converter(result) if self.__result_converter else result
         url = self.__resolve_apiuri("/results")
         try:
             files = None
-            #hasLogs, logFiles = result.hasLogs()
-            #if hasLogs:
+            # hasLogs, logFiles = result.hasLogs()
+            # if hasLogs:
             #    zipFile = self.__archiveLogs(logFiles)
             #    self.logger.debug(zipFile)
             #    files = {"file": ("logs.zip", open(zipFile), 'rb') }
@@ -158,16 +215,17 @@ class OpenTmiClient(object):
             self.logger.debug("result uploaded successfully")
             return data
         except TransportException as error:
-            self.logger.warning("result uploaded failed: %s. status_code: %d", error.message, error.code)
-        except Exception as e:
-            self.logger.warning(e)
+            self.logger.warning("result uploaded failed: %s. status_code: %d",
+                                error.message, error.code)
+        except OpentmiException as error:
+            self.logger.warning(error)
         return None
 
     # Private members
 
-    def __get_testcases(self, filters=''):
-        url = self.__resolve_apiuri("/testcases?" + filters)
-        return self.__transport.get_json(url)
+    def __get_testcases(self, filters=None):
+        url = self.__resolve_apiuri("/testcases")
+        return self.__transport.get_json(url, filters.param() if filters else None)
 
     def __get_campaigns(self):
         url = self.__resolve_apiuri("/campaigns?f=name")
@@ -175,38 +233,38 @@ class OpenTmiClient(object):
 
     def __get_suite(self, suite, options=''):
         url = self.__resolve_apiuri("/campaigns/" + suite + "/suite" + options)
-        return  self.__transport.get_json(url)
+        return self.__transport.get_json(url)
 
     def __lookup_testcase(self, tcid):
         url = self.__resolve_apiuri("/testcases?tcid=" + tcid)
-        self.logger.debug("Search TC: %s (%s)" % (tcid, url))
+        self.logger.debug("Search TC: %s (%s)", tcid, url)
         try:
             data = self.__transport.get_json(url)
             if len(data) == 1:
-                self.logger.debug("testcase '%s' exists in DB" % tcid)
+                self.logger.debug("testcase '%s' exists in DB", tcid)
                 return data[0]
         except TransportException as error:
             if error.code == 404:
-                self.logger.warning("testcase '%s' not found form DB" % tcid)
+                self.logger.warning("testcase '%s' not found form DB", tcid)
             else:
                 self.logger.warning("Test case find failed: %s", error.message)
-        except Exception as e:
-            self.logger.warning(e)
+        except OpentmiException as error:
+            self.logger.warning(error)
 
         return None
 
-    def __update_testcase(self, id, metadata):
-        url = self.__resolve_apiuri("/testcases/" + id)
+    def __update_testcase(self, tcid, metadata):
+        url = self.__resolve_apiuri("/testcases/" + tcid)
         try:
-            self.logger.debug("Update TC: %s" % url)
+            self.logger.debug("Update TC: %s", url)
             payload = metadata
             data = self.__transport.put_json(url, payload)
             self.logger.debug("testcase metadata uploaded successfully")
             return data
         except TransportException as error:
             self.logger.debug(error)
-        except Exception as e:
-            self.logger.debug(e)
+        except OpentmiException as error:
+            self.logger.debug(error)
 
         self.logger.warning("testcase metadata upload failed")
         return None
@@ -214,19 +272,20 @@ class OpenTmiClient(object):
     def __create_testcase(self, metadata):
         url = self.__resolve_apiuri("/testcases")
         try:
-            self.logger.debug("Create TC: %s" % url)
+            self.logger.debug("Create TC: %s", url)
             payload = metadata
             data = self.__transport.post_json(url, payload)
-            self.logger.debug("new testcase metadata uploaded successfully with id: %s" % json.dumps(data))
+            self.logger.debug("new testcase metadata uploaded successfully with id: %s",
+                              json.dumps(data))
             return data
         except TransportException as error:
             self.logger.warning(error)
-        except Exception as e:
+        except OpentmiException as error:
             self.logger.warning('createTestcase throw exception:')
-            self.logger.warning(e)
+            self.logger.warning(error)
 
         self.logger.warning("new testcase metadata upload failed")
         return None
 
     def __resolve_apiuri(self, path):
-        return self.__host + self.__api + str(self.__version) + path
+        return self.__transport.host + self.__api + str(self.__version) + path
