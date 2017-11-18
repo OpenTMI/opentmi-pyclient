@@ -36,5 +36,5 @@ class TestClient(unittest.TestCase):
 
     def test_version(self):
         client = Client()
-        self.assertEqual(client.get_version(), "0.1")
+        self.assertEqual(client.get_version(), 0)
 
