@@ -85,6 +85,7 @@ class Transport(object):
             else:
                 self.logger.warning("Request failed: %s (code: %s)",
                                     response.text, str(response.status_code))
+                raise TransportException(response.text, response.status_code)
         except RequestException as error:
             self.logger.warning("Connection error %s", error)
             raise TransportException(str(error))
