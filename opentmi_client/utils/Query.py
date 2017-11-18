@@ -61,15 +61,8 @@ class Find(Request):
 
 class Distinct(Request):
     def __init__(self):
-        Request.__init__(self, "find")
-
-    def limit(self, limit):
-        self._set("l", limit)
-        return self
-
-    def skip(self, skip):
-        self._set("sk", skip)
-        return self
+        Request.__init__(self, "distinct")
 
     def select(self, field):
         self._set("f", field)
+        return self

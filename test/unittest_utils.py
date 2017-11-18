@@ -1,6 +1,6 @@
 import os
 import unittest
-from opentmi_client.utils import Query, Find, is_object_id, resolve_host, archive_files
+from opentmi_client.utils import Query, Find, Distinct, is_object_id, resolve_host, archive_files
 
 
 class TestRequest(unittest.TestCase):
@@ -34,6 +34,10 @@ class TestRequest(unittest.TestCase):
         find = Find()
         find.query.set("a", "b")
         self.assertDictEqual(find.params(), {"t": "find", "q": '{"a": "b"}'})
+
+    def test_distinct(self):
+        dist = Distinct().select("a")
+        self.assertDictEqual(dist.params(), {"t": "distinct", 'q': '{}', "f": "a"})
 
 
 class TestTools(unittest.TestCase):

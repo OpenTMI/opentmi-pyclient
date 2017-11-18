@@ -72,7 +72,7 @@ class Transport(object):
         except RequestException as e:
             self.logger.warning(e)
             raise TransportException(str(e))
-        except (JSONDecodeError, TypeError, KeyError) as error:
+        except (ValueError, TypeError, KeyError) as error:
             raise TransportException(error.message)
         except Exception as e:
             self.logger.warning(e)
@@ -94,7 +94,7 @@ class Transport(object):
         except RequestException as e:
             self.logger.warning(e)
             raise TransportException(str(e))
-        except (JSONDecodeError, TypeError) as error:
+        except (ValueError, TypeError) as error:
             raise TransportException(error.message)
         except Exception as e:
             self.logger.warning(e)
