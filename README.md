@@ -1,5 +1,8 @@
 # Python Client library for OpenTMI
 
+[![CircleCI](https://circleci.com/gh/OpenTMI/opentmi-client-python/tree/master.svg?style=svg)](https://circleci.com/gh/OpenTMI/opentmi-client-python/tree/master)
+[![Coverage Status](https://coveralls.io/repos/github/OpenTMI/opentmi-client-python/badge.svg)](https://coveralls.io/github/OpenTMI/opentmi-client-python)
+
 This library purpose is to provide simple interface for OpenTMI -backend.
 For example this can fetch existing test case meta information from OpenTMI and upload results to it.
 
@@ -40,7 +43,7 @@ testcases = client.get_testcases()
 result = {
   "tcid": "test-case",
   "campaign": "my-campaign",
-  "exec": { 
+  "exec": {
     "verdict": "pass",
     "duration": "8",
   },
@@ -59,7 +62,7 @@ client.upload_results(result) # require valid result json object or converter fu
 ```
 
 Alternative you can set `result_converter` and `testcase_converter` for OpenTmiClient constructor.
-Converter functions will be used to convert application specific result object for opentmi suitable format. 
+Converter functions will be used to convert application specific result object for opentmi suitable format.
 
 Suitable result schema is described [here](https://github.com/OpenTMI/opentmi/blob/master/app/models/results.js#L15).
 
@@ -67,8 +70,8 @@ Test case document schema is available [here](https://github.com/OpenTMI/opentmi
 
 **notes**
 
-* `tcid` -field have to be unique for each test cases. 
-* There is couple mandatory fields by default: `tcid` and `exec.verdict`. Allowed values for result verdict is: `pass`, `fail`, `inconclusive`, `blocked` and `error`. `upload_results()` -function also create test case document if it doesn't exists in database. 
+* `tcid` -field have to be unique for each test cases.
+* There is couple mandatory fields by default: `tcid` and `exec.verdict`. Allowed values for result verdict is: `pass`, `fail`, `inconclusive`, `blocked` and `error`. `upload_results()` -function also create test case document if it doesn't exists in database.
 
 
 LICENSE: GPLv3
