@@ -48,9 +48,6 @@ jobs:
           command: |
             . venv/bin/activate
             coverage run setup.py test
-      - run:
-          name: generate coverages
-          command: |
             coverage html
             coveralls
 
