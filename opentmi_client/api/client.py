@@ -108,6 +108,7 @@ class OpenTmiClient(object):
             self.logger.warning("Result upload failed: %s (status: %s)", error.message, error.code)
         except OpentmiException as error:
             self.logger.warning(error)
+        return None
 
     # Suite
     def get_suite(self, suite, options=''):

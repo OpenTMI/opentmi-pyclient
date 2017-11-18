@@ -5,7 +5,7 @@ import requests
 from opentmi_client.transport import Transport
 from opentmi_client.utils.exceptions import TransportException
 
-# This method will be used by the mock to replace requests.get
+# This method will be used by the mock to replace requests.get, post, put
 def mocked_requests(*args, **kwargs):
     class MockResponse(Response):
         def __init__(self, json_data, status_code):

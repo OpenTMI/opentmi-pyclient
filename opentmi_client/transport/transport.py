@@ -95,11 +95,11 @@ class Transport(object):
 
     def post_json(self, url, payload, files=None):
         """
-
+        POST request
         :param url:
         :param payload:
         :param files:
-        :return:
+        :return: response as dict
         """
         try:
             response = requests.post(url,
