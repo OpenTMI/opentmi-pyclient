@@ -14,8 +14,16 @@ class Transport(object):
     def __init__(self, host='localhost', port=3000):
         self.logger = get_logger()
         self.__token = None
+        self.__host = None
+        self.set_host(host, port)
+        self.logger.info("OpenTMI host: %s", self.host)
+
+    def set_host(self, host, port):
         self.__host = resolve_host(host, port)
-        self.logger.info("OpenTMI host: %s", self.__host)
+
+    @property
+    def host(self):
+        return self.__host
 
     def set_token(self, token):
         self.__token = token

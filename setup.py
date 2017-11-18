@@ -6,8 +6,10 @@ DESCRIPTION = "opentmi-client"
 OWNER_NAMES = 'Jussi Vatjus-Anttila'
 OWNER_EMAILS = 'jussiva@gmail.com'
 
-with open('requirements.txt') as f:
-    required = f.read().splitlines()
+
+def read_requirements(file):
+    with open(file) as f:
+        required = f.read().splitlines()
 
 # Utility function to cat in a file (used for the README)
 def read(fname):
@@ -26,12 +28,12 @@ setup(name='opentmi_client',
       package_data={'': ['tc_schema.json']},
       include_package_data=True,
       license="GPLv3",
-      tests_require=["coverage"],
+      tests_require=read_requirements('dev_requirements.txt'),
       test_suite = 'test',
       entry_points={
           "console_scripts": [
               "opentmi=opentmi_client:opentmiclient_main",
           ]
       },
-      install_requires=required
+      install_requires=read_requirements('requirements.txt')
     )

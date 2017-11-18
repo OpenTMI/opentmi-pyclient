@@ -23,37 +23,51 @@ class OpenTmiClient(object):
                  port=3000,
                  result_converter=None,
                  testcase_converter=None,
-                 transport=Transport):
-        """Used host
-        @param host: host name or IP address
+                 transport=None):
+        """
+        Constructor for OpenTMI client
+        :param host: opentmi host address (default="localhost")
+        :param port: opentmi server port (default=3000)
+        :param result_converter:
+        :param testcase_converter: function
+        :param transport: optional Transport layer. Mostly for testing purpose
         """
         self.logger = get_logger()
         self.resultConverter = result_converter
         self._tcConverter = testcase_converter
-        self.__transport = transport(host, port)
+        self.__transport = Transport(host, port) if not transport else transport
 
     def login(self, username, password):
+        """
+        Login to OpenTMI server
+        :param username: username for OpenTMI
+        :param password: password for OpenTMI
+        :return: OpenTmiClient
+        """
         payload = {
             "username": username,
             "password": password
         }
-        response = self.__transport.post_json("/login", payload)
+        url = self.__transport.host+ "/login"
+        response = self.__transport.post_json(url, payload)
         token = response.get("token")
         self.logger.info("Login success. Token: %s", token)
         self.set_token(token)
+        return self
 
     def logout(self):
         self.__transport.set_token(None)
+        return self
 
     def set_token(self, token):
         self.__transport.set_token(token)
+        return self
 
     def get_version(self):
         """get client version number
         """
         return "0.1" # todo
 
-    # API's
 
     # Build
     def upload_build(self, build):
