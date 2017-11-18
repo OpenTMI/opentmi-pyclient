@@ -4,7 +4,6 @@
 [![Coverage Status](https://coveralls.io/repos/github/OpenTMI/opentmi-client-python/badge.svg)](https://coveralls.io/github/OpenTMI/opentmi-client-python)
 
 This library purpose is to provide simple interface for OpenTMI -backend.
-For example this can fetch existing test case meta information from OpenTMI and upload results to it.
 
 ## installation
 
@@ -12,7 +11,7 @@ For example this can fetch existing test case meta information from OpenTMI and 
 
 ## Command Line Interface
 
-Purpose is to provide simple Command line Interface to communicate with OpenTMI -backend
+Library provides Command line Interface to communicate with OpenTMI -backend
 
 ```
 /> opentmi --help
@@ -36,8 +35,8 @@ opentmi --host localhost --port 3000 --list --testcases 1
 ## Python API
 
 ```
-from opentmi_client.opentmi_client import OpenTmiClient
-client = OpenTmiClient(host='127.0.0.1', port=3000) # defaults
+from opentmi_client import Client
+client = Client(host='127.0.0.1', port=3000)
 campaigns = client.get_campaigns()
 testcases = client.get_testcases()
 result = {
@@ -61,7 +60,7 @@ result = {
 client.upload_results(result) # require valid result json object or converter function
 ```
 
-Alternative you can set `result_converter` and `testcase_converter` for OpenTmiClient constructor.
+Alternative you can set `result_converter()` and `testcase_converter()` -functions in OpenTmiClient constructor.
 Converter functions will be used to convert application specific result object for opentmi suitable format.
 
 Suitable result schema is described [here](https://github.com/OpenTMI/opentmi/blob/master/app/models/results.js#L15).
@@ -74,4 +73,4 @@ Test case document schema is available [here](https://github.com/OpenTMI/opentmi
 * There is couple mandatory fields by default: `tcid` and `exec.verdict`. Allowed values for result verdict is: `pass`, `fail`, `inconclusive`, `blocked` and `error`. `upload_results()` -function also create test case document if it doesn't exists in database.
 
 
-LICENSE: GPLv3
+LICENSE: MIT

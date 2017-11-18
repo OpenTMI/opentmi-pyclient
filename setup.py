@@ -27,7 +27,7 @@ setup(name='opentmi_client',
       packages=find_packages(exclude=['test', 'log', 'htmlcov']),
       package_data={'': ['tc_schema.json']},
       include_package_data=True,
-      license="GPLv3",
+      license="MIT",
       tests_require=read_requirements('dev_requirements.txt'),
       test_suite = 'test',
       entry_points={
