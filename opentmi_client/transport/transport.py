@@ -89,7 +89,7 @@ class Transport(object):
             self.logger.warning("Connection error %s", error)
             raise TransportException(str(error))
         except (ValueError, TypeError) as error:
-            raise TransportException(error.message)
+            raise TransportException(error)
         return None
 
     def post_json(self, url, payload, files=None):
@@ -117,7 +117,7 @@ class Transport(object):
             self.logger.warning(error)
             raise TransportException(str(error))
         except (ValueError, TypeError, KeyError) as error:
-            raise TransportException(error.message)
+            raise TransportException(error)
         except Exception as error:
             self.logger.warning(error)
             raise TransportException(error.message)
@@ -145,7 +145,7 @@ class Transport(object):
             self.logger.warning(error)
             raise TransportException(str(error))
         except (ValueError, TypeError) as error:
-            raise TransportException(error.message)
+            raise TransportException(error)
         except Exception as error:
             self.logger.warning(error)
             raise TransportException(error.message)

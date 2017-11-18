@@ -1,6 +1,8 @@
 """
 OpenTMI client exceptions
 """
+
+
 class OpentmiException(Exception):
     """
     Default Opentmi Exception
@@ -11,6 +13,7 @@ class OpentmiException(Exception):
         :param message:
         """
         Exception.__init__(self, message)
+
 
 class TransportException(OpentmiException):
     """
