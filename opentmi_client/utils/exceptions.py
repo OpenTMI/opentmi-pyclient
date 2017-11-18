@@ -13,6 +13,7 @@ class OpentmiException(Exception):
         :param message:
         """
         Exception.__init__(self, message)
+        self.message = message
 
 
 class TransportException(OpentmiException):
