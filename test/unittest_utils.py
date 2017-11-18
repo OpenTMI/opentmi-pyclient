@@ -1,5 +1,6 @@
 import os
 import unittest
+from .mock import MagicMock
 from opentmi_client.utils import Query, Find, is_object_id, resolve_host, archive_files
 
 
