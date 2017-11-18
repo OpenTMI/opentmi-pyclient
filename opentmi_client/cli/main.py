@@ -57,7 +57,7 @@ class OpentTMIClientCLI(object):
         Execute
         :return: 0
         """
-        if self.args.func:
+        if hasattr(self.args, "func"):
             return self.args.func(self.args)
         self.parser.print_usage()
         return 0
@@ -191,7 +191,7 @@ class OpentTMIClientCLI(object):
         :return:
         """
         versions = pkg_resources.require("opentmi_client")
-        if self.args.verbose >= 1:
+        if self.args.verbose:
             for ver in versions:
                 print(ver)
         else:
