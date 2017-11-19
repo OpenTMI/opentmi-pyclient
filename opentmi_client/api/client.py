@@ -69,10 +69,20 @@ class OpenTmiClient(object):
         return self
 
     def set_logger(self, logger):
+        """
+        Set custom logger
+        :param logger: logging.Logger instance
+        :return: OpenTmiClient
+        """
         self.__logger = logger
+        return self
 
     @property
     def logger(self):
+        """
+        getter for logger
+        :return: Logger
+        """
         return self.__logger
 
     def logout(self):

@@ -67,6 +67,7 @@ class Transport(object):
 
     def get_json(self, url, params=None):
         """
+        GET request
         :param url: url as a string
         :param params: url parameters as dict
         :raise TransportException: when something goes wrong
@@ -122,10 +123,10 @@ class Transport(object):
 
     def put_json(self, url, payload):
         """
-
+        PUT requests
         :param url:
-        :param payload:
-        :return:
+        :param payload: dict
+        :return: response as a dict
         """
         try:
             response = requests.put(url,
