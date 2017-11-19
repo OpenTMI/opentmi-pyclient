@@ -9,6 +9,18 @@ This library purpose is to provide simple interface for OpenTMI -backend.
 
 `python setup.py install`
 
+## Test
+
+`python setup.py test`
+
+## Compile documentation
+
+```
+sphinx-apidoc -o docs/_static opentmi_client
+make -C docs html
+```
+
+
 ## Command Line Interface
 
 Library provides Command line Interface to communicate with OpenTMI -backend
