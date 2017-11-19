@@ -45,7 +45,7 @@ class OpenTmiClient(object):
         :param testcase_converter: function
         :param transport: optional Transport layer. Mostly for testing purpose
         """
-        self.logger = get_logger()
+        self.__logger = get_logger()
         self.__result_converter = result_converter
         self.__tc_converter = testcase_converter
         self.__transport = Transport(host, port) if not transport else transport
@@ -67,6 +67,13 @@ class OpenTmiClient(object):
         self.logger.info("Login success. Token: %s", token)
         self.set_token(token)
         return self
+
+    def set_logger(self, logger):
+        self.__logger = logger
+
+    @property
+    def logger(self):
+        return self.__logger
 
     def logout(self):
         """

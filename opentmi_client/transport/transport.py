@@ -103,7 +103,7 @@ class Transport(object):
         """
         try:
             response = requests.post(url,
-                                     data=json.dumps(payload),
+                                     json=payload,
                                      headers=self.__headers,
                                      files=files if not None else [],
                                      timeout=REQUEST_TIMEOUT)
@@ -119,9 +119,6 @@ class Transport(object):
             raise TransportException(str(error))
         except (ValueError, TypeError, KeyError) as error:
             raise TransportException(error)
-        except Exception as error:
-            self.logger.warning(error)
-            raise TransportException(str(error))
 
     def put_json(self, url, payload):
         """
@@ -132,7 +129,7 @@ class Transport(object):
         """
         try:
             response = requests.put(url,
-                                    data=json.dumps(payload),
+                                    json=payload,
                                     headers=self.__headers,
                                     timeout=REQUEST_TIMEOUT)
             if Transport.is_success(response):
