@@ -1,5 +1,5 @@
 """
 Collect all public opentmi API's
 """
-from .client import create, OpenTmiClient
+from opentmi_client.api.client import create, OpenTmiClient
 Client = OpenTmiClient

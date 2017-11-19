@@ -5,8 +5,8 @@ import json
 
 
 # Application modules
-from ..utils import is_object_id, get_logger, OpentmiException, TransportException
-from ..transport import Transport
+from opentmi_client.utils import is_object_id, get_logger, OpentmiException, TransportException
+from opentmi_client.transport import Transport
 
 REQUEST_TIMEOUT = 30
 

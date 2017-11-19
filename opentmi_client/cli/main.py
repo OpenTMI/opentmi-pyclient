@@ -11,7 +11,7 @@ import json
 import argparse
 import logging
 import pkg_resources  # part of setuptools
-from ..api import OpenTmiClient
+from opentmi_client.api import OpenTmiClient
 
 EXIT_CODE_SUCCESS = 0
 EXIT_CODE_CONNECTION_ERROR = 60
@@ -251,7 +251,3 @@ def opentmiclient_main():
     """
     cli = OpentTMIClientCLI()
     sys.exit(cli.execute())
-
-
-if __name__ == '__main__':
-    opentmiclient_main()

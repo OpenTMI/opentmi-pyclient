@@ -4,7 +4,7 @@ Transport module for Opentmi python client
 import json
 import requests
 from requests import Response, RequestException
-from ..utils import get_logger, resolve_host, TransportException
+from opentmi_client.utils import get_logger, resolve_host, TransportException
 
 REQUEST_TIMEOUT = 30
 NOT_FOUND = 404

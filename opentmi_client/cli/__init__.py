@@ -1,4 +1,4 @@
 """
 Collect API's for Cli
 """
-from .main import opentmiclient_main
+from opentmi_client.cli.main import opentmiclient_main
