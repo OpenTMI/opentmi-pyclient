@@ -246,18 +246,18 @@ class OpenTmiClient(object):
         return self.__transport.get_json(url, filters.param() if filters else None)
 
     def __get_campaigns(self):
-        url = self.__resolve_apiuri("/campaigns?f=name")
-        return self.__transport.get_json(url)
+        url = self.__resolve_apiuri("/campaigns")
+        return self.__transport.get_json(url, params={"f": "name"})
 
     def __get_suite(self, suite, options=''):
         url = self.__resolve_apiuri("/campaigns/" + suite + "/suite" + options)
         return self.__transport.get_json(url)
 
     def __lookup_testcase(self, tcid):
-        url = self.__resolve_apiuri("/testcases?tcid=" + tcid)
+        url = self.__resolve_apiuri("/testcases")
         self.logger.debug("Search TC: %s (%s)", tcid, url)
         try:
-            data = self.__transport.get_json(url)
+            data = self.__transport.get_json(url, params={"tcid": tcid})
             if len(data) == 1:
                 self.logger.debug("testcase '%s' exists in DB", tcid)
                 return data[0]
