@@ -243,7 +243,7 @@ class OpenTmiClient(object):
 
     def __get_testcases(self, filters=None):
         url = self.__resolve_apiuri("/testcases")
-        return self.__transport.get_json(url, filters.param() if filters else None)
+        return self.__transport.get_json(url, params=filters if filters else None)
 
     def __get_campaigns(self):
         url = self.__resolve_apiuri("/campaigns")
