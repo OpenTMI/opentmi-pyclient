@@ -163,6 +163,7 @@ class OpenTmiClient(object):
         for campaign in self.__get_campaigns():
             if campaign['name'] == campaign_name:
                 return campaign['_id']
+        return None
 
     def get_campaigns(self):
         """
