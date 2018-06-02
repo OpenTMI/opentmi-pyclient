@@ -198,12 +198,13 @@ class OpenTmiClient(object):
         :param metadata:
         :return:
         """
-        testcase = self.__lookup_testcase(metadata['name'])
+        testcase = self.__lookup_testcase(metadata['tcid'])
         if testcase:
-            self.logger.debug("Update existing TC")
-            self.__update_testcase(testcase['id'], metadata)
+            id = testcase['_id']
+            self.logger.info("Update existing TC (%s)", id)
+            self.__update_testcase(id, metadata)
         else:
-            self.logger.debug("Create new TC")
+            self.logger.info("Create new TC")
             self.__create_testcase(metadata)
         return self
 
@@ -257,12 +258,13 @@ class OpenTmiClient(object):
 
     def __lookup_testcase(self, tcid):
         url = self.__resolve_apiuri("/testcases")
-        self.logger.debug("Search TC: %s (%s)", tcid, url)
+        self.logger.debug("Search TC: %s", tcid)
         try:
             data = self.__transport.get_json(url, params={"tcid": tcid})
             if len(data) == 1:
-                self.logger.debug("testcase '%s' exists in DB", tcid)
-                return data[0]
+                doc = data[0]
+                self.logger.debug("testcase '%s' exists in DB (%s)", tcid, doc['_id'])
+                return doc
         except TransportException as error:
             if error.code == 404:
                 self.logger.warning("testcase '%s' not found form DB", tcid)
@@ -273,8 +275,9 @@ class OpenTmiClient(object):
 
         return None
 
-    def __update_testcase(self, tcid, metadata):
-        url = self.__resolve_apiuri("/testcases/" + tcid)
+    def __update_testcase(self, id, metadata):
+        from urllib import quote
+        url = self.__resolve_apiuri("/testcases/" + id)
         try:
             self.logger.debug("Update TC: %s", url)
             payload = metadata
