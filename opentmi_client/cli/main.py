@@ -268,7 +268,7 @@ class OpentTMIClientCLI(object):
         client.upload_results(args.file)
         return EXIT_CODE_SUCCESS
 
-    def subcmd_list_handler(args):
+    def subcmd_list_handler(self, args):
         """
         :param args:
         :return:
