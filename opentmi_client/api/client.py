@@ -263,7 +263,7 @@ class OpenTmiClient(object):
             data = self.__transport.get_json(url, params={"tcid": tcid})
             if len(data) == 1:
                 doc = data[0]
-                self.logger.debug("testcase '%s' exists in DB (%s)", tcid, doc['_id'])
+                self.logger.debug("testcase '%s' exists in DB (%s)", tcid, doc.get('_id'))
                 return doc
         except TransportException as error:
             if error.code == 404:

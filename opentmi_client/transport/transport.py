@@ -89,7 +89,7 @@ class Transport(object):
         :return: dict object or None if not found
         """
         try:
-            self.logger.debug("GET: %s?%s", url, urlencode(params))
+            self.logger.debug("GET: %s?%s", url, urlencode(params) if params else '')
             response = requests.get(url,
                                     headers=self.__headers,
                                     timeout=REQUEST_TIMEOUT,

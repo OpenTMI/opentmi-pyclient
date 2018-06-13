@@ -105,6 +105,6 @@ class TestClient(unittest.TestCase):
         client = Client()
         tc_data = {"tcid": "abc %s"}
         client.get_testcases(tc_data)
-        mock_get.assert_called_once_with("http://127.0.0.1:3000/api/v0/testcases", params={"tcid": "abc"})
+        mock_get.assert_called_once_with("http://127.0.0.1:3000/api/v0/testcases", params={"tcid": "abc %s"})
 
 
