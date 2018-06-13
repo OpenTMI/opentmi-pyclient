@@ -200,9 +200,9 @@ class OpenTmiClient(object):
         """
         testcase = self.__lookup_testcase(metadata['tcid'])
         if testcase:
-            id = testcase['_id']
-            self.logger.info("Update existing TC (%s)", id)
-            self.__update_testcase(id, metadata)
+            test_id = testcase.get('_id')
+            self.logger.info("Update existing TC (%s)", test_id)
+            self.__update_testcase(test_id, metadata)
         else:
             self.logger.info("Create new TC")
             self.__create_testcase(metadata)
@@ -275,9 +275,8 @@ class OpenTmiClient(object):
 
         return None
 
-    def __update_testcase(self, id, metadata):
-        from urllib import quote
-        url = self.__resolve_apiuri("/testcases/" + id)
+    def __update_testcase(self, test_id, metadata):
+        url = self.__resolve_apiuri("/testcases/" + test_id)
         try:
             self.logger.debug("Update TC: %s", url)
             payload = metadata

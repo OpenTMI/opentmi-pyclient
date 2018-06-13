@@ -5,10 +5,10 @@ import json
 import requests
 from requests import Response, RequestException
 try:
-    #python2
+    # python2
     from urllib import urlencode, quote
 except ImportError:
-    #python3
+    # python3
     from urllib.parse import urlencode, quote
 from opentmi_client.utils import get_logger, resolve_host, TransportException
 
@@ -70,13 +70,16 @@ class Transport(object):
         }
         if self.__token:
             headers["Authorization"] = "Bearer " + self.__token
+        return headers
 
-    def _params_encode(self, params):
+    @staticmethod
+    def _params_encode(params):
         """
         Encode parameters
         :param params: Dict of url parameters
         """
-        if not params: return params
+        if not params:
+            return params
         params = {k: quote(v) for k, v in params.items()}
         return params
 
@@ -93,7 +96,7 @@ class Transport(object):
             response = requests.get(url,
                                     headers=self.__headers,
                                     timeout=REQUEST_TIMEOUT,
-                                    params=self._params_encode(params))
+                                    params=Transport._params_encode(params))
             if Transport.is_success(response):
                 return response.json()
             elif response.status_code == NOT_FOUND:

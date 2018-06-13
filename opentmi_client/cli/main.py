@@ -21,7 +21,7 @@ EXIT_CODE_INVALID_PARAMETERS = 62
 EXIT_CODE_OPERATION_FAILED = 63
 
 
-def get_subparser(subparsers, name, func = None, **kwargs):
+def get_subparser(subparsers, name, func=None, **kwargs):
     """
     Get subparser
     :param subparsers:
@@ -31,7 +31,8 @@ def get_subparser(subparsers, name, func = None, **kwargs):
     :return: Parser
     """
     tmp_parser = subparsers.add_parser(name, **kwargs)
-    if func: tmp_parser.set_defaults(func=func)
+    if func:
+        tmp_parser.set_defaults(func=func)
     return tmp_parser
 
 
@@ -150,24 +151,24 @@ class OpentTMIClientCLI(object):
                                                     metavar='<subcommand>')
 
         parser_store_testcase = get_subparser(subsubparsers, 'testcase',
-                      func=self.subcmd_store_testcase,
-                      help='Store Testcase')
+                                              func=self.subcmd_store_testcase,
+                                              help='Store Testcase')
         parser_store_testcase.add_argument('--file',
-                                        dest='file',
-                                        default=None,
-                                        help='Filename',
-                                        type=self.read_json_file,
-                                        required=True)
+                                           dest='file',
+                                           default=None,
+                                           help='Filename',
+                                           type=self.read_json_file,
+                                           required=True)
 
         parser_store_result = get_subparser(subsubparsers, 'result',
-                      func=self.subcmd_store_result,
-                      help='Store Test Result')
+                                            func=self.subcmd_store_result,
+                                            help='Store Test Result')
         parser_store_result.add_argument('--file',
-                                        dest='file',
-                                        default=None,
-                                        help='Filename',
-                                        type=self.read_json_file,
-                                        required=True)
+                                         dest='file',
+                                         default=None,
+                                         help='Filename',
+                                         type=self.read_json_file,
+                                         required=True)
 
         parser_store_build = get_subparser(subsubparsers, 'build',
                                            func=self.subcmd_store_build,
@@ -237,7 +238,7 @@ class OpentTMIClientCLI(object):
 
         raise NotImplementedError()
 
-    def subcmd_store_build(self, args):
+    def subcmd_store_build(self, args): # pylint disable=no-self-use
         """
         :param self:
         :param args:
@@ -247,7 +248,7 @@ class OpentTMIClientCLI(object):
         client.upload_build(args.file)
         return EXIT_CODE_SUCCESS
 
-    def subcmd_store_testcase(self, args):
+    def subcmd_store_testcase(self, args): # pylint disable=no-self-use
         """
         :param self:
         :param args:
@@ -258,7 +259,7 @@ class OpentTMIClientCLI(object):
         return EXIT_CODE_SUCCESS
 
 
-    def subcmd_store_result(self, args):
+    def subcmd_store_result(self, args): # pylint disable=no-self-use
         """
         :param self:
         :param args:
@@ -268,7 +269,7 @@ class OpentTMIClientCLI(object):
         client.upload_results(args.file)
         return EXIT_CODE_SUCCESS
 
-    def subcmd_list_handler(self, args):
+    def subcmd_list_handler(self, args): # pylint disable=no-self-use
         """
         :param args:
         :return:
