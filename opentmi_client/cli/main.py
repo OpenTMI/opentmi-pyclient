@@ -63,7 +63,7 @@ class OpentTMIClientCLI(object):
             try:
                 return self.args.func(self.args)
             except NotImplementedError as error:
-                self.logger.error("Not implemented %s", error.message)
+                self.logger.error("Not implemented %s", str(error))
                 return EXIT_CODE_NOT_IMPLEMENTED
         self.parser.print_usage()
         return EXIT_CODE_SUCCESS
