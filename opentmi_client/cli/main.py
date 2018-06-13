@@ -236,9 +236,9 @@ class OpentTMIClientCLI(object):
         :return:
         """
 
-        raise NotImplementedError()
+        raise NotImplementedError('store')
 
-    def subcmd_store_build(self, args): # pylint disable=no-self-use
+    def subcmd_store_build(self, args): # pylint: disable=no-self-use
         """
         :param self:
         :param args:
@@ -248,7 +248,7 @@ class OpentTMIClientCLI(object):
         client.upload_build(args.file)
         return EXIT_CODE_SUCCESS
 
-    def subcmd_store_testcase(self, args): # pylint disable=no-self-use
+    def subcmd_store_testcase(self, args): # pylint: disable=no-self-use
         """
         :param self:
         :param args:
@@ -259,7 +259,7 @@ class OpentTMIClientCLI(object):
         return EXIT_CODE_SUCCESS
 
 
-    def subcmd_store_result(self, args): # pylint disable=no-self-use
+    def subcmd_store_result(self, args): # pylint: disable=no-self-use
         """
         :param self:
         :param args:
@@ -269,7 +269,7 @@ class OpentTMIClientCLI(object):
         client.upload_results(args.file)
         return EXIT_CODE_SUCCESS
 
-    def subcmd_list_handler(self, args): # pylint disable=no-self-use
+    def subcmd_list_handler(self, args): # pylint: disable=no-self-use
         """
         :param args:
         :return:
