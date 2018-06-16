@@ -6,3 +6,4 @@ from opentmi_client.utils.logger import get_logger
 from opentmi_client.utils.exceptions import OpentmiException
 from opentmi_client.utils.exceptions import TransportException
 from opentmi_client.utils.Query import Query, Find, Distinct
+from opentmi_client.utils.decorators import setter_rules
