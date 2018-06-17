@@ -27,12 +27,12 @@ class TestBuild(unittest.TestCase):
     def test_ci(self):
         build = Build()
         with self.assertRaises(TypeError):
-            build.ci = 'invalid'
+            build.ci_tool = 'invalid'
         ci = Ci()
         with self.assertRaises(ValueError):
             ci.system = 'invalid'
-        build.ci = ci
-        build.ci.system = 'Jenkins'
+        build.ci_tool = ci
+        build.ci_tool.system = 'Jenkins'
         self.assertEqual(ci.system, 'Jenkins')
 
 

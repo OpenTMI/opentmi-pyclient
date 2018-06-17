@@ -1,5 +1,6 @@
-#!/usr/bin/env/python
-
+"""
+OpenTMI module for Test Build
+"""
 from opentmi_client.utils.Base import BaseApi
 from opentmi_client.utils.decorators import setter_rules
 from opentmi_client.api.build.Ci import Ci
@@ -7,20 +8,26 @@ from opentmi_client.api.build.Vcs import Vcs
 
 
 class Build(BaseApi):
-
+    """
+    Build class
+    """
     def __init__(self,
-                 name = None,
+                 name=None,
                  uuid=None,
-                 ci=None,
+                 ci_tool=None,
                  vcs=None,
-                 type=None
-            ):
+                 type=None):
         super(Build, self).__init__()
-        if name: self.name = name
-        if uuid: self.uuid = uuid
-        if type: self.type = type
-        if ci: self.ci = ci
-        if vcs: self.vcs = vcs
+        if name:
+            self.name = name
+        if uuid:
+            self.uuid = uuid
+        if type:
+            self.type = type
+        if ci_tool:
+            self.ci_tool = ci_tool
+        if vcs:
+            self.vcs = vcs
 
     @property
     def name(self):
@@ -29,7 +36,7 @@ class Build(BaseApi):
     @name.setter
     @setter_rules()
     def name(self, value):
-        return self.set("name", value)
+        self.set("name", value)
 
     @property
     def type(self):
@@ -38,16 +45,16 @@ class Build(BaseApi):
     @type.setter
     @setter_rules(type=str, enum="app lib test")
     def type(self, value):
-        return self.set("type",  value)
+        self.set("type",  value)
 
     @property
-    def ci(self):
+    def ci_tool(self):
         return self.get("ci")
 
-    @ci.setter
+    @ci_tool.setter
     @setter_rules(type=Ci)
-    def ci(self, value):
-        return self.set("ci", value)
+    def ci_tool(self, value):
+        self.set("ci", value)
 
     @property
     def vcs(self):
@@ -56,7 +63,7 @@ class Build(BaseApi):
     @vcs.setter
     @setter_rules(type=list, each_type=Vcs)
     def vcs(self, value):
-        return self.set("vcs", value)
+        self.set("vcs", value)
 
     @property
     def uuid(self):
@@ -65,7 +72,7 @@ class Build(BaseApi):
     @name.setter
     @setter_rules()
     def uuid(self, value):
-        return self.set("uuid", value)
+        self.set("uuid", value)
 
     @property
     def compiledBy(self):
@@ -74,7 +81,7 @@ class Build(BaseApi):
     @compiledBy.setter
     @setter_rules(enum="CI manual")
     def compiledBy(self, value):
-        return self.set("compiledBy", value)
+        self.set("compiledBy", value)
 
     @property
     def changeId(self):
@@ -83,4 +90,4 @@ class Build(BaseApi):
     @changeId.setter
     @setter_rules()
     def changeId(self, value):
-        return self.set("changeId", value)
+        self.set("changeId", value)
