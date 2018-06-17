@@ -1,6 +1,5 @@
-from opentmi_client.utils.Base import BaseApi, setter_rules
+from opentmi_client.utils.Base import BaseApi
 
 
 class File(BaseApi):
-    def __init__(self):
-        super(File, self).__init__()
+    pass

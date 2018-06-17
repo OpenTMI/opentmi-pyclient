@@ -1,32 +1,59 @@
-from opentmi_client.utils.Base import BaseApi, setter_rules
+"""
+OpenTMI Result module
+"""
+from opentmi_client.utils.Base import BaseApi
+from opentmi_client.utils.decorators import setter_rules
 from opentmi_client.api.result.Job import Job
 from opentmi_client.api.result.Execution import Execution
 
 
 class Result(BaseApi):
-
+    """
+    Result class
+    """
     def __init__(self,
                  tcid=None,
                  execution=None,
-                 tcRef=None,
-                 job=None
-                 ):
+                 tc_ref=None,
+                 job=None):
+        """
+        Constructor for Result
+        :param tcid: String
+        :param execution: Exection
+        :param tcRef: String
+        :param job: Job
+        """
         super(Result, self).__init__()
         self.job = job if job else Job()
         self.execution = execution if execution else Execution()
-        if tcid: self.tcid = tcid
-        if tcRef: self.tcRef = tcRef
+        if tcid:
+            self.tcid = tcid
+        if tc_ref:
+            self.tc_ref = tc_ref
+
     @property
     def tcid(self):
+        """
+        Getter for test case ID
+        :return: String
+        """
         return self.get("tcid")
 
     @tcid.setter
     @setter_rules()
     def tcid(self, value):
-        return self.set("tcid", value)
+        """
+        Setter for test case ID
+        :param value: String
+        """
+        self.set("tcid", value)
 
     @property
     def verdict(self):
+        """
+        Getter for test verdict
+        :return: String
+        """
         if self.execution:
             return self.execution.verdict
         return None
@@ -34,52 +61,95 @@ class Result(BaseApi):
     @verdict.setter
     @setter_rules()
     def verdict(self, value):
+        """
+        Setter for test verdict
+        :param value: String
+        """
         if not self.execution:
             self.execution = Execution()
         self.execution.verdict = value
-        return self.execution.verdict
 
     @property
-    def tcRef(self):
+    def tc_ref(self):
+        """
+        Getter for test reference id
+        :return: String
+        """
         return self.get("tcRef")
 
-    @tcid.setter
+    @tc_ref.setter
     @setter_rules()
-    def tcRef(self, value):
-        return self.set("tcRef", value)
+    def tc_ref(self, value):
+        """
+        Setter for test reference
+        :param value: String
+        """
+        self.set("tcRef", value)
 
     @property
     def job(self):
+        """
+        Getter for job
+        :return: Job
+        """
         return self.get("job")
 
     @job.setter
     @setter_rules(type=Job)
     def job(self, value):
-        return self.set("job", value)
+        """
+        Setter for job
+        :param value: Job
+        """
+        self.set("job", value)
 
     @property
     def execution(self):
+        """
+        Getter for execution object
+        :return: Execution
+        """
         return self.get("exec")
 
     @execution.setter
     @setter_rules(type=Execution)
     def execution(self, value):
-        return self.set("exec", value)
+        """
+        Setter for Execution
+        :param value: Execution
+        """
+        self.set("exec", value)
 
     @property
     def campaign(self):
+        """
+        Getter for Campaign
+        :return: String
+        """
         return self.get("campaign")
 
     @campaign.setter
     @setter_rules()
     def campaign(self, value):
-        return self.set("campaign", value)
+        """
+        Setter for Campaign
+        :param value: String
+        """
+        self.set("campaign", value)
 
     @property
-    def campaignRef(self):
+    def campaign_ref(self):
+        """
+        Getter for campaign reference
+        :return: String
+        """
         return self.get("campaignRef")
 
-    @campaignRef.setter
+    @campaign_ref.setter
     @setter_rules()
-    def campaignRef(self, value):
-        return self.set("campaignRef", value)
+    def campaign_ref(self, value):
+        """
+        Setter for campaign ref
+        :param value: String
+        """
+        self.set("campaignRef", value)

@@ -1,4 +1,5 @@
-from opentmi_client.utils.Base import BaseApi, setter_rules
+from opentmi_client.utils.Base import BaseApi
+from opentmi_client.utils.decorators import setter_rules
 
 
 class Vcs(BaseApi):

@@ -66,14 +66,14 @@ def remove_empty_from_dict(dictionary):
     :param dictionary: dict
     :return: dict
     """
-    if type(dictionary) is dict:
+    if isinstance(dictionary, dict):
         try:
             return dict((k, remove_empty_from_dict(v)) for k, v in dictionary.iteritems() if
                         v and remove_empty_from_dict(v))
         except AttributeError:
             return dict((k, remove_empty_from_dict(v)) for k, v in dictionary.items() if
                         v and remove_empty_from_dict(v))
-    elif type(dictionary) is list:
+    elif isinstance(dictionary, list):
         return [remove_empty_from_dict(v) for v in dictionary if v and remove_empty_from_dict(v)]
     else:
         return dictionary

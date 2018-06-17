@@ -1,6 +1,7 @@
 #!/usr/bin/env/python
 
-from opentmi_client.utils.Base import BaseApi, setter_rules
+from opentmi_client.utils.Base import BaseApi
+from opentmi_client.utils.decorators import setter_rules
 from opentmi_client.api.build.Ci import Ci
 from opentmi_client.api.build.Vcs import Vcs
 

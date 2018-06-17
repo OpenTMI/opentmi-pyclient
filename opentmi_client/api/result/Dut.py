@@ -1,10 +1,17 @@
-from opentmi_client.utils.Base import BaseApi, setter_rules
+"""
+OpentTMI module for DUT (Device under test)
+"""
+from opentmi_client.utils.Base import BaseApi
+from opentmi_client.utils.decorators import setter_rules
 from opentmi_client.api.result.Provider import Provider
 
+
 class Dut(BaseApi):
-    def __init__(self, verdict):
+    """
+    Dut class
+    """
+    def __init__(self):
         super(Dut, self).__init__()
-        self.verdict = verdict
 
     @property
     def count(self):

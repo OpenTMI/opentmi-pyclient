@@ -4,8 +4,7 @@ OpenTMI Data base class
 
 from json import dumps
 from pydash import get, set_, unset, map_values_deep
-from inspect import isclass
-from opentmi_client.utils import setter_rules, remove_empty_from_dict
+from opentmi_client.utils import remove_empty_from_dict
 
 
 class BaseApi(object):
