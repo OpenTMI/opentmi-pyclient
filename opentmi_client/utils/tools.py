@@ -58,3 +58,22 @@ def archive_files(files, zip_filename, base_path=""):
         zip_file.write(os.path.join(base_path, filename), filename)
     zip_file.close()
     return zip_filename
+
+
+def remove_empty_from_dict(dictionary):
+    """
+    Remove all empty items from nested object
+    :param dictionary: dict
+    :return: dict
+    """
+    if type(dictionary) is dict:
+        try:
+            return dict((k, remove_empty_from_dict(v)) for k, v in dictionary.iteritems() if
+                        v and remove_empty_from_dict(v))
+        except AttributeError:
+            return dict((k, remove_empty_from_dict(v)) for k, v in dictionary.items() if
+                        v and remove_empty_from_dict(v))
+    elif type(dictionary) is list:
+        return [remove_empty_from_dict(v) for v in dictionary if v and remove_empty_from_dict(v)]
+    else:
+        return dictionary

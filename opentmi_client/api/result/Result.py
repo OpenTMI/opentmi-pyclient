@@ -1,21 +1,21 @@
 from opentmi_client.utils.Base import BaseApi, setter_rules
-from opentmi_client.api.result import Job, Execution
+from opentmi_client.api.result.Job import Job
+from opentmi_client.api.result.Execution import Execution
 
 
 class Result(BaseApi):
 
     def __init__(self,
                  tcid=None,
-                 exec=None,
+                 execution=None,
                  tcRef=None,
                  job=None
                  ):
         super(Result, self).__init__()
+        self.job = job if job else Job()
+        self.execution = execution if execution else Execution()
         if tcid: self.tcid = tcid
-        if exec: self.exec = exec
         if tcRef: self.tcRef = tcRef
-        if job: self.job = job
-
     @property
     def tcid(self):
         return self.get("tcid")
@@ -27,17 +27,17 @@ class Result(BaseApi):
 
     @property
     def verdict(self):
-        if self.exec:
-            return self.exec.verdict
+        if self.execution:
+            return self.execution.verdict
         return None
 
     @verdict.setter
     @setter_rules()
     def verdict(self, value):
-        if not self.exec:
-            self.exec = Execution()
-        self.exec.verdict = value
-        return self.exec.verdict
+        if not self.execution:
+            self.execution = Execution()
+        self.execution.verdict = value
+        return self.execution.verdict
 
     @property
     def tcRef(self):
@@ -58,12 +58,12 @@ class Result(BaseApi):
         return self.set("job", value)
 
     @property
-    def exec(self):
+    def execution(self):
         return self.get("exec")
 
-    @exec.setter
+    @execution.setter
     @setter_rules(type=Execution)
-    def exec(self, value):
+    def execution(self, value):
         return self.set("exec", value)
 
     @property

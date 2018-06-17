@@ -1,7 +1,24 @@
+"""
+OpenTMI python client decorators
+"""
+
 from enum import Enum
 import functools
 
 def setter_rules(type=str, each_type=None, enum=None):
+    """
+    setter rules
+    :param type: required Type
+    :param each_type: required type for each items in case of list
+    :param enum: String, only allowed items
+    :return: decorator function
+    :raises: ValueError or TypeError
+    example: require int type for setter - otherwise raise ValueError
+    @count.setter
+    @setter_rules(type=int)
+    def count(self, value):
+        self.value = value
+    """
     def decorator_wrapper(func):
         @functools.wraps(func)
         def function_wrapper(key, value):

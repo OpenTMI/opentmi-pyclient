@@ -1,6 +1,6 @@
 import os
 import unittest
-from opentmi_client.utils import is_object_id, resolve_host, archive_files
+from opentmi_client.utils import is_object_id, resolve_host, archive_files, remove_empty_from_dict
 
 
 class TestTools(unittest.TestCase):
@@ -26,6 +26,10 @@ class TestTools(unittest.TestCase):
         archive_files(['test_tools.py'], zip, os.path.dirname(__file__))
         self.assertTrue(os.path.exists(zip))
         os.remove(zip)
+
+    def test_remove_empty_from_dict(self):
+        data = {"a": {"b": {}, "c": [], "d": 1}}
+        self.assertEqual(remove_empty_from_dict(data), {"a": {"d": 1}})
 
 if __name__ == '__main__':
     unittest.main()

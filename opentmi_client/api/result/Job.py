@@ -3,9 +3,9 @@ from opentmi_client.utils.Base import BaseApi, setter_rules
 
 class Job(BaseApi):
 
-    def __init__(self, id):
+    def __init__(self, id=None):
         super(Job, self).__init__()
-        self.id = id
+        if id: self.id = id
 
     @property
     def id(self):

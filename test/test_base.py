@@ -7,21 +7,21 @@ class TestBase(unittest.TestCase):
         base = BaseApi()
         self.assertEqual(base.data, {})
         self.assertEqual(str(base), '{}')
-        self.assertTrue(base.empty)
+        self.assertTrue(base.is_empty)
 
     def test_set(self):
         base = BaseApi()
         base.set('a', 1)
         self.assertEqual(base.data, {'a': 1})
         self.assertEqual(str(base), '{\n  "a": 1\n}')
-        self.assertFalse(base.empty)
+        self.assertFalse(base.is_empty)
         self.assertEqual(base.get('a'), 1)
 
     def test_unset(self):
         base = BaseApi()
         base.set('a', 1)
         base.unset('a')
-        self.assertTrue(base.empty)
+        self.assertTrue(base.is_empty)
 
     def test_nested(self):
         base = BaseApi()
@@ -29,3 +29,13 @@ class TestBase(unittest.TestCase):
         self.assertEqual(base.data, {'a': {'b': {'c': 2}}})
         self.assertEqual(str(base), '{\n  "a": {\n    "b": {\n      "c": 2\n    }\n  }\n}')
         self.assertEqual(base.get('a.b.c'), 2)
+
+    def test_subclass(self):
+        base = BaseApi()
+        class Test(BaseApi):
+            pass
+        base.set('a.b', Test())
+        base.set('b', 'b')
+        self.assertEqual(base.data, {'b': 'b'})
+        self.assertEqual(str(base), '{\n  "b": "b"\n}')
+        self.assertFalse(base.is_empty)
