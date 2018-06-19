@@ -4,7 +4,7 @@ OpenTMI Result module
 from opentmi_client.utils.Base import BaseApi
 from opentmi_client.utils.decorators import setter_rules
 from opentmi_client.api.result.Job import Job
-from opentmi_client.api.result.Execution import Execution
+from opentmi_client.api.result.Execution import Execution, File
 
 
 class Result(BaseApi):
@@ -30,6 +30,9 @@ class Result(BaseApi):
             self.tcid = tcid
         if tc_ref:
             self.tc_ref = tc_ref
+
+    def __str__(self):
+        return "{} - {}".format(self.get("tcid", "?"), self.get("exec.verdict", "?"))
 
     @property
     def tcid(self):

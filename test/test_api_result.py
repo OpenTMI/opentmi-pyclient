@@ -1,5 +1,5 @@
 import unittest
-from opentmi_client.api import Result, Execution
+from opentmi_client.api import Result, Execution, File
 
 
 class TestResult(unittest.TestCase):
@@ -23,3 +23,16 @@ class TestResult(unittest.TestCase):
         result.execution.note = 'notes'
         self.assertEqual(result.execution.note, 'notes')
         self.assertEqual(result.execution.duration, None)
+
+    def test_file(self):
+        result = Result()
+        log_file = File()
+        log_file.name = "stderr.log"
+        self.assertEqual(log_file.name, "stderr.log")
+        log_file.set_data("test")
+        self.assertEqual(log_file.encoding, "raw")
+        self.assertEqual(str(log_file), "stderr.log")
+        self.assertEqual(log_file.data.decode(), "test")
+        result.execution.append_log(log_file)
+        self.assertEqual(len(result.execution.logs), 1)
+        self.assertEqual(result.execution.logs[0], log_file)

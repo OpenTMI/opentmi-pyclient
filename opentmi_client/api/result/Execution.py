@@ -126,7 +126,7 @@ class Execution(BaseApi):
         :param log_file: File
         """
         assert isinstance(log_file, File), "require File instance"
-        if isinstance(self.logs, list):
+        if not isinstance(self.logs, list):
             self.logs = []
         self.logs.append(log_file)
 
