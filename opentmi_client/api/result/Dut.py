@@ -10,8 +10,6 @@ class Dut(BaseApi):
     """
     Dut class
     """
-    def __init__(self):
-        super(Dut, self).__init__()
 
     @property
     def count(self):

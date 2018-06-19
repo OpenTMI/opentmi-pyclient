@@ -5,6 +5,7 @@ OpenTMI python client decorators
 from enum import Enum
 import functools
 
+
 def setter_rules(type=str, each_type=None, enum=None):
     """
     setter rules
@@ -20,8 +21,19 @@ def setter_rules(type=str, each_type=None, enum=None):
         self.value = value
     """
     def decorator_wrapper(func):
+        """
+        Decorator wrapper
+        :param func: function for wrap
+        :return: decorator wrapper
+        """
         @functools.wraps(func)
         def function_wrapper(key, value):
+            """
+            Function wrapper
+            :param key:
+            :param value: value given for setter
+            :return: target function return value
+            """
             if not isinstance(value, type):
                 raise TypeError("type must be str")
             if each_type:

@@ -3,8 +3,6 @@ from opentmi_client.utils.decorators import setter_rules
 
 
 class Vcs(BaseApi):
-    def __init__(self):
-        super(Vcs, self).__init__()
 
     @property
     def name(self):

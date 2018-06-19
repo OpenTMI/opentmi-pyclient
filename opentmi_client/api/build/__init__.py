@@ -1,3 +1,4 @@
 from opentmi_client.api.build.Build import Build
 from opentmi_client.api.build.Vcs import Vcs
-from opentmi_client.api.build.Ci import Ci, Location
+from opentmi_client.api.build.Ci import Ci
+from opentmi_client.api.build.Ci import Location

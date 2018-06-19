@@ -12,22 +12,10 @@ class Build(BaseApi):
     Build class
     """
     def __init__(self,
-                 name=None,
-                 uuid=None,
-                 ci_tool=None,
-                 vcs=None,
-                 type=None):
+                 name=None):
         super(Build, self).__init__()
         if name:
             self.name = name
-        if uuid:
-            self.uuid = uuid
-        if type:
-            self.type = type
-        if ci_tool:
-            self.ci_tool = ci_tool
-        if vcs:
-            self.vcs = vcs
 
     @property
     def name(self):
@@ -45,7 +33,7 @@ class Build(BaseApi):
     @type.setter
     @setter_rules(type=str, enum="app lib test")
     def type(self, value):
-        self.set("type",  value)
+        self.set("type", value)
 
     @property
     def ci_tool(self):
@@ -75,19 +63,19 @@ class Build(BaseApi):
         self.set("uuid", value)
 
     @property
-    def compiledBy(self):
+    def compiled_by(self):
         return self.get("compiledBy")
 
-    @compiledBy.setter
+    @compiled_by.setter
     @setter_rules(enum="CI manual")
-    def compiledBy(self, value):
+    def compiled_by(self, value):
         self.set("compiledBy", value)
 
     @property
-    def changeId(self):
+    def change_id(self):
         return self.get("changeId")
 
-    @changeId.setter
+    @change_id.setter
     @setter_rules()
-    def changeId(self, value):
+    def change_id(self, value):
         self.set("changeId", value)

@@ -23,7 +23,6 @@ class Sut(BaseApi):
         """
         Setter for reference
         :param value: String
-        :return:
         """
         self.set("ref", value)
 
