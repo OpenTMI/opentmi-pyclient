@@ -18,6 +18,23 @@ class BaseApi(object):
         self.__data = {}
 
     @property
+    def _id(self):
+        """
+        Getter for document id
+        :return: document _id
+        """
+        return self.get('_id')
+
+    @_id.setter
+    def _id(self, value):
+        """
+        document id setter
+        :param value: _id
+        :return: _id
+        """
+        return self.set('_id', value)
+
+    @property
     def is_empty(self):
         """
         :return: True data is empty
@@ -32,6 +49,17 @@ class BaseApi(object):
         """
         data = map_values_deep(self.__data, lambda x: x.data if isinstance(x, BaseApi) else x)
         return remove_empty_from_dict(data)
+
+    @data.setter
+    def data(self, values):
+        data = remove_empty_from_dict(values)
+        print(data)
+        def fnc(value, path):
+            joined_path = '.'.join(path)
+            print(joined_path, value)
+            set_(self, joined_path, value)
+        map_values_deep(data, fnc) #lambda value, path: set_(self, '.'.join(path), value)
+
 
     def get(self, key, default=None):
         """

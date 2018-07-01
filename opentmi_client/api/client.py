@@ -7,6 +7,7 @@ import json
 # Application modules
 from opentmi_client.utils import is_object_id, get_logger, OpentmiException, TransportException
 from opentmi_client.transport import Transport
+from opentmi_client.api.result import Result
 
 REQUEST_TIMEOUT = 30
 
@@ -208,22 +209,9 @@ class OpenTmiClient(object):
             self.__create_testcase(metadata)
         return self
 
-    def upload_results(self, result):
-        """
-        Upload result
-        :param result:
-        :return:
-        """
-        tc_meta = self.__tc_converter(result.tc_metadata) if self.__tc_converter else result
-        test_case = self.__lookup_testcase(tc_meta['tcid'])
-        if not test_case:
-            test_case = self.__create_testcase(tc_meta)
-            if not test_case:
-                self.logger.warning("TC creation failed")
-                return None
-
-        payload = self.__result_converter(result) if self.__result_converter else result
+    def post_result(self, result):
         url = self.__resolve_apiuri("/results")
+        payload = result.data
         try:
             files = None
             # hasLogs, logFiles = result.hasLogs()
@@ -241,6 +229,24 @@ class OpenTmiClient(object):
         except OpentmiException as error:
             self.logger.warning(error)
         return None
+
+    def upload_results(self, result):
+        """
+        Upload result
+        :param result: dictionary
+        :return:
+        """
+        tc_meta = self.__tc_converter(result.tc_metadata) if self.__tc_converter else result
+        test_case = self.__lookup_testcase(tc_meta['tcid'])
+        if not test_case:
+            test_case = self.__create_testcase(tc_meta)
+            if not test_case:
+                self.logger.warning("TC creation failed")
+                return None
+
+        result_dict = self.__result_converter(result) if self.__result_converter else result
+        result = Result.from_dict(result_dict)
+        return self.post_results(result)
 
     # Private members
 

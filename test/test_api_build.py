@@ -20,9 +20,9 @@ class TestBuild(unittest.TestCase):
     def test_compiledBy(self):
         build = Build()
         with self.assertRaises(ValueError):
-            build.compiledBy = 'invalid'
-        build.compiledBy = 'CI'
-        self.assertEqual(build.compiledBy, 'CI')
+            build.compiled_by = 'invalid'
+        build.compiled_by = 'CI'
+        self.assertEqual(build.compiled_by, 'CI')
 
     def test_ci(self):
         build = Build()
@@ -56,8 +56,8 @@ class TestBuild(unittest.TestCase):
         self.assertTrue(vcs.clean_wa)
         vcs.pr_number = '123'
         self.assertEqual(vcs.pr_number, '123')
-        vcs.commitId = '123'
-        self.assertEqual(vcs.commitId, '123')
+        vcs.commit_id = '123'
+        self.assertEqual(vcs.commit_id, '123')
         vcs.system = 'git'
         self.assertEqual(vcs.system, 'git')
         vcs.url = 'url'

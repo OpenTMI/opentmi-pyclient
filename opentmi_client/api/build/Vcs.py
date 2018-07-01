@@ -32,12 +32,12 @@ class Vcs(BaseApi):
         return self.set("type", value)
 
     @property
-    def commitId(self):
+    def commit_id(self):
         return self.get("commitId")
 
-    @commitId.setter
+    @commit_id.setter
     @setter_rules()
-    def commitId(self, value):
+    def commit_id(self, value):
         return self.set("commitId", value)
 
     @property

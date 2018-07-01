@@ -13,9 +13,7 @@ class Result(BaseApi):
     """
     def __init__(self,
                  tcid=None,
-                 execution=None,
-                 tc_ref=None,
-                 job=None):
+                 tc_ref=None):
         """
         Constructor for Result
         :param tcid: String
@@ -24,12 +22,18 @@ class Result(BaseApi):
         :param job: Job
         """
         super(Result, self).__init__()
-        self.job = job if job else Job()
-        self.execution = execution if execution else Execution()
+        self.job = Job()
+        self.execution = Execution()
         if tcid:
             self.tcid = tcid
         if tc_ref:
             self.tc_ref = tc_ref
+
+    @staticmethod
+    def from_dict(dictionary):
+        result = Result()
+        result.data = dictionary
+        return result
 
     def __str__(self):
         return "{} - {}".format(self.get("tcid", "?"), self.get("exec.verdict", "?"))
