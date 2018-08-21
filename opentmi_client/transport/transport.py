@@ -24,7 +24,7 @@ class Transport(object):
 
     __request_timeout = 10
 
-    def __init__(self, host='localhost', port=3000):
+    def __init__(self, host='localhost', port=None):
         """
         Constructor for Transport
         :param host:
