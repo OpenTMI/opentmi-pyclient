@@ -33,8 +33,8 @@ class OpenTmiClient(object):
 
     # pylint: disable-msg=too-many-arguments
     def __init__(self,
-                 host='localhost',
-                 port=3000,
+                 host='127.0.0.1',
+                 port=None,
                  result_converter=None,
                  testcase_converter=None,
                  transport=None):

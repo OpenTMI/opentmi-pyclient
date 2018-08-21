@@ -22,7 +22,7 @@ def is_object_id(value):
     return True if match else False
 
 
-def resolve_host(host="localhost", port=None):
+def resolve_host(host, port=None):
     """
     Resolve host from given arguments
     :param host: string
