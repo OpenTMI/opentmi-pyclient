@@ -2,7 +2,6 @@
 Generic tools function
 """
 import re
-import socket
 import zipfile
 import os
 import six
