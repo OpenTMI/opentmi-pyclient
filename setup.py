@@ -34,5 +34,11 @@ setup(name='opentmi_client',
               "opentmi=opentmi_client:opentmiclient_main",
           ]
       },
-      install_requires=read_requirements('requirements.txt')
+      install_requires=read_requirements('requirements.txt'),
+      classifiers=[
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+      ]
     )
