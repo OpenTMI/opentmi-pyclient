@@ -60,13 +60,17 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            coverage run setup.py test
-            coverage html
+            mkdir junit || true
+            nosetests --with-xunit --with-coverage --cover-html --cover-html-dir=htmlcov --cover-xml-file=coverage. --xunit-file=junit/results.xml
             coveralls || true
             pylint opentmi_client
       - store_artifacts:
           path: htmlcov
           destination: htmlcov
+      - store_test_results:
+          path: junit
+      - store_artifacts:
+          path: junit
 
   test-3.5:
     <<: *test-template
