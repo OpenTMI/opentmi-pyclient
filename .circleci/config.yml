@@ -51,6 +51,7 @@ jobs:
             . venv/bin/activate
             pip install -r requirements.txt
             pip install -r dev_requirements.txt
+            python setup.py develop
       - save_cache:
           paths:
             - ./venv
@@ -61,7 +62,7 @@ jobs:
           command: |
             . venv/bin/activate
             mkdir junit || true
-            nosetests --with-xunit --with-coverage --cover-html --cover-html-dir=htmlcov --cover-xml-file=coverage.xml --xunit-file=junit/results.xml --exe
+            nosetests --with-xunit --with-coverage --cover-package=opentmi_client --cover-html --cover-html-dir=htmlcov --cover-xml-file=coverage.xml --xunit-file=junit/results.xml
             coveralls || true
             pylint opentmi_client
       - store_artifacts:
@@ -71,6 +72,7 @@ jobs:
           path: junit
       - store_artifacts:
           path: junit
+          destination: juni
 
   test-3.5:
     <<: *test-template
