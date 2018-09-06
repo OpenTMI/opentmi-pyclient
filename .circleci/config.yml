@@ -61,7 +61,7 @@ jobs:
           command: |
             . venv/bin/activate
             mkdir junit || true
-            nosetests --with-xunit --with-coverage --cover-html --cover-html-dir=htmlcov --cover-xml-file=coverage.xml --xunit-file=junit/results.xml
+            nosetests --with-xunit --with-coverage --cover-html --cover-html-dir=htmlcov --cover-xml-file=coverage.xml --xunit-file=junit/results.xml --exe
             coveralls || true
             pylint opentmi_client
       - store_artifacts:
