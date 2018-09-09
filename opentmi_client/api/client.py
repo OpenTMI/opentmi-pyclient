@@ -56,8 +56,7 @@ class OpenTmiClient(object):
         self.__logger = get_logger()
         self.__result_converter = None
         self.__tc_converter = None
-        self.__transport = Transport(host, port) if not transport else transport
-        if token: self.__transport.set_token(token)
+        self.__transport = Transport(host, port, token) if not transport else transport
 
     def set_result_converter(self, fn):
         """

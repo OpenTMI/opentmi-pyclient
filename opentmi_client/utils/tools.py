@@ -34,7 +34,22 @@ def resolve_host(host, port=None):
         host += ":" + str(port)
     if not host.startswith("http"):
         host = "http://" + host
+    token = resolve_token(host)
+    if token:
+        # remove token from host url
+        host = host.replace(token+"@", "")
     return host
+
+def resolve_token(host):
+    """
+    Resolve access token from host string
+    Format: https://<token>@<url>
+    :param host: host as a string
+    :return: token or None
+    """
+    host_re = r"^https?://([a-zA-Z0-9\-_]+?\.[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+)\@.+$"
+    match = re.match(host_re, host)
+    return match.group(1) if match else None
 
 def archive_files(files, zip_filename, base_path=""):
     """

@@ -40,6 +40,21 @@ class TestRequest(unittest.TestCase):
         resp.status_code = 199
         self.assertFalse(Transport.is_success(resp))
 
+    def test_set_host(self):
+        transport = Transport()
+        HOST = "127.0.0.1"
+        transport.set_host(HOST)
+        self.assertEqual(transport.token, None)
+        self.assertEqual(transport.host, HOST)
+
+        transport.set_host("a.b.c@"+HOST)
+        self.assertEqual(transport.token, "a.b.c")
+        self.assertEqual(transport.host, "http://"+HOST)
+
+        transport.set_host("https://aa.bb.cc@"+HOST)
+        self.assertEqual(transport.token, "aa.bb.cc")
+        self.assertEqual(transport.host, "http://"+HOST)
+
     def test_get_json_not_found(self):
         transport = Transport()
         with self.assertRaises(TransportException):

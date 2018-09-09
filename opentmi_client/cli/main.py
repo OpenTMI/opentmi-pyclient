@@ -102,6 +102,11 @@ class OpentTMIClientCLI(object):
                             default='password',
                             help='password')
 
+        parser.add_argument('--token',
+                            dest='token',
+                            default=None,
+                            help='Authentication token')
+
         parser.add_argument('-p', '--port',
                             dest='port',
                             type=int,

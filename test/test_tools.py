@@ -1,6 +1,6 @@
 import os
 import unittest
-from opentmi_client.utils import is_object_id, resolve_host, archive_files
+from opentmi_client.utils import is_object_id, resolve_host, resolve_token, archive_files
 
 
 class TestTools(unittest.TestCase):
@@ -21,6 +21,12 @@ class TestTools(unittest.TestCase):
         self.assertEqual(resolve_host("https://mydomain"), "https://mydomain")
         self.assertEqual(resolve_host("https://1.2.3.4:3000"), "https://1.2.3.4:3000")
         self.assertEqual(resolve_host("https://1.2.3.4", 3000), "https://1.2.3.4:3000")
+        self.assertEqual(resolve_host("https://aa.bb.cc@1.2.3.4", 3000), "https://1.2.3.4:3000")
+
+    def test_resolve_token(self):
+        self.assertEqual(resolve_token("http://1.2.3.4"), None)
+        self.assertEqual(resolve_token("http://a.b.c@1.2.3.4"), "a.b.c")
+        self.assertEqual(resolve_token("https://aa.bb.cc@1.2.3.4"), "aa.bb.cc")
 
     def test_archive(self):
         zip = 'temp.zip'
