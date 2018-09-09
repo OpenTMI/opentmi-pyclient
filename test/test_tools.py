@@ -21,7 +21,7 @@ class TestTools(unittest.TestCase):
         self.assertEqual(resolve_host("https://mydomain"), "https://mydomain")
         self.assertEqual(resolve_host("https://1.2.3.4:3000"), "https://1.2.3.4:3000")
         self.assertEqual(resolve_host("https://1.2.3.4", 3000), "https://1.2.3.4:3000")
-        self.assertEqual(resolve_host("https://aa.bb.cc@1.2.3.4", 3000), "https://1.2.3.4:3000")
+        self.assertEqual(resolve_host("https://1.2.3.4", 3000), "https://1.2.3.4:3000")
 
     def test_resolve_token(self):
         self.assertEqual(resolve_token("http://1.2.3.4"), None)

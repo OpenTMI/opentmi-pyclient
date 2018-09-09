@@ -45,15 +45,15 @@ class TestRequest(unittest.TestCase):
         HOST = "127.0.0.1"
         transport.set_host(HOST)
         self.assertEqual(transport.token, None)
-        self.assertEqual(transport.host, HOST)
+        self.assertEqual(transport.host, "http://"+HOST)
 
-        transport.set_host("a.b.c@"+HOST)
+        transport.set_host("http://a.b.c@"+HOST)
         self.assertEqual(transport.token, "a.b.c")
         self.assertEqual(transport.host, "http://"+HOST)
 
         transport.set_host("https://aa.bb.cc@"+HOST)
         self.assertEqual(transport.token, "aa.bb.cc")
-        self.assertEqual(transport.host, "http://"+HOST)
+        self.assertEqual(transport.host, "https://"+HOST)
 
     def test_get_json_not_found(self):
         transport = Transport()

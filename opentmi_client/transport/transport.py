@@ -31,8 +31,11 @@ class Transport(object):
         :param port:
         """
         self.logger = get_logger()
-        self.__token = token
+        self.__token = None
         self.__host = None
+        if token:
+            self.set_token(token)
+
         self.set_host(host, port)
         self.logger.info("OpenTMI host: %s", self.host)
 
@@ -41,10 +44,13 @@ class Transport(object):
         Set host address and port
         :param host:
         :param port:
-        :return:
+        :return: None
         """
         self.__host = resolve_host(host, port)
-        self.__token = resolve_token(host)
+        token = resolve_token(host)
+        if token:
+            self.__host = self.__host.replace(token + "@", "")
+            self.set_token(token)
 
     @property
     def host(self):
@@ -73,6 +79,14 @@ class Transport(object):
 
     def has_token(self):
         return self.__token != None
+
+    def get_url(self, path):
+        """
+        Create url from path
+        :param path: string, e.g. "/auth/login"
+        :return: url as a string
+        """
+        return self.__host + path
 
     @property
     def __headers(self):

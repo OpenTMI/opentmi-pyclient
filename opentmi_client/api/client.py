@@ -43,8 +43,8 @@ class OpenTmiClient(object):
     def __init__(self,
                  host='127.0.0.1',
                  port=None,
-                 transport=None,
-                 token=None):
+                 token=None,
+                 transport=None):
         """
         Constructor for OpenTMI client
         :param host: opentmi host address (default="localhost")
@@ -57,6 +57,8 @@ class OpenTmiClient(object):
         self.__result_converter = None
         self.__tc_converter = None
         self.__transport = Transport(host, port, token) if not transport else transport
+        if transport and token:
+            transport.set_token(token)
 
     def set_result_converter(self, fn):
         """
@@ -82,10 +84,10 @@ class OpenTmiClient(object):
         :return: OpenTmiClient
         """
         payload = {
-            "username": username,
+            "email": username,
             "password": password
         }
-        url = self.__transport.host + "/login"
+        url = self.__resolve_url("/auth/login")
         response = self.__transport.post_json(url, payload)
         token = response.get("token")
         self.logger.info("Login success. Token: %s", token)
@@ -102,12 +104,9 @@ class OpenTmiClient(object):
         if not service:
             self.set_token(token)
             return self
-        payload = {
-            "token": token,
-            "service": service
-        }
+        payload = {"token": token}
         self.logout()
-        url = self.__transport.host + "/login/" + service + "/token"
+        url = self.__resolve_url("/auth/" + service + "/token")
         response = self.__transport.post_json(url, payload)
         token = response.get("token")
         self.logger.info("Login success. Token: %s", token)
@@ -391,5 +390,8 @@ class OpenTmiClient(object):
         self.logger.warning("new testcase metadata upload failed")
         return None
 
+    def __resolve_url(self, path):
+        return self.__transport.get_url(path)
+
     def __resolve_apiuri(self, path):
-        return self.__transport.host + self.__api + str(self.__version) + path
+        return self.__resolve_url(self.__api + str(self.__version) + path)

@@ -12,6 +12,7 @@ import argparse
 import logging
 import pkg_resources  # part of setuptools
 from opentmi_client.api import OpenTmiClient
+from opentmi_client.utils.exceptions import OpentmiException
 
 EXIT_CODE_SUCCESS = 0
 EXIT_CODE_NOT_IMPLEMENTED = 1
@@ -94,18 +95,23 @@ class OpentTMIClientCLI(object):
 
         parser.add_argument('--user',
                             dest='user',
-                            default='user',
+                            default=None,
                             help='username')
 
         parser.add_argument('--password',
                             dest='password',
-                            default='password',
+                            default=None,
                             help='password')
 
         parser.add_argument('--token',
                             dest='token',
                             default=None,
                             help='Authentication token')
+
+        parser.add_argument('--token_service',
+                            dest='token_service',
+                            default=None,
+                            help='Optional authentication service')
 
         parser.add_argument('-p', '--port',
                             dest='port',
@@ -243,49 +249,67 @@ class OpentTMIClientCLI(object):
 
         raise NotImplementedError('store')
 
-    def subcmd_store_build(self, args): # pylint: disable=no-self-use
+    def create_client(self, args):
+        """
+        Create OpenTmiClient instance based on args
+        :param args: arguments
+        :return: OpenTmiClient instance
+        """
+        client = OpenTmiClient(host=args.host, port=args.port, token=args.token)
+        if args.user:
+            if args.password:
+                client.login(args.user, args.password)
+            else:
+                raise OpentmiException("password missing")
+        elif args.token:
+            client.login_with_token(args.token, args.token_service)
+        return client
+
+    def subcmd_store_build(self, args):
         """
         :param self:
         :param args:
         :return:
         """
-        client = OpenTmiClient(host=args.host, port=args.port)
+        client = self.create_client(args)
         client.upload_build(args.file)
         return EXIT_CODE_SUCCESS
 
-    def subcmd_store_testcase(self, args): # pylint: disable=no-self-use
+    def subcmd_store_testcase(self, args):
         """
         :param self:
         :param args:
         :return:
         """
-        client = OpenTmiClient(host=args.host, port=args.port)
+        client = self.create_client(args)
         client.update_testcase(args.file)
         return EXIT_CODE_SUCCESS
 
 
-    def subcmd_store_result(self, args): # pylint: disable=no-self-use
+    def subcmd_store_result(self, args):
         """
         :param self:
         :param args:
         :return:
         """
-        client = OpenTmiClient(host=args.host, port=args.port)
+        client = self.create_client(args)
         client.upload_results(args.file)
         return EXIT_CODE_SUCCESS
 
-    def subcmd_list_handler(self, args): # pylint: disable=no-self-use
+    def subcmd_list_handler(self, args):
         """
         :param args:
         :return:
         """
-        client = OpenTmiClient(host=args.host, port=args.port)
+        client = self.create_client(args)
         if args.testcases:
             testcases = client.get_testcases()
             if args.json:
                 print(json.dumps(testcases))
-            for test_case in testcases:
-                print(test_case['tcid'])
+            else:
+                print("Test cases:")
+                for test_case in testcases:
+                    print(test_case['tcid'])
         elif args.campaigns:
             campaigns = client.get_campaign_names()
             if args.json:
@@ -303,4 +327,11 @@ def opentmiclient_main():
         Function exits with success-code
     """
     cli = OpentTMIClientCLI()
-    sys.exit(cli.execute())
+    try:
+        sys.exit(cli.execute())
+    except OpentmiException as error:
+        print(str(error))
+        sys.exit(EXIT_CODE_OPERATION_FAILED)
+
+if __name__ == '__main__':
+    opentmiclient_main()

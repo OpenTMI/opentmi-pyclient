@@ -7,7 +7,8 @@ from opentmi_client.cli.main import opentmiclient_main, OpentTMIClientCLI
 def mocked_get_list(*args, **kwargs):
     return [{"tcid": "b", "name": "c"}]
 
-FAKE_TOKEN = "abc"
+FAKE_TOKEN = "a.b.c"
+
 
 class TestCli(unittest.TestCase):
     @patch('sys.stdout', new_callable=Mock())

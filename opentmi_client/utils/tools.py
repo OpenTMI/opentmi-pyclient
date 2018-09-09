@@ -34,10 +34,6 @@ def resolve_host(host, port=None):
         host += ":" + str(port)
     if not host.startswith("http"):
         host = "http://" + host
-    token = resolve_token(host)
-    if token:
-        # remove token from host url
-        host = host.replace(token+"@", "")
     return host
 
 def resolve_token(host):
