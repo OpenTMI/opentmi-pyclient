@@ -249,8 +249,7 @@ class OpentTMIClientCLI(object):
 
         raise NotImplementedError('store')
 
-    @staticmethod
-    def create_client(args):
+    def create_client(self, args):
         """
         Create OpenTmiClient instance based on args
         :param args: arguments
@@ -259,10 +258,12 @@ class OpentTMIClientCLI(object):
         client = OpenTmiClient(host=args.host, port=args.port, token=args.token)
         if args.user:
             if args.password:
+                self.logger.debug("Use credentials from env variable")
                 client.login(args.user, args.password)
             else:
                 raise OpentmiException("password missing")
         elif args.token:
+            self.logger.debug("Use token from env variable")
             client.login_with_token(args.token, args.token_service)
         return client
 
@@ -272,7 +273,7 @@ class OpentTMIClientCLI(object):
         :param args:
         :return:
         """
-        client = OpentTMIClientCLI.create_client(args)
+        client = self.create_client(args)
         client.upload_build(args.file)
         return EXIT_CODE_SUCCESS
 
@@ -282,7 +283,7 @@ class OpentTMIClientCLI(object):
         :param args:
         :return:
         """
-        client = OpentTMIClientCLI.create_client(args)
+        client = self.create_client(args)
         client.update_testcase(args.file)
         return EXIT_CODE_SUCCESS
 
@@ -292,7 +293,7 @@ class OpentTMIClientCLI(object):
         :param args:
         :return:
         """
-        client = OpentTMIClientCLI.create_client(args)
+        client = self.create_client(args)
         client.upload_results(args.file)
         return EXIT_CODE_SUCCESS
 
@@ -301,7 +302,7 @@ class OpentTMIClientCLI(object):
         :param args:
         :return:
         """
-        client = OpentTMIClientCLI.create_client(args)
+        client = self.create_client(args)
         if args.testcases:
             testcases = client.get_testcases()
             if args.json:
