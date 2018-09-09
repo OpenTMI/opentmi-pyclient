@@ -1,7 +1,8 @@
 # pylint: disable=missing-docstring
 
 import unittest
-from mock import MagicMock, patch, call
+import os
+from mock import mock, MagicMock, patch, call
 from opentmi_client.api import Client, create
 from opentmi_client.utils import TransportException, OpentmiException
 from opentmi_client.transport.transport import Transport
@@ -85,6 +86,25 @@ class TestClient(unittest.TestCase):
     def test_version(self):
         client = Client()
         self.assertEqual(client.get_version(), 0)
+
+    def test_try_login_raise(self):
+        client = Client()
+        with self.assertRaises(OpentmiException):
+            client.try_login()
+
+    @mock.patch.dict(os.environ, {'OPENTMI_GITHUB_ACCESS_TOKEN': 'a.b.c'})
+    @patch('opentmi_client.transport.Transport.post_json', side_effect=mocked_post)
+    def test_try_login_token(self,  mock_post):
+        client = Client()
+        client.try_login()
+        mock_post.assert_called_once_with("http://127.0.0.1/auth/github/token", {"token": "a.b.c"})
+
+    @mock.patch.dict(os.environ, {'OPENTMI_USERNAME': 'username', "OPENTMI_PASSWORD": "passw"})
+    @patch('opentmi_client.transport.Transport.post_json', side_effect=mocked_post)
+    def test_try_login_token(self, mock_post):
+        client = Client()
+        client.try_login()
+        mock_post.assert_called_once_with("http://127.0.0.1/auth/login", {"email": "username", "password": "passw"})
 
     @patch('opentmi_client.transport.Transport.post_json', side_effect=mocked_post)
     def test_upload_build(self, mock_post):
