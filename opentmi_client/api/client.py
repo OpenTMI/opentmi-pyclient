@@ -6,7 +6,8 @@ import os
 
 
 # Application modules
-from opentmi_client.utils import is_object_id, get_logger, OpentmiException, TransportException, requires_logged_in
+from opentmi_client.utils import is_object_id, get_logger, requires_logged_in
+from opentmi_client.utils import OpentmiException, TransportException
 from opentmi_client.transport import Transport
 
 REQUEST_TIMEOUT = 30
@@ -27,8 +28,8 @@ def create(host='localhost', port=None, result_converter=None, testcase_converte
     :return: OpenTmiClient
     """
     client = OpenTmiClient(host, port)
-    client.set_result_converter = result_converter
-    client.set_testcase_converter = testcase_converter
+    client.set_result_converter(result_converter)
+    client.set_tc_converted(testcase_converter)
     return client
 
 
@@ -60,21 +61,21 @@ class OpenTmiClient(object):
         if transport and token:
             transport.set_token(token)
 
-    def set_result_converter(self, fn):
+    def set_result_converter(self, func):
         """
         Set custom result converter
-        :param fn: conversion function
+        :param func: conversion function
         :return: None
         """
-        self.__result_converter = fn
+        self.__result_converter = func
 
-    def set_tc_converted(self, fn):
+    def set_tc_converted(self, func):
         """
         Set custom test case converter
-        :param fn: conversion function
+        :param func: conversion function
         :return: None
         """
-        self.__tc_converter = fn
+        self.__tc_converter = func
 
     def login(self, username, password):
         """
@@ -302,9 +303,7 @@ class OpenTmiClient(object):
             self.logger.warning(error)
         return None
 
-    # Private members
-
-    def _try_login(self):
+    def try_login(self):
         """
         function to check if login is done.
         If not try to use environment variables by default
@@ -324,6 +323,8 @@ class OpenTmiClient(object):
             self.logger.info("Using opentmi credentials from environment variable")
             return self.login(username, password)
         raise OpentmiException("login required")
+
+    # Private members
 
     def __get_testcases(self, filters=None):
         url = self.__resolve_apiuri("/testcases")

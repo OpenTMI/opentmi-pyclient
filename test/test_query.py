@@ -1,4 +1,3 @@
-import os
 import unittest
 from opentmi_client.utils import Query, Find, Distinct
 

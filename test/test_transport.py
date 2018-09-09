@@ -1,7 +1,6 @@
 import unittest
-from mock import patch, MagicMock
+from mock import patch
 from requests import Response, RequestException
-import requests
 from opentmi_client.transport import Transport
 from opentmi_client.utils.exceptions import TransportException
 

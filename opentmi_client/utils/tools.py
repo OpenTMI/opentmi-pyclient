@@ -6,8 +6,6 @@ import zipfile
 import os
 import six
 
-from opentmi_client.utils.exceptions import OpentmiException
-
 
 def is_object_id(value):
     """
@@ -61,7 +59,7 @@ def archive_files(files, zip_filename, base_path=""):
     zip_file.close()
     return zip_filename
 
-def requires_logged_in(fn):
+def requires_logged_in(func):
     """
     Decorator which verify that client are logged in
     if not but env variables are available
@@ -70,7 +68,12 @@ def requires_logged_in(fn):
     :return: wrapper function
     """
     def ret_fn(*args):
+        """
+        wrapper function
+        :param args: argument for decorated function
+        :return: return decorated function return values
+        """
         self = args[0]
-        self._try_login()
-        return fn(*args)
+        self.try_login()
+        return func(*args)
     return ret_fn

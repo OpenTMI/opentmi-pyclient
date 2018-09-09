@@ -1,6 +1,5 @@
-import sys
 import unittest
-from mock import MagicMock, patch, call, Mock
+from mock import patch, Mock
 from opentmi_client.cli.main import opentmiclient_main, OpentTMIClientCLI
 
 

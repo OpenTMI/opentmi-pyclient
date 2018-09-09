@@ -1,5 +1,5 @@
 import unittest
-from mock import MagicMock, patch, call, PropertyMock
+from mock import MagicMock, patch, call
 from opentmi_client.api import Client, create
 from opentmi_client.utils import TransportException, OpentmiException
 from opentmi_client.transport.transport import Transport
@@ -63,14 +63,14 @@ class TestClient(unittest.TestCase):
         client = Client(transport=tr_mock)
         client.login("user", "passwd")
         tr_mock.post_json.assert_called_once_with("http://127.0.0.1/auth/login",
-                                                  {"username": "user", "password": "passwd"})
+                                                  {"email": "user", "password": "passwd"})
 
     def test_login_with_github_token(self):
         tr_mock = Transport()
         mock_transport(tr_mock)
         client = Client(transport=tr_mock)
         client.login_with_token("a.b.c", "github")
-        tr_mock.post_json.assert_called_once_with("http://127.0.0.1/auth/login/github/token",
+        tr_mock.post_json.assert_called_once_with("http://127.0.0.1/auth/github/token",
                                                   {"token": "a.b.c"})
 
     def test_logout(self):

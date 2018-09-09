@@ -27,8 +27,9 @@ class Transport(object):
     def __init__(self, host="127.0.0.1", port=None, token=None):
         """
         Constructor for Transport
-        :param host:
-        :param port:
+        :param host: Hostname as a String
+        :param port: optional port as a positive Integer
+        :param token: optional token
         """
         self.logger = get_logger()
         self.__token = None
@@ -78,6 +79,10 @@ class Transport(object):
         return self
 
     def has_token(self):
+        """
+        Check if token is available
+        :return: Boolean True if token exists, otherwise False
+        """
         return self.__token != None
 
     def get_url(self, path):
