@@ -1,5 +1,5 @@
 import unittest
-from mock import MagicMock, patch, call
+from mock import MagicMock, patch, call, PropertyMock
 from opentmi_client.api import Client, create
 from opentmi_client.utils import TransportException, OpentmiException
 from opentmi_client.transport.transport import Transport
@@ -35,6 +35,8 @@ def mock_transport(transport):
     transport.post_json = MagicMock()
     transport.put_json = MagicMock()
 
+DUMMY_TOKEN = "abc"
+
 
 class TestClient(unittest.TestCase):
 
@@ -46,8 +48,14 @@ class TestClient(unittest.TestCase):
         tr_mock = Transport()
         mock_transport(tr_mock)
         client = Client(transport=tr_mock)
-        client.set_token('test')
-        tr_mock.set_token.assert_called_once_with("test")
+        client.set_token(DUMMY_TOKEN)
+        tr_mock.set_token.assert_called_once_with(DUMMY_TOKEN)
+
+    def test_token_in_constructor(self):
+        tr_mock = Transport()
+        mock_transport(tr_mock)
+        client = Client(transport=tr_mock, token=DUMMY_TOKEN)
+        tr_mock.set_token.assert_called_once_with(DUMMY_TOKEN)
 
     def test_login(self):
         tr_mock = Transport()
@@ -70,20 +78,20 @@ class TestClient(unittest.TestCase):
 
     @patch('opentmi_client.transport.Transport.post_json', side_effect=mocked_post)
     def test_upload_build(self, mock_post):
-        client = Client()
+        client = Client(token=DUMMY_TOKEN)
         self.assertDictEqual(client.upload_build({}), {})
         mock_post.assert_called_once_with("http://127.0.0.1/api/v0/duts/builds", {})
 
     @patch('opentmi_client.transport.Transport.post_json', side_effect=mocked_post)
     def test_upload_build_exceptions(self, mock_post):
-        client = Client()
+        client = Client(token=DUMMY_TOKEN)
         self.assertEqual(client.upload_build({"exception": "TransportException"}), None)
         self.assertEqual(client.upload_build({"exception": "OpentmiException"}), None)
 
     @patch('opentmi_client.transport.Transport.get_json', side_effect=mocked_get)
     @patch('opentmi_client.transport.Transport.post_json', side_effect=mocked_post)
     def test_upload_results_new_test(self, mock_post, mock_get):
-        client = Client()
+        client = Client(token=DUMMY_TOKEN)
         tc_data = {"tcid": "notfound"}
         client.upload_results(tc_data)
         mock_get.assert_called_once_with("http://127.0.0.1/api/v0/testcases", params={"tcid": "notfound"})
@@ -94,7 +102,7 @@ class TestClient(unittest.TestCase):
     @patch('opentmi_client.transport.Transport.get_json', side_effect=mocked_get)
     @patch('opentmi_client.transport.Transport.post_json', side_effect=mocked_post)
     def test_upload_results_update_test(self, mock_post, mock_get):
-        client = Client()
+        client = Client(token=DUMMY_TOKEN)
         tc_data = {"tcid": "abc"}
         client.upload_results(tc_data)
         mock_get.assert_called_once_with("http://127.0.0.1/api/v0/testcases", params={"tcid": "abc"})
@@ -102,9 +110,7 @@ class TestClient(unittest.TestCase):
 
     @patch('opentmi_client.transport.Transport.get_json', side_effect=mocked_get)
     def test_get_test(self, mock_get):
-        client = Client()
+        client = Client(token=DUMMY_TOKEN)
         tc_data = {"tcid": "abc %s"}
         client.get_testcases(tc_data)
         mock_get.assert_called_once_with("http://127.0.0.1/api/v0/testcases", params={"tcid": "abc %s"})
-
-

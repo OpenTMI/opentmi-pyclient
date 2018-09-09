@@ -62,6 +62,9 @@ class Transport(object):
         self.__token = token
         return self
 
+    def has_token(self):
+        return self.__token != None
+
     @property
     def __headers(self):
         headers = {

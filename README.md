@@ -76,6 +76,9 @@ Test case document schema is available [here](https://github.com/OpenTMI/opentmi
 * `tcid` -field have to be unique for each test cases.
 * There is couple mandatory fields by default: `tcid` and `exec.verdict`. Allowed values for result verdict is: `pass`, `fail`, `inconclusive`, `blocked` and `error`. `upload_results()` -function also create test case document if it doesn't exists in database.
 
+For authentication you can use optionally environment variables:
+Using username and password: `OPENTMI_USERNAME` and `OPENTMI_PASSWORD` or
+Using github access token: `OPENTMI_GITHUB_ACCESS_TOKEN`.
 
 ## LICENSE
 
