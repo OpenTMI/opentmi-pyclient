@@ -1,3 +1,5 @@
+# pylint: disable=missing-docstring
+
 import unittest
 from mock import patch
 from requests import Response, RequestException

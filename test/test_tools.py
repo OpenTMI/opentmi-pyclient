@@ -1,3 +1,5 @@
+# pylint: disable=missing-docstring
+
 import os
 import unittest
 from opentmi_client.utils import is_object_id, resolve_host, resolve_token, archive_files

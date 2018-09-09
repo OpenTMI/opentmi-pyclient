@@ -1,3 +1,5 @@
+# pylint: disable=missing-docstring
+
 import unittest
 from opentmi_client.utils import Query, Find, Distinct
 

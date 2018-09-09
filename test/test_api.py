@@ -1,3 +1,5 @@
+# pylint: disable=missing-docstring
+
 import unittest
 from mock import MagicMock, patch, call
 from opentmi_client.api import Client, create

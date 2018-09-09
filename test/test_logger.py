@@ -1,4 +1,5 @@
-import os
+# pylint: disable=missing-docstring
+
 import unittest
 from logging import Logger
 from opentmi_client.utils import get_logger
