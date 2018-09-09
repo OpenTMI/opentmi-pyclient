@@ -83,7 +83,7 @@ class Transport(object):
         Check if token is available
         :return: Boolean True if token exists, otherwise False
         """
-        return self.__token != None
+        return self.__token is not None
 
     def get_url(self, path):
         """
