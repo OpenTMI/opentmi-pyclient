@@ -1,7 +1,6 @@
 """
 OpenTMI python client decorators
 """
-
 from enum import Enum
 import re
 import functools
