@@ -92,8 +92,10 @@ jobs:
   deploy:
     <<: *test-template
     steps:
-      - attach_workspace:
-          at: ~/opentmi-pyclient
+      - checkout
+      # Download and cache dependencies
+      - restore_cache:
+          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
           name: verify git tag vs. version
           command: |
