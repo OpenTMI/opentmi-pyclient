@@ -42,11 +42,8 @@ jobs:
     steps:
       - checkout
       # Download and cache dependencies
-      #- restore_cache:
-      #    keys:
-      #    - v1-dependencies-{{ checksum "requirements.txt" }}
-      #    # fallback to using the latest cache if no exact match is found
-      #    - v1-dependencies-
+      - restore_cache:
+          keys: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
           name: install dependencies
           command: |
@@ -58,7 +55,7 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
+          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
       # run tests!
       - run:
           name: run tests
