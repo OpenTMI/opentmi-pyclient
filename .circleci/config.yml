@@ -51,11 +51,11 @@ jobs:
           name: install dependencies
           command: |
             python --version
-            pip install virtualenv
+            pip install --user virtualenv
             python -m venv venv || virtualenv venv
             . venv/bin/activate
-            pip install -r requirements.txt
-            pip install -r dev_requirements.txt
+            pip install --user -r requirements.txt
+            pip install --user -r dev_requirements.txt
             python setup.py develop
       - save_cache:
           paths:
