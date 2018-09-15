@@ -41,7 +41,8 @@ def setter_rules(value_type=str, each_type=None, enum=None):
                     raise TypeError("{} list values must be {}".format(key, each_type))
             if enum:
                 members = Enum("values", enum)
-                if value not in members.__members__:
+                enum_values = [e.name for e in members]
+                if value not in enum_values:
                     raise ValueError("Value {} not in allowed list ({})".format(value, enum))
             return func(key, value)
         return function_wrapper

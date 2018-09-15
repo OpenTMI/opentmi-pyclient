@@ -13,20 +13,38 @@ class Dut(BaseApi):
 
     @property
     def count(self):
+        """
+        Getter for dut count
+        :return: Integer
+        """
         return self.get("count")
 
     @count.setter
     @setter_rules(value_type=int)
     def count(self, value):
+        """
+        Setter for dut count
+        :param value: integer
+        :return: value
+        """
         return self.set("count", value)
 
     @property
     def type(self):
+        """
+        Getter for DUT type
+        :return: String
+        """
         return self.get("type")
 
     @type.setter
     @setter_rules(enum="hw simulator process")
     def type(self, value):
+        """
+        Setter for DUT type
+        :param value: String, hw|simulator|process
+        :return: value
+        """
         return self.set("type", value)
 
     @property
