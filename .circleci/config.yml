@@ -43,7 +43,7 @@ jobs:
       - checkout
       # Download and cache dependencies
       - restore_cache:
-          keys: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
           name: install dependencies
           command: |
