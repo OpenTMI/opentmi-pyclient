@@ -26,6 +26,7 @@ class Sut(BaseApi):
         """
         self.set("ref", value)
 
+
 '''
       gitUrl: {type: String, default: ''},
       buildName: {type: String},

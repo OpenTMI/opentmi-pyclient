@@ -1,3 +1,6 @@
+"""
+OpenTMI module for VCS
+"""
 from opentmi_client.utils.Base import BaseApi
 from opentmi_client.utils.decorators import setter_rules
 

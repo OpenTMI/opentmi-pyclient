@@ -1,3 +1,6 @@
+"""
+Result module
+"""
 from opentmi_client.api.result.Result import Result
 from opentmi_client.api.result.Provider import Provider
 from opentmi_client.api.result.File import File

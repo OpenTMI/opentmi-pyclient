@@ -97,7 +97,7 @@ class Build(BaseApi):
         """
         return self.get("uuid")
 
-    @name.setter
+    @uuid.setter
     @setter_rules()
     def uuid(self, value):
         """

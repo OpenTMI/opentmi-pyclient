@@ -49,54 +49,107 @@ class Dut(BaseApi):
 
     @property
     def ref(self):
+        """
+        Getter for reference
+        :return: String
+        """
         return self.get("ref")
 
     @ref.setter
     @setter_rules()
     def ref(self, value):
+        """
+        Setter for reference
+        :param value:
+        :return:
+        """
         return self.set("ref", value)
 
     @property
     def vendor(self):
+        """
+        Getter for vendor
+        :return: String
+        """
         return self.get("vendor")
 
     @vendor.setter
     @setter_rules()
     def vendor(self, value):
+        """
+        Setter for DUT vendor
+        :param value: String
+        :return: value
+        """
         return self.set("vendor", value)
 
     @property
     def model(self):
+        """
+        Getter for dut model
+        :return: String
+        """
         return self.get("model")
 
     @model.setter
     @setter_rules()
     def model(self, value):
+        """
+        Setter for dut model
+        :param value: String
+        :return: value
+        """
         return self.set("model", value)
 
     @property
     def ver(self):
+        """
+        Getter for dut version
+        :return: String
+        """
         return self.get("ver")
 
     @ver.setter
     @setter_rules()
     def ver(self, value):
+        """
+        Setter for version
+        :param value: String
+        :return: value
+        """
         return self.set("ver", value)
 
     @property
-    def sn(self):
+    def serial_number(self):
+        """
+        Getter for dut Serial Number
+        :return: String
+        """
         return self.get("sn")
 
-    @sn.setter
+    @serial_number.setter
     @setter_rules()
-    def sn(self, value):
+    def serial_number(self, value):
+        """
+        Setter for Serial Number
+        :param value: String
+        :return: value
+        """
         return self.set("sn", value)
 
     @property
     def provider(self):
+        """
+        Getter for dut provider
+        :return: String
+        """
         return self.get("provider")
 
     @provider.setter
     @setter_rules(value_type=Provider)
     def provider(self, value):
+        """
+        Setter for dut provider
+        :return: Provider
+        """
         return self.set("provider", value)
