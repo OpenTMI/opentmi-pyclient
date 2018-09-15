@@ -88,7 +88,6 @@ class File(BaseApi):
         :param value: str
         """
         self.encoding = 'raw'
-        data = None
         try:
             # python 2
             data = bytearray()

@@ -31,11 +31,20 @@ class Result(BaseApi):
 
     @staticmethod
     def from_dict(dictionary):
+        """
+        Create Result from plain dictionary (JSON)
+        :param dictionary: Dict
+        :return: Result
+        """
         result = Result()
         result.data = dictionary
         return result
 
     def __str__(self):
+        """
+        Stringify function
+        :return: String
+        """
         return "{} - {}".format(self.get("tcid", "?"), self.get("exec.verdict", "?"))
 
     @property
