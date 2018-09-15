@@ -8,9 +8,9 @@ workflows:
   test:
     jobs:
       - test-3.7:
-        filters:
-          tags:
-            only: /.*/
+          filters:
+            tags:
+              only: /.*/
       - test-3.6:
           filters:
             tags:
