@@ -102,7 +102,7 @@ class Result(BaseApi):
         return self.get("job")
 
     @job.setter
-    @setter_rules(type=Job)
+    @setter_rules(value_type=Job)
     def job(self, value):
         """
         Setter for job
@@ -119,7 +119,7 @@ class Result(BaseApi):
         return self.get("exec")
 
     @execution.setter
-    @setter_rules(type=Execution)
+    @setter_rules(value_type=Execution)
     def execution(self, value):
         """
         Setter for Execution

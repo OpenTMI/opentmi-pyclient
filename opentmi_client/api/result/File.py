@@ -73,7 +73,7 @@ class File(BaseApi):
         return self.get("data")
 
     @data.setter
-    @setter_rules(type=bytearray)
+    @setter_rules(value_type=bytearray)
     def data(self, value):
         """
         Setter for data

@@ -76,7 +76,7 @@ class Execution(BaseApi):
         return self.get("duration")
 
     @duration.setter
-    @setter_rules(type=float)
+    @setter_rules(value_type=float)
     def duration(self, value):
         """
         Setter for duration
@@ -93,7 +93,7 @@ class Execution(BaseApi):
         return self.get("profiling")
 
     @profiling.setter
-    @setter_rules(type=dict)
+    @setter_rules(value_type=dict)
     def profiling(self, value):
         """
         Setter for profiling.
@@ -112,7 +112,7 @@ class Execution(BaseApi):
         return self.get("logs")
 
     @logs.setter
-    @setter_rules(type=list, each_type=File)
+    @setter_rules(value_type=list, each_type=File)
     def logs(self, value):
         """
         Setter for logs
@@ -139,7 +139,7 @@ class Execution(BaseApi):
         return self.get("env")
 
     @environment.setter
-    @setter_rules(type=Environment)
+    @setter_rules(value_type=Environment)
     def environment(self, value):
         """
         Setter for environment

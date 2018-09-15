@@ -25,7 +25,7 @@ class Ci(BaseApi):
         return self.get("system")
 
     @system.setter
-    @setter_rules(type=str, enum="Jenkins travisCI circleCI")
+    @setter_rules(value_type=str, enum="Jenkins travisCI circleCI")
     def system(self, value):
         return self.set("system", value)
 
@@ -34,6 +34,6 @@ class Ci(BaseApi):
         return self.get("location")
 
     @location.setter
-    @setter_rules(type=Location)
+    @setter_rules(value_type=Location)
     def location(self, value):
         return self.set("location", value)

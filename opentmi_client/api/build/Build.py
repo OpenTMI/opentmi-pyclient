@@ -31,7 +31,7 @@ class Build(BaseApi):
         return self.get("type")
 
     @type.setter
-    @setter_rules(type=str, enum="app lib test")
+    @setter_rules(value_type=str, enum="app lib test")
     def type(self, value):
         self.set("type", value)
 
@@ -40,7 +40,7 @@ class Build(BaseApi):
         return self.get("ci")
 
     @ci_tool.setter
-    @setter_rules(type=Ci)
+    @setter_rules(value_type=Ci)
     def ci_tool(self, value):
         self.set("ci", value)
 
@@ -49,7 +49,7 @@ class Build(BaseApi):
         return self.get("vcs")
 
     @vcs.setter
-    @setter_rules(type=list, each_type=Vcs)
+    @setter_rules(value_type=list, each_type=Vcs)
     def vcs(self, value):
         self.set("vcs", value)
 

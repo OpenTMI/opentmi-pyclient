@@ -39,6 +39,6 @@ class Environment(BaseApi):
         return self.get("framework")
 
     @framework.setter
-    @setter_rules(type=Framework)
+    @setter_rules(value_type=Framework)
     def framework(self, value):
         self.set("framework", value)

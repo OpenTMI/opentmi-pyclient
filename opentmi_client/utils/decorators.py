@@ -6,10 +6,10 @@ from enum import Enum
 import functools
 
 
-def setter_rules(type=str, each_type=None, enum=None):
+def setter_rules(value_type=str, each_type=None, enum=None):
     """
     setter rules
-    :param type: required Type
+    :param value_type: required Type
     :param each_type: required type for each items in case of list
     :param enum: String, only allowed items
     :return: decorator function
@@ -34,7 +34,7 @@ def setter_rules(type=str, each_type=None, enum=None):
             :param value: value given for setter
             :return: target function return value
             """
-            if not isinstance(value, type):
+            if not isinstance(value, value_type):
                 raise TypeError("type must be str")
             if each_type:
                 if not all(isinstance(i, each_type) for i in value):

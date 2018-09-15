@@ -16,7 +16,7 @@ class Dut(BaseApi):
         return self.get("count")
 
     @count.setter
-    @setter_rules(type=int)
+    @setter_rules(value_type=int)
     def count(self, value):
         return self.set("count", value)
 
@@ -79,6 +79,6 @@ class Dut(BaseApi):
         return self.get("provider")
 
     @provider.setter
-    @setter_rules(type=Provider)
+    @setter_rules(value_type=Provider)
     def provider(self, value):
         return self.set("provider", value)
