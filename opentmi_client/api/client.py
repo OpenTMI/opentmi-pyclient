@@ -210,6 +210,11 @@ class OpenTmiClient(object):
         return self
 
     def post_result(self, result):
+        """
+        Post Result object
+        :param result:
+        :return:
+        """
         url = self.__resolve_apiuri("/results")
         payload = result.data
         try:
@@ -246,7 +251,7 @@ class OpenTmiClient(object):
 
         result_dict = self.__result_converter(result) if self.__result_converter else result
         result = Result.from_dict(result_dict)
-        return self.post_results(result)
+        return self.post_result(result)
 
     # Private members
 

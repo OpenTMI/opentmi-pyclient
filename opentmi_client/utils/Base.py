@@ -52,14 +52,26 @@ class BaseApi(object):
 
     @data.setter
     def data(self, values):
+        """
+        Set plain dictionary object which are suitable for OpenTMI backend
+        :param values:
+        :return:
+        """
         data = remove_empty_from_dict(values)
-        print(data)
-        def fnc(value, path):
-            joined_path = '.'.join(path)
-            print(joined_path, value)
-            set_(self, joined_path, value)
-        map_values_deep(data, fnc) #lambda value, path: set_(self, '.'.join(path), value)
 
+        def fnc(value, path):
+            """
+            mapper function
+            :param value: Value to be set
+            :param path: array of nested path
+            :return:
+            """
+            ref = self
+            for key in path[0:-1]:
+                ref = getattr(ref, key)
+            key = path[-1]
+            setattr(ref, key, value)
+        map_values_deep(data, fnc)
 
     def get(self, key, default=None):
         """
