@@ -45,7 +45,7 @@ def setter_rules(value_type=str, each_type=None, enum=None, match=None):
                     raise ValueError("Value does not match to regex: {}".format(match))
             if enum:
                 members = Enum("values", enum)
-                enum_values = [e.name for e in members]
+                enum_values = [e.name for e in members] # pylint: disable=not-an-iterable
                 if value not in enum_values:
                     raise ValueError("Value {} not in allowed list ({})".format(value, enum))
             return func(key, value)
