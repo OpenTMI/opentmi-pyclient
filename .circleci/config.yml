@@ -103,7 +103,7 @@ jobs:
       - run:
           name: init .pypirc
           command: |
-            pip install twine
+            pip install --user twine
             echo -e "[pypi]" >> ~/.pypirc
             echo -e "username = $PYPI_USERNAME" >> ~/.pypirc
             echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
