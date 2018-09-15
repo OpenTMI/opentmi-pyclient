@@ -102,7 +102,7 @@ jobs:
             virtualenv venv
             source venv/bin/activate
             python setup.py develop
-            pip install --user twine
+            pip install twine
             pip install -r dev_requirements.txt
       - save_cache:
           paths:
