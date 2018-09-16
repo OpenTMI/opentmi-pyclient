@@ -59,7 +59,7 @@ class BaseApi(object):
         """
         data = remove_empty_from_dict(values)
 
-        def hasAttr(ref, key):
+        def has_attribute(ref, key):
             """
             Validates that attribute key has in ref
             :param ref: Object
@@ -79,10 +79,10 @@ class BaseApi(object):
             """
             ref = self
             for key in path[0:-1]:
-                hasAttr(ref, key)
+                has_attribute(ref, key)
                 ref = getattr(ref, key)
             key = path[-1]
-            hasAttr(ref, key)
+            has_attribute(ref, key)
             setattr(ref, key, value)
         map_values_deep(data, fnc)
 
