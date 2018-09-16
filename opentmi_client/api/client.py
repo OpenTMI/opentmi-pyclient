@@ -1,13 +1,16 @@
 """
 OpenTmiClient module
 """
+# standard imports
 import json
-
-
-# Application modules
+# 3rd party imports
+# import deprecation
+# Application imports
 from opentmi_client.utils import is_object_id, get_logger, OpentmiException, TransportException
+from opentmi_client.utils.decorators import setter_rules
 from opentmi_client.transport import Transport
 from opentmi_client.api.result import Result
+
 
 REQUEST_TIMEOUT = 30
 
@@ -48,9 +51,10 @@ class OpenTmiClient(object):
         :param transport: optional Transport layer. Mostly for testing purpose
         """
         self.__logger = get_logger()
+        self.__transport = Transport(host, port) if not transport else transport
+        # backward compatibility
         self.__result_converter = result_converter
         self.__tc_converter = testcase_converter
-        self.__transport = Transport(host, port) if not transport else transport
 
     def login(self, username, password):
         """
@@ -209,10 +213,11 @@ class OpenTmiClient(object):
             self.__create_testcase(metadata)
         return self
 
+    @setter_rules(value_type=Result)
     def post_result(self, result):
         """
         Post Result object
-        :param result:
+        :param result: Result or plain dictionary
         :return:
         """
         url = self.__resolve_apiuri("/results")
@@ -235,11 +240,13 @@ class OpenTmiClient(object):
             self.logger.warning(error)
         return None
 
+    # @deprecation.deprecated(deprecated_in="v0.4.0", removed_in="v0.5.0",
+    #                        details="Use post_result(Result) instead")
     def upload_results(self, result):
         """
-        Upload result
+        Upload result, and test case if not stored already
         :param result: dictionary
-        :return:
+        :return: Dictionary
         """
         tc_meta = self.__tc_converter(result.tc_metadata) if self.__tc_converter else result
         test_case = self.__lookup_testcase(tc_meta['tcid'])
@@ -250,7 +257,8 @@ class OpenTmiClient(object):
                 return None
 
         result_dict = self.__result_converter(result) if self.__result_converter else result
-        result = Result.from_dict(result_dict)
+        result = Result()
+        result._data = result_dict
         return self.post_result(result)
 
     # Private members
