@@ -1,3 +1,4 @@
+import os
 import unittest
 from opentmi_client.api import Result, Execution, File
 
@@ -48,7 +49,9 @@ class TestResult(unittest.TestCase):
         self.assertEqual(result.data, {"exec": {"verdict": "pass"}, "tcid": "hello"})
 
     def test_from_junit(self):
-        results = Result.from_junit_file("./data/junit_simple.xml")
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        junit_file = os.path.join(dir_path, "../test/data/junit_simple.xml")
+        results = Result.from_junit_file(junit_file)
         self.assertEqual(len(results), 3)
         self.assertEqual(results[0].tcid, "should default path to an empty string")
         self.assertEqual(results[0].verdict, "fail")
