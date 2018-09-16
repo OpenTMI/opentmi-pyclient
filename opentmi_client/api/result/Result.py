@@ -1,16 +1,20 @@
 """
 OpenTMI Result module
 """
+# standard imports
+import json
+# 3rd party imports
 from junitparser import JUnitXml
 from junitparser import Failure as JunitFailure
 from junitparser import Skipped as JunitSkipped
-import json
+from pydash import reduce_, map_keys
+# Internal imports
 from opentmi_client.utils.Base import BaseApi
 from opentmi_client.utils.decorators import setter_rules
 from opentmi_client.api.result.Job import Job
 from opentmi_client.api.result.Execution import Execution
 from opentmi_client.api.result.File import File
-from pydash import reduce_, map_keys
+
 
 class Result(BaseApi):
     """
@@ -22,9 +26,7 @@ class Result(BaseApi):
         """
         Constructor for Result
         :param tcid: String
-        :param execution: Exection
-        :param tcRef: String
-        :param job: Job
+        :param tc_ref: String
         """
         super(Result, self).__init__()
         self.job = Job()
@@ -44,10 +46,10 @@ class Result(BaseApi):
         """
         def reducer_func(_result, value, key):
             if isinstance(value, dict):
-                new_value = map_keys(value, lambda inner_value, inner_key: "{}.{}".format(key, inner_key))
+                new_value = map_keys(value, lambda inner_value, inner_key:
+                                     "{}.{}".format(key, inner_key))
                 return reduce_(new_value, reducer_func, _result)
-            else:
-                return reducer(_result, value, key)
+            return reducer(_result, value, key)
 
         result = Result()
         if reducer:
@@ -61,7 +63,7 @@ class Result(BaseApi):
         """
         Create Result from plain dictionary (JSON)
         :param json_filename: String, filename
-        :param reducer: optional reducer
+        :param reducer: optional reducer function, see Result.from_dict
         :return: Result
         """
         data = json.load(json_filename)
@@ -72,6 +74,10 @@ class Result(BaseApi):
         """
         Read junit file to list of Result's
         :param junit_filename: String, filename
+        :param wrapper: Optional wrapper function, which is called for each case in junit file.
+        Function purpose is to fill optional properties for result.
+        wrapper need to set at least `tcid` which by default is set using case.name
+        e.g. lambda result, case, suite: result.
         :return: [Result]
         """
         xml = JUnitXml.fromfile(junit_filename)
@@ -81,21 +87,16 @@ class Result(BaseApi):
             for case in suite:
                 # handle cases
                 result = Result()
-                if wrapper:
-                    wrapper(result, case, suite)
-                else:
-                    result.tcid = case.name
-                    result.execution.sut.append_cut(case.classname)
                 if case.system_out:
-                    file = File()
-                    file.data = case.system_out
-                    file.name = "system_out"
-                    result.execution.append_log(file)
+                    log_file = File()
+                    log_file.data = case.system_out
+                    log_file.name = "system_out"
+                    result.execution.append_log(log_file)
                 if case.system_err:
-                    file = File()
-                    file.data = case.system_err
-                    file.name = "system_err"
-                    result.execution.append_log(file)
+                    log_file = File()
+                    log_file.data = case.system_err
+                    log_file.name = "system_err"
+                    result.execution.append_log(log_file)
                 result.execution.duration = case.time
                 if isinstance(case.result, JunitFailure):
                     result.execution.verdict = 'fail'
@@ -103,6 +104,11 @@ class Result(BaseApi):
                     result.execution.verdict = 'skip'
                 else:
                     result.execution.verdict = 'pass'
+                if wrapper:
+                    wrapper(result, case, suite)
+                else:
+                    result.tcid = case.name
+                    result.execution.sut.append_cut(case.classname)
                 results_list.append(result)
         return results_list
 
