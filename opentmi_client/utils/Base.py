@@ -41,6 +41,14 @@ class BaseApi(object):
         """
         return len(self._data.keys()) == 0
 
+    def set_data(self, data):
+        """
+        Set whole data dictionary
+        :param data: Dictionary
+        :return: None
+        """
+        self._data = data
+
     @property
     def data(self):
         """

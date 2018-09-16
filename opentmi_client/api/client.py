@@ -258,7 +258,7 @@ class OpenTmiClient(object):
 
         result_dict = self.__result_converter(result) if self.__result_converter else result
         result = Result()
-        result._data = result_dict
+        result.set_data(result_dict)
         return self.post_result(result)
 
     # Private members
