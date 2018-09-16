@@ -45,6 +45,13 @@ class Result(BaseApi):
         :return: Result
         """
         def reducer_func(_result, value, key):
+            """
+            Inner reducer_function
+            :param _result: Result object
+            :param value: value from input dictionary
+            :param key: key from dictionary, nested key is format: "<key>.<inner-key>"
+            :return: Result
+            """
             if isinstance(value, dict):
                 new_value = map_keys(value, lambda inner_value, inner_key:
                                      "{}.{}".format(key, inner_key))
