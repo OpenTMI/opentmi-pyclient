@@ -5,6 +5,7 @@ from opentmi_client.utils.Base import BaseApi
 from opentmi_client.utils.decorators import setter_rules
 from opentmi_client.api.result.File import File
 from opentmi_client.api.result.Environment import Environment
+from opentmi_client.api.result.Sut import Sut
 
 
 class Execution(BaseApi):
@@ -31,7 +32,11 @@ class Execution(BaseApi):
             self.note = note
         if duration:
             self.duration = duration
-        self.environment = environment if environment else Environment()
+        if environment:
+            self.environment = environment
+        else:
+            self.environment = Environment()
+        self.sut = Sut()
 
     @property
     def verdict(self):
@@ -120,12 +125,12 @@ class Execution(BaseApi):
         """
         self.set("logs", value)
 
+    @setter_rules(value_type=File)
     def append_log(self, log_file):
         """
         Appens new file to logs array
         :param log_file: File
         """
-        assert isinstance(log_file, File), "require File instance"
         if not isinstance(self.logs, list):
             self.logs = []
         self.logs.append(log_file)
@@ -146,3 +151,20 @@ class Execution(BaseApi):
         :param value: Environment
         """
         self.set("env", value)
+
+    @property
+    def sut(self):
+        """
+        Getter for sut (Software Under Test)
+        :return: Sut
+        """
+        return self.get("sut")
+
+    @sut.setter
+    @setter_rules(value_type=Sut)
+    def sut(self, value):
+        """
+        Setter for sut (Software Under Test)
+        :param value: Sut
+        """
+        self.set("sut", value)

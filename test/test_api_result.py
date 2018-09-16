@@ -36,3 +36,22 @@ class TestResult(unittest.TestCase):
         result.execution.append_log(log_file)
         self.assertEqual(len(result.execution.logs), 1)
         self.assertEqual(result.execution.logs[0], log_file)
+
+    def test_from_dictionary(self):
+        def reducer_func(_result, value, key):
+            if key == "result":
+                _result.verdict = value.lower()
+            elif key == "test.name":
+                _result.tcid = value
+            return _result
+        result = Result.from_dict({"result": "PASS", "test": {"name": "hello"}}, reducer=reducer_func)
+        self.assertEqual(result.data, {"exec": {"verdict": "pass"}, "tcid": "hello"})
+
+    def test_from_junit(self):
+        results = Result.from_junit_file("./data/junit_simple.xml")
+        self.assertEqual(len(results), 3)
+        self.assertEqual(results[0].tcid, "should default path to an empty string")
+        self.assertEqual(results[0].verdict, "fail")
+        self.assertEqual(results[1].verdict, "skip")
+        self.assertEqual(results[2].verdict, "pass")
+

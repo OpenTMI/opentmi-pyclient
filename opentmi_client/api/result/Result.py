@@ -1,11 +1,16 @@
 """
 OpenTMI Result module
 """
+from junitparser import JUnitXml
+from junitparser import Failure as JunitFailure
+from junitparser import Skipped as JunitSkipped
+import json
 from opentmi_client.utils.Base import BaseApi
 from opentmi_client.utils.decorators import setter_rules
 from opentmi_client.api.result.Job import Job
 from opentmi_client.api.result.Execution import Execution
-
+from opentmi_client.api.result.File import File
+from pydash import reduce_, map_keys
 
 class Result(BaseApi):
     """
@@ -30,15 +35,76 @@ class Result(BaseApi):
             self.tc_ref = tc_ref
 
     @staticmethod
-    def from_dict(dictionary):
+    def from_dict(dictionary, reducer=None):
         """
         Create Result from plain dictionary (JSON)
         :param dictionary: Dict
+        :param reducer: optional, e.g. lambda result, value, key: result
         :return: Result
         """
+        def reducer_func(_result, value, key):
+            if isinstance(value, dict):
+                new_value = map_keys(value, lambda inner_value, inner_key: "{}.{}".format(key, inner_key))
+                return reduce_(new_value, reducer_func, _result)
+            else:
+                return reducer(_result, value, key)
+
         result = Result()
-        result.data = dictionary
+        if reducer:
+            reduce_(dictionary, reducer_func, result)
+        else:
+            result.data = dictionary
         return result
+
+    @staticmethod
+    def from_jsonfile(json_filename, reducer=None):
+        """
+        Create Result from plain dictionary (JSON)
+        :param json_filename: String, filename
+        :param reducer: optional reducer
+        :return: Result
+        """
+        data = json.load(json_filename)
+        return Result.from_dict(data, reducer=reducer)
+
+    @staticmethod
+    def from_junit_file(junit_filename, wrapper=None):
+        """
+        Read junit file to list of Result's
+        :param junit_filename: String, filename
+        :return: [Result]
+        """
+        xml = JUnitXml.fromfile(junit_filename)
+        results_list = []
+        for suite in xml:
+            # handle suites
+            for case in suite:
+                # handle cases
+                result = Result()
+                if wrapper:
+                    wrapper(result, case, suite)
+                else:
+                    result.tcid = case.name
+                    result.execution.sut.append_cut(case.classname)
+                if case.system_out:
+                    file = File()
+                    file.data = case.system_out
+                    file.name = "system_out"
+                    result.execution.append_log(file)
+                if case.system_err:
+                    file = File()
+                    file.data = case.system_err
+                    file.name = "system_err"
+                    result.execution.append_log(file)
+                result.execution.duration = case.time
+                if isinstance(case.result, JunitFailure):
+                    result.execution.verdict = 'fail'
+                elif isinstance(case.result, JunitSkipped):
+                    result.execution.verdict = 'skip'
+                else:
+                    result.execution.verdict = 'pass'
+                results_list.append(result)
+        return results_list
 
     def __str__(self):
         """
