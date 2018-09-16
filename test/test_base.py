@@ -9,6 +9,13 @@ class TestBase(unittest.TestCase):
         self.assertEqual(str(base), '{}')
         self.assertTrue(base.is_empty)
 
+    def test_id(self):
+        base = BaseApi()
+        base._id = "abc"
+        self.assertEqual(base.data, {"_id": "abc"})
+        self.assertEqual(str(base), '{\n  "_id": "abc"\n}')
+        self.assertFalse(base.is_empty)
+
     def test_set(self):
         base = BaseApi()
         base.set('a', 1)
@@ -39,3 +46,65 @@ class TestBase(unittest.TestCase):
         self.assertEqual(base.data, {'b': 'b'})
         self.assertEqual(str(base), '{\n  "b": "b"\n}')
         self.assertFalse(base.is_empty)
+
+    def test_set_data_key_not_exists(self):
+        base = BaseApi()
+        with self.assertRaises(KeyError):
+            base.data = {"a": "a"}
+
+    def test_set_data_key_exists(self):
+        class A(BaseApi):
+            @property
+            def a(self):
+                return self.get("a")
+            @a.setter
+            def a(self, value):
+                self.set("a", value)
+
+        base = A()
+        base.data = {"a": "a"}
+        self.assertEqual(base.data, {"a": "a"})
+        self.assertEqual(base.a, "a")
+
+    def test_set_data_nested_key_not_exists(self):
+        class A(BaseApi):
+            @property
+            def a(self):
+                return self.get("a")
+            @a.setter
+            def a(self, value):
+                self.set("a", value)
+
+        base = A()
+        with self.assertRaises(KeyError):
+            base.data = {"a": {"a": 1}}
+
+    def test_set_data_nested_key_exists(self):
+        class InnerA(BaseApi):
+            @property
+            def a(self):
+                return self.get("a")
+            @a.setter
+            def a(self, value):
+                self.set("a", value)
+
+        class A(BaseApi):
+            def __init__(self):
+                super(A, self).__init__()
+                self.a = InnerA()
+            @property
+            def a(self):
+                return self.get("a")
+            @a.setter
+            def a(self, value):
+                self.set("a", value)
+
+        base = A()
+        base.data = {"a": {"a": 1}}
+        self.assertEqual(base.data, {"a": {"a": 1}})
+        self.assertEqual(base.a, {"a": 1})
+
+    def test_set_data_empty(self):
+        base = BaseApi()
+        base.data = {}
+        self.assertEqual(base.data, {})
