@@ -59,10 +59,10 @@ class OpenTmiClient(object):
         :return: OpenTmiClient
         """
         payload = {
-            "username": username,
+            "email": username,
             "password": password
         }
-        url = self.__transport.host + "/login"
+        url = self.__transport.host + "/auth/login"
         response = self.__transport.post_json(url, payload)
         token = response.get("token")
         self.logger.info("Login success. Token: %s", token)
