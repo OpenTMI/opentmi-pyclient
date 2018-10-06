@@ -88,26 +88,24 @@ class OpenTmiClient(object):
             "email": username,
             "password": password
         }
-        url = self.__resolve_url("/auth/login")
+        url = self.__transport.host + "/auth/login"
         response = self.__transport.post_json(url, payload)
         token = response.get("token")
         self.logger.info("Login success. Token: %s", token)
         self.set_token(token)
         return self
 
-    def login_with_token(self, token, service=None):
+    def login_with_access_token(self, access_token, service="github"):
         """
-        Login using token
-        :param token: token as a string
-        :param service: optional service to be use for login.
-        Supported service depend on opentmi server.
+        Login to OpenTMI server using access token
+        :param access_token: access token to be used
+        :param service: access token provider
+        :return: OpenTmiClient
         """
-        if not service:
-            self.set_token(token)
-            return self
-        payload = {"token": token}
-        self.logout()
-        url = self.__resolve_url("/auth/" + service + "/token")
+        payload = {
+            "access_token": access_token
+        }
+        url = "{}/auth/{}/token".format(self.__transport.host, service)
         response = self.__transport.post_json(url, payload)
         token = response.get("token")
         self.logger.info("Login success. Token: %s", token)
