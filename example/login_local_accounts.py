@@ -1,5 +1,5 @@
-import os
+from os import getenv
 from opentmi_client import OpenTmiClient
 
 client = OpenTmiClient(port=3000)
-client.login(username=os.getenv('USERNAME'), password=os.getenv('PASSWORD'))
+client.login(username=getenv('USERNAME'), password=getenv('PASSWORD'))
