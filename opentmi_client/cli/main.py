@@ -249,7 +249,8 @@ class OpentTMIClientCLI(object):
 
         raise NotImplementedError('store')
 
-    def create_client(self, args):
+    @staticmethod
+    def create_client(args):
         """
         Create OpenTmiClient instance based on args
         :param args: arguments
