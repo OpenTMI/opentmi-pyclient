@@ -303,7 +303,8 @@ class OpenTmiClient(object):
         """
         function to check if login is done.
         If not try to use environment variables by default
-        :param raise_if_fail: Boolean, raise if login failed or env variabels are does not exists. Default False
+        :param raise_if_fail: Boolean, raise if login failed
+        or env variables are does not exists. Default False
         :return: OpenTmiClient
         :throws: OpentmiException in case of failure
         """
@@ -319,6 +320,7 @@ class OpenTmiClient(object):
             return self.login(username, password)
         if raise_if_fail:
             raise OpentmiException("login required")
+        return self
 
     # Private members
 
