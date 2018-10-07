@@ -81,7 +81,7 @@ class File(BaseApi):
         """
         self.set("data", value)
 
-    def set_data(self, value, encoding="raw"):
+    def set_file_data(self, value, encoding="raw"):
         """
         Set string data
         :param value: str

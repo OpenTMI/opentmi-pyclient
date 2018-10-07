@@ -30,7 +30,7 @@ class TestResult(unittest.TestCase):
         log_file = File()
         log_file.name = "stderr.log"
         self.assertEqual(log_file.name, "stderr.log")
-        log_file.set_data("test")
+        log_file.set_file_data("test")
         self.assertEqual(log_file.encoding, "raw")
         self.assertEqual(str(log_file), "stderr.log")
         self.assertEqual(log_file.data.decode(), "test")
