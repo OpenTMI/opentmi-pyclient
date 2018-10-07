@@ -14,7 +14,7 @@ class Test:
     def api(self):
         return True
 
-    def try_login(self, raise_if_fail):
+    def _try_login(self, raise_if_fail):
         return self
 
     @property
@@ -56,12 +56,12 @@ class TestTools(unittest.TestCase):
 
     def test_requires_logged_in(self):
         test = Test(logged_in=True)
-        with patch.object(test, 'try_login') as monkey:
+        with patch.object(test, '_try_login') as monkey:
             self.assertTrue(test.api())
             self.assertTrue(monkey.notCalled())
 
         test = Test(logged_in=False)
-        with patch.object(test, 'try_login') as monkey:
+        with patch.object(test, '_try_login') as monkey:
             self.assertTrue(test.api())
             self.assertTrue(monkey.calledOnceWith(raise_if_fail=True))
 

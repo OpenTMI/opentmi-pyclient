@@ -88,11 +88,11 @@ class TestClient(unittest.TestCase):
     def test_try_login_raise_when_required(self):
         client = Client()
         with self.assertRaises(OpentmiException):
-            client.try_login(raise_if_fail=True)
+            client._try_login(raise_if_fail=True)
 
     def test_try_login_not_raise_by_default(self):
         client = Client()
-        client.try_login()
+        client._try_login()
 
     @mock.patch.dict(os.environ, {'OPENTMI_GITHUB_ACCESS_TOKEN': 'a.b.c'})
     @patch('opentmi_client.transport.Transport.post_json', side_effect=mocked_post)

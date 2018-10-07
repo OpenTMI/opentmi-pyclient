@@ -17,7 +17,7 @@ class Build(BaseApi):
         super(Build, self).__init__()
         self.target = Target()
         self.vcs = []
-        self.Ci = Ci()
+        self.ci_tool = Ci()
         if name:
             self.name = name
 

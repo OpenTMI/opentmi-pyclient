@@ -21,7 +21,7 @@ def requires_logged_in(func):
         """
         self = args[0]
         if not self.is_logged_in:
-            self.try_login(raise_if_fail=True)
+            self._try_login(raise_if_fail=True)
         return func(*args)
     return ret_fn
 

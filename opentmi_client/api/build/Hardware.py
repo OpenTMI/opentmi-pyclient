@@ -7,11 +7,8 @@ from opentmi_client.utils.decorators import setter_rules
 
 class Hardware(BaseApi):
     """
-        Target Class
-        """
-
-    def __init__(self):
-        super(Hardware, self).__init__()
+    Target Class
+    """
 
     @property
     def vendor(self):

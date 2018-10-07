@@ -62,7 +62,7 @@ class OpenTmiClient(object):
         # backward compatibility
         self.__result_converter = None
         self.__tc_converter = None
-        self.try_login()
+        self._try_login()
 
     def set_result_converter(self, func):
         """
@@ -207,7 +207,7 @@ class OpenTmiClient(object):
         :return:
         """
         try:
-            campaign_id = self.get_campaign_id(suite)
+            campaign_id = self.__get_campaign_id(suite)
         except OpentmiException as error:
             self.logger.warning("exception happened while resolving suite: %s, %s",
                                 suite, error)
@@ -222,20 +222,6 @@ class OpenTmiClient(object):
         return suite
 
     # Campaign
-    # @requires_logged_in
-    def get_campaign_id(self, campaign_name):
-        """
-        get campaign id from name
-        :param campaign_name:
-        :return: string
-        """
-        if is_object_id(campaign_name):
-            return campaign_name
-
-        for campaign in self.__get_campaigns():
-            if campaign['name'] == campaign_name:
-                return campaign['_id']
-        return None
 
     # @requires_logged_in
     def get_campaigns(self):
@@ -332,7 +318,9 @@ class OpenTmiClient(object):
         result.set_data(result_dict)
         return self.post_result(result)
 
-    def try_login(self, raise_if_fail=False):
+    # Private members
+
+    def _try_login(self, raise_if_fail=False):
         """
         function to check if login is done.
         If not try to use environment variables by default
@@ -355,7 +343,20 @@ class OpenTmiClient(object):
             raise OpentmiException("login required")
         return self
 
-    # Private members
+    # @requires_logged_in
+    def __get_campaign_id(self, campaign_name):
+        """
+        get campaign id from name
+        :param campaign_name:
+        :return: string
+        """
+        if is_object_id(campaign_name):
+            return campaign_name
+
+        for campaign in self.__get_campaigns():
+            if campaign['name'] == campaign_name:
+                return campaign['_id']
+        return None
 
     def __get_testcases(self, filters=None):
         url = self.__resolve_apiuri("/testcases")
