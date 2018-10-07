@@ -3,8 +3,9 @@ Collect all utils API's
 """
 from opentmi_client.utils.tools import is_object_id
 from opentmi_client.utils.tools import resolve_host
-from opentmi_client.utils.tools import archive_files
+from opentmi_client.utils.tools import is_object_id, archive_files
 from opentmi_client.utils.tools import remove_empty_from_dict
+from opentmi_client.utils.tools import requires_logged_in
 from opentmi_client.utils.logger import get_logger
 from opentmi_client.utils.exceptions import OpentmiException
 from opentmi_client.utils.exceptions import TransportException
