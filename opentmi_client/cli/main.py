@@ -258,12 +258,10 @@ class OpentTMIClientCLI(object):
         client = OpenTmiClient(host=args.host, port=args.port)
         if args.user:
             if args.password:
-                self.logger.debug("Use credentials from env variable")
                 client.login(args.user, args.password)
             else:
                 raise OpentmiException("password missing")
         elif args.token:
-            self.logger.debug("Use token from env variable")
             service = args.token_service or "github"
             client.login_with_access_token(args.token, service)
         return client

@@ -6,7 +6,8 @@ import os
 
 
 # Application modules
-from opentmi_client.utils import is_object_id, get_logger, requires_logged_in
+from opentmi_client.utils import is_object_id, get_logger
+# from opentmi_client.utils import requires_logged_in
 from opentmi_client.utils import OpentmiException, TransportException
 from opentmi_client.transport import Transport
 
@@ -101,6 +102,7 @@ class OpenTmiClient(object):
             "access_token": access_token
         }
         url = "{}/auth/{}/token".format(self.__transport.host, service)
+        self.logger.debug("Login using %s token", service)
         response = self.__transport.post_json(url, payload)
         token = response.get("token")
         self.logger.info("Login success. Token: %s", token)

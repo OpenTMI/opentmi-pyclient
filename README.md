@@ -93,7 +93,7 @@ Test case document schema is available [here](https://github.com/OpenTMI/opentmi
 
 Most of API's require authentication and user have multiple options to authenticate:
 * use `Client.login(<username>, <password>)`
-* use `Client.login_with_token(<token>, [<service>])`
+* use `Client.login_with_access_token(<token>, [<service>])`
   * service are optional and depend on server support
 * Use environment variables:
   * Using username and password: `OPENTMI_USERNAME` and `OPENTMI_PASSWORD` or
