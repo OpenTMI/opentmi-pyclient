@@ -91,11 +91,12 @@ Test case document schema is available [here](https://github.com/OpenTMI/opentmi
 
 ## Authentication
 
-User have multiple options to authenticate:
+There are multiple options to authenticate:
 * use `Client.login(<username>, <password>)`
 * use `Client.login_with_access_token(<token>, [<service>])`
-  * service are optional and depend on server support
-* Use environment variables (trird automatically when constructor is called):
+  * service are optional and supported values depend on server support.
+   By default `github` is in use.
+* Use environment variables (tries login automatically when constructor is called):
   * Using username and password: `OPENTMI_USERNAME` and `OPENTMI_PASSWORD` or
   * Using github access token: `OPENTMI_GITHUB_ACCESS_TOKEN`
 * use token in host like `http://<token>@localhost`
