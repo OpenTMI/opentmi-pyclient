@@ -12,6 +12,7 @@ class Target(BaseApi):
     """
     def __init__(self):
         super(Target, self).__init__()
+        self.hardware = Hardware()
 
     @property
     def type(self):
@@ -32,16 +33,16 @@ class Target(BaseApi):
         return self.set("type", value)
 
     @property
-    def os(self):
+    def operating_system(self):
         """
         Getter for target type
         :return: String
         """
         return self.get("os")
 
-    @os.setter
+    @operating_system.setter
     @setter_rules(value_type=str, enum="win32 win64 unix32 unix64 mbedOS unknown")
-    def os(self, value):
+    def operating_system(self, value):
         """
         Setter for target os
         :param value: String (win32 win64 unix32 unix64 mbedOS unknown)
@@ -50,16 +51,16 @@ class Target(BaseApi):
         return self.set("os", value)
 
     @property
-    def hw(self):
+    def hardware(self):
         """
         Getter for target hw
         :return: Hardware
         """
         return self.get("hw")
 
-    @hw.setter
+    @hardware.setter
     @setter_rules(value_type=Hardware)
-    def hw(self, value):
+    def hardware(self, value):
         """
         Setter for target hw
         :param value: Hardware

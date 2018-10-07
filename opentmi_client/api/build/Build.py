@@ -15,6 +15,9 @@ class Build(BaseApi):
     def __init__(self,
                  name=None):
         super(Build, self).__init__()
+        self.target = Target()
+        self.vcs = []
+        self.Ci = Ci()
         if name:
             self.name = name
 

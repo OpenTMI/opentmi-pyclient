@@ -13,9 +13,9 @@ build.ci_tool = ci
 target = Target()
 hw = Hardware()
 hw.model = "K64F"
-target.hw = hw
+target.hardware = hw
 build.target = target
-build.target.os = "win32"
+build.target.operating_system = "win32"
 
 print(build.data)
 client.post_build(build)
