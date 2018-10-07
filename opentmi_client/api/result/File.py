@@ -88,12 +88,11 @@ class File(BaseApi):
         :param encoding: str, "raw" by default
         """
         self.encoding = encoding
+        data = bytearray()
         try:
             # python 2
-            data = bytearray()
             data.extend(value)
         except TypeError:
             # Python3:
-            data = bytearray()
             data.extend(map(ord, value))
-        self.data = value
+        self.data = data
