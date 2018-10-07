@@ -269,7 +269,7 @@ class OpenTmiClient(object):
             self.__create_testcase(metadata)
         return self
 
-	# @requires_logged_in
+    # @requires_logged_in
     @setter_rules(value_type=Result)
     def post_result(self, result):
         """
@@ -317,6 +317,29 @@ class OpenTmiClient(object):
         result = Result()
         result.set_data(result_dict)
         return self.post_result(result)
+
+    def try_login(self, raise_if_fail=False):
+        """
+        function to check if login is done.
+        If not try to use environment variables by default
+        :param raise_if_fail: Boolean, raise if login failed
+        or env variables are does not exists. Default False
+        :return: OpenTmiClient
+        :throws: OpentmiException in case of failure
+        """
+        # use environment variables if available
+        token = os.getenv(ENV_GITHUB_ACCESS_TOKEN)
+        if token:
+            self.logger.info("Using github access token from environment variable")
+            return self.login_with_access_token(access_token=token, service="github")
+        username = os.getenv(ENV_OPENTMI_USERNAME)
+        password = os.getenv(ENV_OPENTMI_PASSWORD)
+        if username and password:
+            self.logger.info("Using opentmi credentials from environment variable")
+            return self.login(username, password)
+        if raise_if_fail:
+            raise OpentmiException("login required")
+        return self
 
     # Private members
 

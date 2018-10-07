@@ -54,7 +54,7 @@ class TestTools(unittest.TestCase):
         self.assertTrue(os.path.exists(zip))
         os.remove(zip)
 
-	def test_requires_logged_in(self):
+    def test_requires_logged_in(self):
         test = Test(logged_in=True)
         with patch.object(test, 'try_login') as monkey:
             self.assertTrue(test.api())
