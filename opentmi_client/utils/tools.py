@@ -74,6 +74,7 @@ def requires_logged_in(func):
         :return: return decorated function return values
         """
         self = args[0]
-        self.try_login()
+        if not self.is_logged_in:
+            self.try_login()
         return func(*args)
     return ret_fn

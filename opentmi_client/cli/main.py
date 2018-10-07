@@ -255,7 +255,7 @@ class OpentTMIClientCLI(object):
         :param args: arguments
         :return: OpenTmiClient instance
         """
-        client = OpenTmiClient(host=args.host, port=args.port, token=args.token)
+        client = OpenTmiClient(host=args.host, port=args.port)
         if args.user:
             if args.password:
                 self.logger.debug("Use credentials from env variable")
@@ -264,7 +264,8 @@ class OpentTMIClientCLI(object):
                 raise OpentmiException("password missing")
         elif args.token:
             self.logger.debug("Use token from env variable")
-            client.login_with_token(args.token, args.token_service)
+            service = args.token_service or "github"
+            client.login_with_access_token(args.token, service)
         return client
 
     def subcmd_store_build(self, args):

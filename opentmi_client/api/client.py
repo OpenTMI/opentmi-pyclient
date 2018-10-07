@@ -17,7 +17,7 @@ ENV_OPENTMI_USERNAME = "OPENTMI_USERNAME"
 ENV_OPENTMI_PASSWORD = "OPENTMI_PASSWORD"
 
 
-#pylint: disable-msg=too-many-arguments
+# pylint: disable-msg=too-many-arguments
 def create(host='localhost', port=None, result_converter=None, testcase_converter=None):
     """
     Generic create -api for Client
@@ -44,22 +44,17 @@ class OpenTmiClient(object):
     def __init__(self,
                  host='127.0.0.1',
                  port=None,
-                 token=None,
                  transport=None):
         """
         Constructor for OpenTMI client
         :param host: opentmi host address (default="localhost")
         :param port: opentmi server port (default=3000)
-        :param result_converter:
-        :param testcase_converter: function
         :param transport: optional Transport layer. Mostly for testing purpose
         """
         self.__logger = get_logger()
         self.__result_converter = None
         self.__tc_converter = None
-        self.__transport = Transport(host, port, token) if not transport else transport
-        if transport and token:
-            transport.set_token(token)
+        self.__transport = Transport(host, port) if not transport else transport
 
     def set_result_converter(self, func):
         """
@@ -88,7 +83,7 @@ class OpenTmiClient(object):
             "email": username,
             "password": password
         }
-        url = self.__transport.host + "/auth/login"
+        url = self.__resolve_url("/auth/login")
         response = self.__transport.post_json(url, payload)
         token = response.get("token")
         self.logger.info("Login success. Token: %s", token)
@@ -161,7 +156,7 @@ class OpenTmiClient(object):
         """
         return self.__version
 
-    @requires_logged_in
+    # @requires_logged_in
     def upload_build(self, build):
         """
         Upload build
@@ -181,7 +176,7 @@ class OpenTmiClient(object):
         return None
 
     # Suite
-    @requires_logged_in
+    # @requires_logged_in
     def get_suite(self, suite, options=''):
         """
         get single suite informations
@@ -205,7 +200,7 @@ class OpenTmiClient(object):
         return suite
 
     # Campaign
-    @requires_logged_in
+    # @requires_logged_in
     def get_campaign_id(self, campaign_name):
         """
         get campaign id from name
@@ -220,7 +215,7 @@ class OpenTmiClient(object):
                 return campaign['_id']
         return None
 
-    @requires_logged_in
+    # @requires_logged_in
     def get_campaigns(self):
         """
         Get campaigns
@@ -228,7 +223,7 @@ class OpenTmiClient(object):
         """
         return self.__get_campaigns()
 
-    @requires_logged_in
+    # @requires_logged_in
     def get_campaign_names(self):
         """
         Get campaign names
@@ -240,7 +235,7 @@ class OpenTmiClient(object):
             campaign_names.append(campaign['name'])
         return campaign_names
 
-    @requires_logged_in
+    # @requires_logged_in
     def get_testcases(self, filters=None):
         """
         Get testcases
@@ -249,7 +244,7 @@ class OpenTmiClient(object):
         """
         return self.__get_testcases(filters)
 
-    @requires_logged_in
+    # @requires_logged_in
     def update_testcase(self, metadata):
         """
         update test case
@@ -266,7 +261,7 @@ class OpenTmiClient(object):
             self.__create_testcase(metadata)
         return self
 
-    @requires_logged_in
+    # @requires_logged_in
     def upload_results(self, result):
         """
         Upload result
@@ -308,13 +303,11 @@ class OpenTmiClient(object):
         :return: OpenTmiClient
         :throws: OpentmiException in case of failure
         """
-        if self.is_logged_in:
-            return self
         # use environment variables if available
         token = os.getenv(ENV_GITHUB_ACCESS_TOKEN)
         if token:
             self.logger.info("Using github access token from environment variable")
-            return self.login_with_token(token=token, service="github")
+            return self.login_with_access_token(access_token=token, service="github")
         username = os.getenv(ENV_OPENTMI_USERNAME)
         password = os.getenv(ENV_OPENTMI_PASSWORD)
         if username and password:
