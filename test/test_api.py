@@ -79,23 +79,25 @@ class TestClient(unittest.TestCase):
         client = Client()
         self.assertEqual(client.get_version(), 0)
 
-    def test_try_login_raise(self):
+    def test_try_login_raise_when_required(self):
         client = Client()
         with self.assertRaises(OpentmiException):
-            client.try_login()
+            client.try_login(raise_if_fail=True)
+
+    def test_try_login_not_raise_by_default(self):
+        client = Client()
+        client.try_login()
 
     @mock.patch.dict(os.environ, {'OPENTMI_GITHUB_ACCESS_TOKEN': 'a.b.c'})
     @patch('opentmi_client.transport.Transport.post_json', side_effect=mocked_post)
     def test_try_login_token(self,  mock_post):
         client = Client()
-        client.try_login()
         mock_post.assert_called_once_with("http://127.0.0.1/auth/github/token", {"token": "a.b.c"})
 
     @mock.patch.dict(os.environ, {'OPENTMI_USERNAME': 'username', "OPENTMI_PASSWORD": "passw"})
     @patch('opentmi_client.transport.Transport.post_json', side_effect=mocked_post)
     def test_try_login_token(self, mock_post):
         client = Client()
-        client.try_login()
         mock_post.assert_called_once_with("http://127.0.0.1/auth/login", {"email": "username", "password": "passw"})
 
     @patch('opentmi_client.transport.Transport.post_json', side_effect=mocked_post)

@@ -95,7 +95,7 @@ Most of API's require authentication and user have multiple options to authentic
 * use `Client.login(<username>, <password>)`
 * use `Client.login_with_access_token(<token>, [<service>])`
   * service are optional and depend on server support
-* Use environment variables:
+* Use environment variables (trird automatically when constructor is called):
   * Using username and password: `OPENTMI_USERNAME` and `OPENTMI_PASSWORD` or
   * Using github access token: `OPENTMI_GITHUB_ACCESS_TOKEN`
 * use token in host like `http://<token>@localhost`

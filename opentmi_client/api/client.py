@@ -30,7 +30,7 @@ def create(host='localhost', port=None, result_converter=None, testcase_converte
     """
     client = OpenTmiClient(host, port)
     client.set_result_converter(result_converter)
-    client.set_tc_converted(testcase_converter)
+    client.set_tc_converter(testcase_converter)
     return client
 
 
@@ -56,6 +56,7 @@ class OpenTmiClient(object):
         self.__result_converter = None
         self.__tc_converter = None
         self.__transport = Transport(host, port) if not transport else transport
+        self.try_login()
 
     def set_result_converter(self, func):
         """
@@ -65,7 +66,7 @@ class OpenTmiClient(object):
         """
         self.__result_converter = func
 
-    def set_tc_converted(self, func):
+    def set_tc_converter(self, func):
         """
         Set custom test case converter
         :param func: conversion function
@@ -298,10 +299,11 @@ class OpenTmiClient(object):
             self.logger.warning(error)
         return None
 
-    def try_login(self):
+    def try_login(self, raise_if_fail=False):
         """
         function to check if login is done.
         If not try to use environment variables by default
+        :param raise_if_fail: Boolean, raise if login failed or env variabels are does not exists. Default False
         :return: OpenTmiClient
         :throws: OpentmiException in case of failure
         """
@@ -315,7 +317,8 @@ class OpenTmiClient(object):
         if username and password:
             self.logger.info("Using opentmi credentials from environment variable")
             return self.login(username, password)
-        raise OpentmiException("login required")
+        if raise_if_fail:
+            raise OpentmiException("login required")
 
     # Private members
 
