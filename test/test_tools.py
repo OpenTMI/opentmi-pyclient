@@ -1,9 +1,25 @@
 # pylint: disable=missing-docstring
 
 import os
+import unittest.mock as mock
 import unittest
-from opentmi_client.utils import is_object_id, resolve_host, resolve_token, archive_files
+from opentmi_client.utils import is_object_id, resolve_host, resolve_token, archive_files, requires_logged_in
 
+
+class Test:
+    def __init__(self, logged_in):
+        self.logged_in = logged_in
+
+    @requires_logged_in
+    def api(self):
+        return True
+
+    def try_login(self, raise_if_fail):
+        return self
+
+    @property
+    def is_logged_in(self):
+        return self.logged_in
 
 class TestTools(unittest.TestCase):
     def test_is_object_id(self):
@@ -35,6 +51,18 @@ class TestTools(unittest.TestCase):
         archive_files(['test_tools.py'], zip, os.path.dirname(__file__))
         self.assertTrue(os.path.exists(zip))
         os.remove(zip)
+
+    def test_requires_logged_in(self):
+        test = Test(logged_in=True)
+        with mock.patch.object(test, 'try_login') as monkey:
+            self.assertTrue(test.api())
+            self.assertTrue(monkey.notCalled())
+
+        test = Test(logged_in=False)
+        with mock.patch.object(test, 'try_login') as monkey:
+            self.assertTrue(test.api())
+            self.assertTrue(monkey.calledOnceWith(raise_if_fail=True))
+
 
 if __name__ == '__main__':
     unittest.main()

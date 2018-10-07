@@ -50,9 +50,14 @@ class TestClient(unittest.TestCase):
     def test_token(self):
         tr_mock = Transport()
         mock_transport(tr_mock)
+        tr_mock.has_token = MagicMock()
+        def has_token(*args):
+            return True
+        tr_mock.has_token.return_value = True
         client = Client(transport=tr_mock)
         client.set_token(DUMMY_TOKEN)
         tr_mock.set_token.assert_called_once_with(DUMMY_TOKEN)
+        self.assertEqual(client.is_logged_in, True)
 
     def test_login(self):
         tr_mock = Transport()
@@ -68,6 +73,7 @@ class TestClient(unittest.TestCase):
         client.login_with_access_token("token", "github")
         tr_mock.post_json.assert_called_once_with("http://127.0.0.1/auth/github/token",
                                                   {"access_token": "token"})
+
     def test_logout(self):
         tr_mock = Transport()
         mock_transport(tr_mock)
