@@ -5,6 +5,25 @@ from enum import Enum
 import re
 import functools
 
+def requires_logged_in(func):
+    """
+    Decorator which verify that client are logged in
+    if not but env variables are available
+    it tries to loggin using them
+    :param fn: function to decorated
+    :return: wrapper function
+    """
+    def ret_fn(*args):
+        """
+        wrapper function
+        :param args: argument for decorated function
+        :return: return decorated function return values
+        """
+        self = args[0]
+        if not self.is_logged_in:
+            self.try_login(raise_if_fail=True)
+        return func(*args)
+    return ret_fn
 
 def setter_rules(value_type=str, each_type=None, enum=None, match=None):
     """

@@ -81,13 +81,13 @@ class File(BaseApi):
         """
         self.set("data", value)
 
-    @setter_rules()
-    def set_data(self, value):
+    def set_data(self, value, encoding="raw"):
         """
         Set string data
         :param value: str
+        :param encoding: str, "raw" by default
         """
-        self.encoding = 'raw'
+        self.encoding = encoding
         try:
             # python 2
             data = bytearray()
@@ -96,4 +96,4 @@ class File(BaseApi):
             # Python3:
             data = bytearray()
             data.extend(map(ord, value))
-        self.set("data", data)
+        self.data = value
