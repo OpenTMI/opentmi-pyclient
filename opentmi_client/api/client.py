@@ -62,7 +62,7 @@ class OpenTmiClient(object):
         # backward compatibility
         self.__result_converter = None
         self.__tc_converter = None
-        self._try_login()
+        self.try_login()
 
     def set_result_converter(self, func):
         """
@@ -318,9 +318,7 @@ class OpenTmiClient(object):
         result.set_data(result_dict)
         return self.post_result(result)
 
-    # Private members
-
-    def _try_login(self, raise_if_fail=False):
+    def try_login(self, raise_if_fail=False):
         """
         function to check if login is done.
         If not try to use environment variables by default
@@ -342,6 +340,8 @@ class OpenTmiClient(object):
         if raise_if_fail:
             raise OpentmiException("login required")
         return self
+
+    # Private members
 
     # @requires_logged_in
     def __get_campaign_id(self, campaign_name):
