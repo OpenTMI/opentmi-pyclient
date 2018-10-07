@@ -91,7 +91,7 @@ Test case document schema is available [here](https://github.com/OpenTMI/opentmi
 
 ## Authentication
 
-Most of API's require authentication and user have multiple options to authenticate:
+User have multiple options to authenticate:
 * use `Client.login(<username>, <password>)`
 * use `Client.login_with_access_token(<token>, [<service>])`
   * service are optional and depend on server support
