@@ -13,6 +13,7 @@ from opentmi_client.utils import OpentmiException, TransportException
 from opentmi_client.utils.decorators import setter_rules
 from opentmi_client.transport import Transport
 from opentmi_client.api.result import Result
+from opentmi_client.api.build import Build
 
 
 REQUEST_TIMEOUT = 30
@@ -165,23 +166,36 @@ class OpenTmiClient(object):
         return self.__version
 
     # @requires_logged_in
-    def upload_build(self, build):
+    @setter_rules(value_type=Build)
+    def post_build(self, build):
         """
-        Upload build
-        :param build:
-        :return:
+        Send build
+        :param build: Build object
+        :return: Stored build data
         """
-        payload = build
+        payload = build.data
         url = self.__resolve_apiuri("/duts/builds")
         try:
             data = self.__transport.post_json(url, payload)
-            self.logger.debug("build uploaded successfully")
+            self.logger.debug("build uploaded successfully, _id: %s", data.get("_id"))
             return data
         except TransportException as error:
             self.logger.warning("Result upload failed: %s (status: %s)", error.message, error.code)
         except OpentmiException as error:
             self.logger.warning(error)
         return None
+
+    # @requires_logged_in
+    def upload_build(self, build):
+        """
+        Upload build
+        :param build:
+        :return:
+        """
+        build_dict = build
+        build = Build()
+        build.set_data(build_dict)
+        return self.post_build(build)
 
     # Suite
     # @requires_logged_in
@@ -288,7 +302,7 @@ class OpenTmiClient(object):
             #    files = {"file": ("logs.zip", open(zipFile), 'rb') }
             #    self.logger.debug(files)
             data = self.__transport.post_json(url, payload, files=files)
-            self.logger.debug("result uploaded successfully")
+            self.logger.debug("result uploaded successfully, _id: %s", data.get("_id"))
             return data
         except TransportException as error:
             self.logger.warning("result uploaded failed: %s. status_code: %d",

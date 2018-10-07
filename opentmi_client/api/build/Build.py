@@ -5,6 +5,7 @@ from opentmi_client.utils.Base import BaseApi
 from opentmi_client.utils.decorators import setter_rules
 from opentmi_client.api.build.Ci import Ci
 from opentmi_client.api.build.Vcs import Vcs
+from opentmi_client.api.build.Target import Target
 
 
 class Build(BaseApi):
@@ -142,3 +143,21 @@ class Build(BaseApi):
         :return: value
         """
         self.set("changeId", value)
+
+    @property
+    def target(self):
+        """
+        Getter for target
+        :return: Target
+        """
+        return self.get("target")
+
+    @target.setter
+    @setter_rules(value_type=Target)
+    def target(self, value):
+        """
+        Getter for target
+        :param value: Target instance
+        :return: value
+        """
+        self.set("target", value)

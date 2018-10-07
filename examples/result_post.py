@@ -4,4 +4,4 @@ client = OpenTmiClient()
 result = Result()
 result.tcid = "test-case-a"
 result.verdict = "pass"
-client.upload_results(result.data)
+client.post_result(result)

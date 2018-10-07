@@ -4,4 +4,3 @@ client = OpenTmiClient()
 
 result = Result.from_dict({"tcid": "abc", "execution": {"verdict": "pass"}})
 print(result.data)
-client.post_result(result)

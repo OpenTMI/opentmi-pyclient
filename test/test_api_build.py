@@ -1,5 +1,5 @@
 import unittest
-from opentmi_client.api import Build, Ci, Vcs
+from opentmi_client.api import Build, Ci, Vcs, Target, Hardware
 
 
 class TestBuild(unittest.TestCase):
@@ -62,3 +62,27 @@ class TestBuild(unittest.TestCase):
         self.assertEqual(vcs.system, 'git')
         vcs.url = 'url'
         self.assertEqual(vcs.url, 'url')
+
+    def test_target(self):
+        build = Build()
+        with self.assertRaises(TypeError):
+            build.target = 'invalid'
+        target = Target()
+        build.target = target
+        target.os = "win32"
+        self.assertEqual(build.target.os, 'win32')
+        target.type = "hardware"
+        self.assertEqual(build.target.type, 'hardware')
+        with self.assertRaises(TypeError):
+            target.hw = 'invalid'
+        hw = Hardware()
+        target.hw = hw
+        hw.model = 'abc'
+        self.assertEqual(build.target.hw.model, 'abc')
+        hw.vendor = 'def'
+        self.assertEqual(build.target.hw.vendor, 'def')
+        hw.rev = 'qwe'
+        self.assertEqual(build.target.hw.rev, 'qwe')
+        hw.meta = 'ooo'
+        self.assertEqual(build.target.hw.meta, 'ooo')
+
