@@ -43,7 +43,7 @@ class Event(BaseApi):
     @property
     def eid(self):
         """
-        Getter for id
+        Getter for event id
         :return: String
         """
         return self.get("id")
@@ -52,7 +52,7 @@ class Event(BaseApi):
     @setter_rules()
     def eid(self, value):
         """
-        Setter for id
+        Setter for event id
         :param value: string
         """
         self.set("id", value)
@@ -114,7 +114,7 @@ class Event(BaseApi):
     def duration(self):
         """
         Getter for duration
-        :return: String
+        :return: float
         """
         return self.get("duration")
 
@@ -123,7 +123,7 @@ class Event(BaseApi):
     def duration(self, value):
         """
         Setter for duration
-        :param value: number
+        :param value: float
         """
         self.set("duration", value)
 
