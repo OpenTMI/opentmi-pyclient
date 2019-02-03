@@ -26,7 +26,8 @@ ENV_OPENTMI_PASSWORD = "OPENTMI_PASSWORD"
 
 
 # pylint: disable-msg=too-many-arguments
-def create(host='localhost', port=None, result_converter=None, testcase_converter=None, logger=None):
+def create(host='localhost', port=None, result_converter=None,
+           testcase_converter=None, logger=None):
     """
     Generic create -api for Client
     :param host:
@@ -60,6 +61,7 @@ class OpenTmiClient(object):
         :param host: opentmi host address (default="localhost")
         :param port: opentmi server port (default=3000)
         :param transport: optional Transport layer. Mostly for testing purpose
+        :param logger: optional Logging instance.
         """
         self.__logger = logger or get_logger()
         self.__transport = Transport(host, port) if not transport else transport
