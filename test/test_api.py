@@ -17,6 +17,7 @@ def mocked_post(*args, **kwargs):
         return None
     return args[1]
 
+
 def mocked_put(*args, **kwargs):
     if args[1].get("exception") == "TransportException":
         raise TransportException("")
@@ -26,10 +27,12 @@ def mocked_put(*args, **kwargs):
         return None
     return args[1]
 
+
 def mocked_get(*args, **kwargs):
     if kwargs.get('params', {}).get('tcid') == "notfound":
         return []
     return [{"tcid": "abc"}]
+
 
 def mock_transport(transport):
     transport.set_token =  MagicMock()
@@ -37,6 +40,7 @@ def mock_transport(transport):
     transport.get_json = MagicMock()
     transport.post_json = MagicMock()
     transport.put_json = MagicMock()
+
 
 DUMMY_TOKEN = "abc"
 

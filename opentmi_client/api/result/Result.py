@@ -14,6 +14,7 @@ from opentmi_client.utils.decorators import setter_rules
 from opentmi_client.api.result.Job import Job
 from opentmi_client.api.result.Execution import Execution
 from opentmi_client.api.result.File import File
+from opentmi_client.api.result.Dut import Dut
 
 
 class Result(BaseApi):
@@ -248,3 +249,30 @@ class Result(BaseApi):
         :param value: String
         """
         self.set("campaignRef", value)
+
+    @property
+    def duts(self):
+        """
+        Getter for duts
+        :return: List<Dut>
+        """
+        return self.get("duts")
+
+    @duts.setter
+    @setter_rules(value_type=list, each_type=Dut)
+    def duts(self, value):
+        """
+        Setter for duts
+        :param value: List<File>
+        """
+        self.set("duts", value)
+
+    @setter_rules(value_type=Dut)
+    def append_dut(self, dut):
+        """
+        Appens new Device Under Test to duts array
+        :param dut: Dut
+        """
+        if not isinstance(self.duts, list):
+            self.duts = []
+        self.duts.append(dut)

@@ -13,11 +13,13 @@ from setuptools.command.install import install
 DESCRIPTION = "opentmi-client"
 OWNER_NAMES = 'Jussi Vatjus-Anttila'
 OWNER_EMAILS = 'jussiva@gmail.com'
-VERSION = '0.5.0'
+VERSION = '0.6.0'
+
 
 # Utility function to cat in a file (used for the README)
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
 
 class VerifyVersionCommand(install):
     """Custom command to verify that the git tag matches our version"""
@@ -27,9 +29,10 @@ class VerifyVersionCommand(install):
         tag = os.getenv('CIRCLE_TAG')
         version = "v" + VERSION
         if tag != version:
-            info = "Git tag: {0} does not match the"\
-            "version of this app: {1}".format(tag, version)
+            info = "Git tag: {0} does not match the" \
+                   "version of this app: {1}".format(tag, version)
             sys.exit(info)
+
 
 setup(name='opentmi_client',
       version=VERSION,
@@ -66,7 +69,6 @@ setup(name='opentmi_client',
           "junitparser"
       ],
       classifiers=[
-          "Programming Language :: Python :: 2.7",
           "Programming Language :: Python :: 3.6",
           "Programming Language :: Python :: 3.7",
           "License :: OSI Approved :: MIT License",
@@ -74,5 +76,4 @@ setup(name='opentmi_client',
       ],
       cmdclass={
           'verify': VerifyVersionCommand,
-      }
-     )
+      })
