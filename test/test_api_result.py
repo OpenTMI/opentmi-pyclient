@@ -1,6 +1,6 @@
 import os
 import unittest
-from opentmi_client.api import Result, Execution, File
+from opentmi_client.api import Result, Execution, File, Dut, Provider
 
 
 class TestResult(unittest.TestCase):
@@ -24,6 +24,36 @@ class TestResult(unittest.TestCase):
         result.execution.note = 'notes'
         self.assertEqual(result.execution.note, 'notes')
         self.assertEqual(result.execution.duration, None)
+
+    def test_dut(self):
+        result = Result()
+        dut = Dut()
+        dut.model = 'abc'
+        dut.serial_number = '123'
+        dut.type = 'hw'
+        dut.vendor = 'some'
+        provider = Provider()
+        provider.name = 'stub'
+        provider.ver = '1.0.0'
+        provider.id = '0'
+        dut.provider = provider
+        result.append_dut(dut)
+        self.assertEqual(result.duts[0].model, 'abc')
+        self.assertEqual(result.duts[0].serial_number, '123')
+        self.assertEqual(result.duts[0].type, 'hw')
+        self.assertEqual(result.duts[0].vendor, 'some')
+        self.assertEqual(result.duts[0].provider.name, 'stub')
+        self.assertEqual(result.duts[0].provider.ver, '1.0.0')
+        self.assertEqual(result.duts[0].provider.id, '0')
+        self.assertEqual(result.data, {
+            'duts': [{
+                'model': 'abc',
+                'provider': {'id': '0', 'name': 'stub', 'ver': '1.0.0'},
+                'sn': '123',
+                'type': 'hw',
+                'vendor': 'some'
+            }]
+        })
 
     def test_file(self):
         result = Result()
