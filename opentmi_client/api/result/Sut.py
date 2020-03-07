@@ -64,13 +64,92 @@ class Sut(BaseApi):
         """
         self.get("fut").append(value)
 
+    @property
+    def git_url(self):
+        """
+        Getter for git url
+        :return: String
+        """
+        return self.get("gitUrl")
 
-# gitUrl: {type: String, default: ''},
+    @git_url.setter
+    @setter_rules()
+    def git_url(self, value):
+        """
+        Setter for git url
+        :param value: String
+        """
+        self.set("gitUrl", value)
+
+    @property
+    def build_sha1(self):
+        """
+        Getter for git build sha1
+        :return: String
+        """
+        return self.get("buildSha1")
+
+    @build_sha1.setter
+    @setter_rules()
+    def build_sha1(self, value):
+        """
+        Setter for git build sha1
+        :param value: String
+        """
+        self.set("buildSha1", value)
+
+    @property
+    def commit_id(self):
+        """
+        Getter for git commit id
+        :return: String
+        """
+        return self.get("commitId")
+
+    @commit_id.setter
+    @setter_rules()
+    def commit_id(self, value):
+        """
+        Setter for git commit id
+        :param value: String
+        """
+        self.set("commitId", value)
+
+    @property
+    def branch(self):
+        """
+        Getter for git commit branch
+        :return: String
+        """
+        return self.get("branch")
+
+    @branch.setter
+    @setter_rules()
+    def branch(self, value):
+        """
+        Setter for git branch
+        :param value: String
+        """
+        self.set("branch", value)
+
+    @property
+    def tag(self):
+        """
+        Getter for git commit id
+        :return: String
+        """
+        return self.get("tag")
+
+    @tag.setter
+    @setter_rules(list, each_type=str)
+    def tag(self, value):
+        """
+        Setter for git commit id
+        :param value: String
+        """
+        self.set("tag", value)
+
 # buildName: {type: String},
 # buildDate: {type: Date},
 # buildUrl: {type: String, default: ''},
-# buildSha1: {type: String},
-# branch: {type: String, default: ''},
-# commitId: {type: String, default: ''},
-# tag: [{type: String}],
 # href: {type: String},
