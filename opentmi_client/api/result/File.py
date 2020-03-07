@@ -65,16 +65,16 @@ class File(BaseApi):
         self.set("encoding", value)
 
     @property
-    def data(self):
+    def raw_data(self):
         """
         Getter for data
         :return: String
         """
         return self.get("data")
 
-    @data.setter
-    @setter_rules(value_type=bytes)
-    def data(self, value):
+    @raw_data.setter
+    @setter_rules(value_type=bytearray)
+    def raw_data(self, value):
         """
         Setter for data
         :param value: bytes
@@ -88,5 +88,5 @@ class File(BaseApi):
         :param encoding: str, "raw" by default
         """
         self.encoding = encoding
-        data = bytes(value, 'utf8')
-        self.data = data
+        data = bytearray(value, 'utf8')
+        self.raw_data = data

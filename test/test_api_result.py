@@ -64,9 +64,9 @@ class TestResult(unittest.TestCase):
         self.assertEqual(log_file.encoding, "raw")
         self.assertEqual(str(log_file), "stderr.log")
         self.assertEqual(log_file.data.decode(), "test")
-        result.execution.append_log(log_file)
-        self.assertEqual(len(result.execution.logs), 1)
-        self.assertEqual(result.execution.logs[0], log_file)
+        result.append_log(log_file)
+        self.assertEqual(len(result.logs), 1)
+        self.assertEqual(result.logs[0], log_file)
 
     def test_from_dictionary(self):
         def reducer_func(_result, value, key):
