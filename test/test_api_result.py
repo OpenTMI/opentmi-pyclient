@@ -63,7 +63,7 @@ class TestResult(unittest.TestCase):
         log_file.set_file_data("test")
         self.assertEqual(log_file.encoding, "raw")
         self.assertEqual(str(log_file), "stderr.log")
-        self.assertEqual(log_file.data.decode(), "test")
+        self.assertEqual(log_file.raw_data, "test")
         result.append_log(log_file)
         self.assertEqual(len(result.logs), 1)
         self.assertEqual(result.logs[0], log_file)
