@@ -65,21 +65,21 @@ class File(BaseApi):
         self.set("encoding", value)
 
     @property
-    def data(self):
+    def raw_data(self):
         """
         Getter for data
         :return: String
         """
         return self.get("data")
 
-    @data.setter
+    @raw_data.setter
     @setter_rules(value_type=bytearray)
-    def data(self, value):
+    def raw_data(self, value):
         """
         Setter for data
-        :param value: bytearray
+        :param value: bytes
         """
-        self.set("data", value)
+        self.set("data", value.decode('ascii'))
 
     def set_file_data(self, value, encoding="raw"):
         """
@@ -88,11 +88,5 @@ class File(BaseApi):
         :param encoding: str, "raw" by default
         """
         self.encoding = encoding
-        data = bytearray()
-        try:
-            # python 2
-            data.extend(value)
-        except TypeError:
-            # Python3:
-            data.extend(map(ord, value))
-        self.data = data
+        data = bytearray(value, 'utf8')
+        self.raw_data = data

@@ -158,8 +158,7 @@ class Transport(object):
                                      files=files if not None else [],
                                      timeout=REQUEST_TIMEOUT)
             if Transport.is_success(response):
-                data = json.loads(response.text)
-                return data
+                return response.json()
             self.logger.warning("status_code: %s", str(response.status_code))
             self.logger.warning(response.text)
             raise TransportException(response.text, response.status_code)
