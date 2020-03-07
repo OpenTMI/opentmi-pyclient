@@ -35,7 +35,7 @@ class Sut(BaseApi):
     @property
     def cut(self):
         """
-        Getter for cut
+        Getter for Component Under Test
         :return: String
         """
         return self.get("cut")
@@ -51,7 +51,7 @@ class Sut(BaseApi):
     @property
     def fut(self):
         """
-        Getter for fut
+        Getter for Feature Under Test
         :return: String
         """
         return self.get("fut")
@@ -84,7 +84,7 @@ class Sut(BaseApi):
     @property
     def build_sha1(self):
         """
-        Getter for git build sha1
+        Getter for git build file sha1
         :return: String
         """
         return self.get("buildSha1")
@@ -93,7 +93,7 @@ class Sut(BaseApi):
     @setter_rules()
     def build_sha1(self, value):
         """
-        Setter for git build sha1
+        Setter for git build file sha1
         :param value: String
         """
         self.set("buildSha1", value)
