@@ -73,13 +73,13 @@ class File(BaseApi):
         return self.get("data")
 
     @data.setter
-    @setter_rules(value_type=bytearray)
+    @setter_rules(value_type=bytes)
     def data(self, value):
         """
         Setter for data
-        :param value: bytearray
+        :param value: bytes
         """
-        self.set("data", value)
+        self.set("data", value.decode('ascii'))
 
     def set_file_data(self, value, encoding="raw"):
         """
@@ -88,11 +88,5 @@ class File(BaseApi):
         :param encoding: str, "raw" by default
         """
         self.encoding = encoding
-        data = bytearray()
-        try:
-            # python 2
-            data.extend(value)
-        except TypeError:
-            # Python3:
-            data.extend(map(ord, value))
+        data = bytes(value, 'utf8')
         self.data = data

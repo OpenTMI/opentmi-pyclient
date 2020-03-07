@@ -109,33 +109,6 @@ class Execution(BaseApi):
         self.set("profiling", value)
 
     @property
-    def logs(self):
-        """
-        Getter for logs
-        :return: List<File>
-        """
-        return self.get("logs")
-
-    @logs.setter
-    @setter_rules(value_type=list, each_type=File)
-    def logs(self, value):
-        """
-        Setter for logs
-        :param value: List<File>
-        """
-        self.set("logs", value)
-
-    @setter_rules(value_type=File)
-    def append_log(self, log_file):
-        """
-        Appens new file to logs array
-        :param log_file: File
-        """
-        if not isinstance(self.logs, list):
-            self.logs = []
-        self.logs.append(log_file)
-
-    @property
     def environment(self):
         """
         Getter for environment
