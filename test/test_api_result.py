@@ -37,23 +37,23 @@ class TestResult(unittest.TestCase):
         provider.ver = '1.0.0'
         provider.id = '0'
         dut.provider = provider
-        result.append_dut(dut)
-        self.assertEqual(result.duts[0].model, 'abc')
-        self.assertEqual(result.duts[0].serial_number, '123')
-        self.assertEqual(result.duts[0].type, 'hw')
-        self.assertEqual(result.duts[0].vendor, 'some')
-        self.assertEqual(result.duts[0].provider.name, 'stub')
-        self.assertEqual(result.duts[0].provider.ver, '1.0.0')
-        self.assertEqual(result.duts[0].provider.id, '0')
+        result.execution.append_dut(dut)
+        self.assertEqual(result.execution.duts[0].model, 'abc')
+        self.assertEqual(result.execution.duts[0].serial_number, '123')
+        self.assertEqual(result.execution.duts[0].type, 'hw')
+        self.assertEqual(result.execution.duts[0].vendor, 'some')
+        self.assertEqual(result.execution.duts[0].provider.name, 'stub')
+        self.assertEqual(result.execution.duts[0].provider.ver, '1.0.0')
+        self.assertEqual(result.execution.duts[0].provider.id, '0')
         self.assertEqual(result.data, {
-            'duts': [{
+            'exec': {'duts': [{
                 'model': 'abc',
                 'provider': {'id': '0', 'name': 'stub', 'ver': '1.0.0'},
                 'sn': '123',
                 'type': 'hw',
                 'vendor': 'some'
             }]
-        })
+        }})
 
     def test_file(self):
         result = Result()
