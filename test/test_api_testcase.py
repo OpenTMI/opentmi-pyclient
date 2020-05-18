@@ -1,5 +1,9 @@
 import unittest
-from opentmi_client.api.testcase import Testcase, Compatible, Status, Execution, OtherInfo
+from opentmi_client.api.testcase.Testcase import Testcase
+from opentmi_client.api.testcase.Compatible import Compatible
+from opentmi_client.api.testcase.Status import Status
+from opentmi_client.api.testcase.Execution import Execution
+from opentmi_client.api.testcase.OtherInfo import OtherInfo
 
 
 class TestTestcase(unittest.TestCase):
