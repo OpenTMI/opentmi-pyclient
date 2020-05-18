@@ -5,10 +5,7 @@ from opentmi_client.utils.decorators import setter_rules
 
 
 class Skip(BaseApi):
-    """ Execution class """
-    def __init__(self):
-        """ Constructor for Execution """
-        super().__init__()
+    """ Skip class """
 
     @property
     def value(self):

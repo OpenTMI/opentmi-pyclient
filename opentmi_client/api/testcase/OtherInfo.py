@@ -6,9 +6,6 @@ from opentmi_client.utils.decorators import setter_rules
 
 class OtherInfo(BaseApi):
     """ OtherInfo class """
-    def __init__(self):
-        """ Constructor for OtherInfo """
-        super().__init__()
 
     @property
     def title(self):
