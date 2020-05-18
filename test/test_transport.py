@@ -1,5 +1,6 @@
 # pylint: disable=missing-docstring
 
+import json
 import unittest
 from mock import patch
 from requests import Response, RequestException
@@ -14,6 +15,10 @@ def mocked_requests(*args, **kwargs):
             self.json_data = json_data
             self.status_code = status_code
 
+        @property
+        def text(self):
+            return json.dumps(self.json_data)
+
         def json(self):
             return self.json_data
 
@@ -23,6 +28,8 @@ def mocked_requests(*args, **kwargs):
         raise ValueError("")
     elif args[0] == 'TypeError':
         raise TypeError("")
+    elif args[0] == 'NotFound' or kwargs.get('NotFound'):
+        raise MockResponse(None, 404)
     elif args[0] == 'status_300':
         return MockResponse(None, 300)
 
@@ -47,6 +54,7 @@ class TestRequest(unittest.TestCase):
         transport.set_host(HOST)
         self.assertEqual(transport.token, None)
         self.assertEqual(transport.host, "http://"+HOST)
+        self.assertTrue(transport.has_token())
 
         transport.set_host("http://a.b.c@"+HOST)
         self.assertEqual(transport.token, "a.b.c")
@@ -71,30 +79,24 @@ class TestRequest(unittest.TestCase):
         with self.assertRaises(TransportException):
             transport.put_json("localhost", {})
 
-    def test_get_json(self):
+    @patch('requests.get', side_effect=mocked_requests)
+    def test_get_json(self, mock_post):
         transport = Transport()
         transport.set_token("mytoken")
-        url = "https://jsonplaceholder.typicode.com/posts"
-        self.assertIsInstance(transport.get_json(url), list)
+        url = "https://localhost"
+        self.assertIsInstance(transport.get_json(url), dict)
 
-    def test_get_post_not_found(self):
+    @patch('requests.post', side_effect=mocked_requests)
+    def test_post_json(self, mock_post):
         transport = Transport()
-        url = "https://jsonplaceholder.typicode.com/posts/a"
-        self.assertEqual(transport.get_json(url), None)
-
-    def test_post_json(self):
-        transport = Transport()
-        url = "https://jsonplaceholder.typicode.com/posts"
-        data = {
-            "title": "foo",
-            "body": 'bar',
-            "userId": 1
-        }
+        url = "https://localhost"
+        data = {}
         self.assertIsInstance(transport.post_json(url, data), dict)
 
-    def test_put_json(self):
+    @patch('requests.put', side_effect=mocked_requests)
+    def test_put_json(self, mock_put):
         transport = Transport()
-        url = "https://jsonplaceholder.typicode.com/posts/1"
+        url = "https://localhost"
         data = {
             "title": "foo",
             "body": 'bar',
