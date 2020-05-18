@@ -16,6 +16,7 @@ from opentmi_client.transport import Transport
 from opentmi_client.api.result import Result
 from opentmi_client.api.build import Build
 from opentmi_client.api.event import Event
+from opentmi_client.api.resource import Resource
 
 
 REQUEST_TIMEOUT = 30
@@ -207,6 +208,26 @@ class OpenTmiClient(object):
             return data
         except TransportException as error:
             self.logger.warning("Result upload failed: %s (status: %s)", error.message, error.code)
+        except OpentmiException as error:
+            self.logger.warning(error)
+        return None
+
+    @setter_rules(value_type=Resource)
+    def post_resource(self, resource):
+        """
+        Send resource
+        :param resource: Resource object
+        :return: Stored resource data
+        """
+        payload = resource.data
+        url = self.__resolve_apiuri("/resources")
+        try:
+            data = self.__transport.post_json(url, payload)
+            self.logger.debug("resource uploaded successfully, _id: %s", data.get("_id"))
+            return data
+        except TransportException as error:
+            self.logger.warning("Resource upload failed: %s (status: %s)",
+                                error.message, error.code)
         except OpentmiException as error:
             self.logger.warning(error)
         return None
