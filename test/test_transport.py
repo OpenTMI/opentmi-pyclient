@@ -54,11 +54,11 @@ class TestRequest(unittest.TestCase):
         transport.set_host(HOST)
         self.assertEqual(transport.token, None)
         self.assertEqual(transport.host, "http://"+HOST)
-        self.assertTrue(transport.has_token())
 
         transport.set_host("http://a.b.c@"+HOST)
         self.assertEqual(transport.token, "a.b.c")
         self.assertEqual(transport.host, "http://"+HOST)
+        self.assertTrue(transport.has_token())
 
         transport.set_host("https://aa.bb.cc@"+HOST)
         self.assertEqual(transport.token, "aa.bb.cc")
