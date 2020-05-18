@@ -53,13 +53,13 @@ class Resource(BaseApi):
 
     @type.setter
     @setter_rules(enum=[
-            'system',
-            'dut',
-            'instrument',
-            'accessories',
-            'computer',
-            'room'
-        ])
+        'system',
+        'dut',
+        'instrument',
+        'accessories',
+        'computer',
+        'room'
+    ])
     def type(self, value):
         """
         Setter for type
@@ -117,4 +117,3 @@ class Resource(BaseApi):
         :param value: Hardware
         """
         self.set("hw", value)
-

@@ -226,7 +226,8 @@ class OpenTmiClient(object):
             self.logger.debug("resource uploaded successfully, _id: %s", data.get("_id"))
             return data
         except TransportException as error:
-            self.logger.warning("Resource upload failed: %s (status: %s)", error.message, error.code)
+            self.logger.warning("Resource upload failed: %s (status: %s)",
+                                error.message, error.code)
         except OpentmiException as error:
             self.logger.warning(error)
         return None

@@ -43,5 +43,3 @@ class Hardware(BaseApi):
         :param value: string
         """
         self.set("hwid", value)
-
-

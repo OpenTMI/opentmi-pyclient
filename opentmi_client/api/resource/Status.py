@@ -24,7 +24,7 @@ class Status(BaseApi):
         'maintenance',
         'storage',
         'broken'
-      ])
+    ])
     def value(self, value):
         """
         Setter for value

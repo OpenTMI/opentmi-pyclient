@@ -26,5 +26,3 @@ class Item(BaseApi):
         :param value: string
         """
         self.set("model", value)
-
-
