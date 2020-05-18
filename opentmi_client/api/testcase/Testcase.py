@@ -4,7 +4,10 @@ OpenTMI Testcase module
 # Internal imports
 from opentmi_client.utils.Base import BaseApi
 from opentmi_client.utils.decorators import setter_rules
-from opentmi_client.api.testcase import *
+from opentmi_client.api.testcase.OtherInfo import OtherInfo
+from opentmi_client.api.testcase.Execution import Execution
+from opentmi_client.api.testcase.Status import Status
+from opentmi_client.api.testcase.Compatible import Compatible
 
 
 class Testcase(BaseApi):
@@ -16,10 +19,19 @@ class Testcase(BaseApi):
         Constructor for Testcase
         :param tcid: String
         """
-        super()
+        super().__init__()
         self.tcid = tcid
+        self.status = Status()
         self.execution = Execution()
         self.other_info = OtherInfo()
+        self.compatible = Compatible()
+
+    def __str__(self):
+        """
+        Stringify function
+        :return: String
+        """
+        return "{}".format(self.get("tcid", "?"))
 
     @property
     def tcid(self):
@@ -42,7 +54,7 @@ class Testcase(BaseApi):
     def other_info(self):
         """
         Getter for execution
-        :return: String
+        :return: OtherInfo
         """
         return self.get("other_info")
 
@@ -71,3 +83,37 @@ class Testcase(BaseApi):
         :param value: String
         """
         self.set("execution", value)
+
+    @property
+    def status(self):
+        """
+        Getter for status
+        :return: Status
+        """
+        return self.get("status")
+
+    @status.setter
+    @setter_rules(Status)
+    def status(self, value: Status):
+        """
+        Setter for status
+        :param value: Status
+        """
+        self.set("status", value)
+
+    @property
+    def compatible(self):
+        """
+        Getter for compatible
+        :return: Compatible
+        """
+        return self.get("compatible")
+
+    @compatible.setter
+    @setter_rules(Compatible)
+    def compatible(self, value: Compatible):
+        """
+        Setter for compatible
+        :param value: Compatible
+        """
+        self.set("compatible", value)
