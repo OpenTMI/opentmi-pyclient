@@ -17,6 +17,12 @@ class BaseApi(object):
         """
         self._data = {}
 
+    @classmethod
+    def from_data(cls, data):
+        obj = cls()
+        obj.data = data
+        return obj
+
     @property
     def _id(self):
         """

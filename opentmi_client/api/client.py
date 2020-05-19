@@ -3,12 +3,11 @@
 OpenTmiClient module
 """
 # standard imports
-import json
 import os
 # 3rd party imports
-# import deprecation
+import deprecation
 # Application imports
-from opentmi_client.utils import is_object_id, get_logger
+from opentmi_client.utils import get_logger
 from opentmi_client.utils import requires_logged_in
 from opentmi_client.utils import OpentmiException, TransportException
 from opentmi_client.utils.decorators import setter_rules
@@ -16,6 +15,7 @@ from opentmi_client.transport import Transport
 from opentmi_client.api.result import Result
 from opentmi_client.api.build import Build
 from opentmi_client.api.event import Event
+from opentmi_client.api.testcase import Testcase
 from opentmi_client.api.resource import Resource
 
 
@@ -172,199 +172,6 @@ class OpenTmiClient(object):
         """
         return self.__version
 
-    @requires_logged_in
-    @setter_rules(value_type=Event)
-    def post_event(self, event):
-        """
-        Send build
-        :param build: Build object
-        :return: Stored build data
-        """
-        payload = event.data
-        url = self.__resolve_apiuri("/events")
-        try:
-            data = self.__transport.post_json(url, payload)
-            self.logger.debug("Event uploaded successfully, _id: %s", data.get("_id"))
-            return data
-        except TransportException as error:
-            self.logger.warning("Event upload failed: %s (status: %s)", error.message, error.code)
-        except OpentmiException as error:
-            self.logger.warning(error)
-        return None
-
-    # @requires_logged_in
-    @setter_rules(value_type=Build)
-    def post_build(self, build):
-        """
-        Send build
-        :param build: Build object
-        :return: Stored build data
-        """
-        payload = build.data
-        url = self.__resolve_apiuri("/duts/builds")
-        try:
-            data = self.__transport.post_json(url, payload)
-            self.logger.debug("build uploaded successfully, _id: %s", data.get("_id"))
-            return data
-        except TransportException as error:
-            self.logger.warning("Result upload failed: %s (status: %s)", error.message, error.code)
-        except OpentmiException as error:
-            self.logger.warning(error)
-        return None
-
-    @setter_rules(value_type=Resource)
-    def post_resource(self, resource):
-        """
-        Send resource
-        :param resource: Resource object
-        :return: Stored resource data
-        """
-        payload = resource.data
-        url = self.__resolve_apiuri("/resources")
-        try:
-            data = self.__transport.post_json(url, payload)
-            self.logger.debug("resource uploaded successfully, _id: %s", data.get("_id"))
-            return data
-        except TransportException as error:
-            self.logger.warning("Resource upload failed: %s (status: %s)",
-                                error.message, error.code)
-        except OpentmiException as error:
-            self.logger.warning(error)
-        return None
-
-    # @requires_logged_in
-    def upload_build(self, build):
-        """
-        Upload build
-        :param build:
-        :return:
-        """
-        build_dict = build
-        build = Build()
-        build.set_data(build_dict)
-        return self.post_build(build)
-
-    # Suite
-    # @requires_logged_in
-    def get_suite(self, suite, options=''):
-        """
-        get single suite informations
-        :param suite:
-        :param options:
-        :return:
-        """
-        try:
-            campaign_id = self.__get_campaign_id(suite)
-        except OpentmiException as error:
-            self.logger.warning("exception happened while resolving suite: %s, %s",
-                                suite, error)
-            return None
-
-        if campaign_id is None:
-            self.logger.warning("could not resolve campaign id for suite: %s",
-                                suite)
-            return None
-
-        suite = self.__get_suite(campaign_id, options)
-        return suite
-
-    # Campaign
-
-    # @requires_logged_in
-    def get_campaigns(self):
-        """
-        Get campaigns
-        :return:
-        """
-        return self.__get_campaigns()
-
-    # @requires_logged_in
-    def get_campaign_names(self):
-        """
-        Get campaign names
-        :return:
-        """
-        campaigns = self.__get_campaigns()
-        campaign_names = []
-        for campaign in campaigns:
-            campaign_names.append(campaign['name'])
-        return campaign_names
-
-    # @requires_logged_in
-    def get_testcases(self, filters=None):
-        """
-        Get testcases
-        :param filters:
-        :return:
-        """
-        return self.__get_testcases(filters)
-
-    # @requires_logged_in
-    def update_testcase(self, metadata):
-        """
-        update test case
-        :param metadata:
-        :return:
-        """
-        testcase = self.__lookup_testcase(metadata['tcid'])
-        if testcase:
-            test_id = testcase.get('_id')
-            self.logger.info("Update existing TC (%s)", test_id)
-            self.__update_testcase(test_id, metadata)
-        else:
-            self.logger.info("Create new TC")
-            self.__create_testcase(metadata)
-        return self
-
-    # @requires_logged_in
-    @setter_rules(value_type=Result)
-    def post_result(self, result):
-        """
-        Post Result object
-        :param result: Result or plain dictionary
-        :return:
-        """
-        url = self.__resolve_apiuri("/results")
-        payload = result.data
-        try:
-            files = None
-            # hasLogs, logFiles = result.hasLogs()
-            # if hasLogs:
-            #    zipFile = self.__archiveLogs(logFiles)
-            #    self.logger.debug(zipFile)
-            #    files = {"file": ("logs.zip", open(zipFile), 'rb') }
-            #    self.logger.debug(files)
-            data = self.__transport.post_json(url, payload, files=files)
-            self.logger.debug("result uploaded successfully, _id: %s", data.get("_id"))
-            return data
-        except TransportException as error:
-            self.logger.warning("result uploaded failed: %s. status_code: %d",
-                                error.message, error.code)
-        except OpentmiException as error:
-            self.logger.warning(error)
-        return None
-
-    # @deprecation.deprecated(deprecated_in="v0.4.0", removed_in="v0.5.0",
-    #                        details="Use post_result(Result) instead")
-    def upload_results(self, result):
-        """
-        Upload result, and test case if not stored already
-        :param result: dictionary
-        :return: Dictionary
-        """
-        tc_meta = self.__tc_converter(result.tc_metadata) if self.__tc_converter else result
-        test_case = self.__lookup_testcase(tc_meta['tcid'])
-        if not test_case:
-            test_case = self.__create_testcase(tc_meta)
-            if not test_case:
-                self.logger.warning("TC creation failed")
-                return None
-
-        result_dict = self.__result_converter(result) if self.__result_converter else result
-        result = Result()
-        result.set_data(result_dict)
-        return self.post_result(result)
-
     def try_login(self, raise_if_fail=False):
         """
         function to check if login is done.
@@ -388,34 +195,203 @@ class OpenTmiClient(object):
             raise OpentmiException("login required")
         return self
 
-    # Private members
+    @requires_logged_in
+    @setter_rules(value_type=Event)
+    def post_event(self, event: Event):
+        """
+        Send build
+        :param event: Event object
+        :return: Stored event
+        """
+        data = self._post_json("/events", event.data)
+        self.logger.debug("Event uploaded successfully, _id: %s", data.get("_id"))
+        return Event.from_data(data)
+
+    @requires_logged_in
+    @setter_rules(value_type=Build)
+    def post_build(self, build: Build):
+        """
+        Send build
+        :param build: Build object
+        :return: Stored build data
+        """
+        data = self._post_json("/duts/builds", build.data)
+        self.logger.debug("build uploaded successfully, _id: %s", data.get("_id"))
+
+    @requires_logged_in
+    @setter_rules(value_type=Resource)
+    def post_resource(self, resource) -> Resource:
+        """
+        Send resource
+        :param resource: Resource object
+        :return: Stored resource data
+        """
+        data = self._post_json("/resources", resource.data)
+        self.logger.debug("resource uploaded successfully, _id: %s", data.get("_id"))
+        return Resource.from_data(data)
+
+    @deprecation.deprecated(deprecated_in="v0.7.0", removed_in="v0.8.0",
+                            details="Use post_build(Build) instead")
+    def upload_build(self, build: dict) -> dict:
+        """
+        Upload build
+        :param build:
+        :return:
+        """
+        build_dict = build
+        build = Build()
+        build.set_data(build_dict)
+        return self.post_build(build).data
+
+    # Suite
+    @requires_logged_in
+    def get_suite(self, suite, options=''):
+        """
+        get single suite informations
+        :param suite:
+        :param options:
+        :return:
+        """
+        try:
+            campaigns = self._get_json("/campaigns", {"name": suite})
+            assert len(campaigns) == 1, 'did not found campaind'
+            campaign_id = campaigns[0]._id
+        except OpentmiException as error:
+            self.logger.warning("exception happened while resolving suite: %s, %s",
+                                suite, error)
+            return None
+
+        if campaign_id is None:
+            self.logger.warning("could not resolve campaign id for suite: %s",
+                                suite)
+            return None
+
+        return self._get_json(f"/campaigns/{suite}/suite{options}")
+
+    # Campaign
 
     # @requires_logged_in
-    def __get_campaign_id(self, campaign_name):
+    def get_campaigns(self):
         """
-        get campaign id from name
-        :param campaign_name:
-        :return: string
+        Get campaigns
+        :return:
         """
-        if is_object_id(campaign_name):
-            return campaign_name
+        return self._get_json("/campaigns")
 
-        for campaign in self.__get_campaigns():
-            if campaign['name'] == campaign_name:
-                return campaign['_id']
-        return None
+    @requires_logged_in
+    def get_campaign_names(self):
+        """
+        Get campaign names
+        :return:
+        """
+        return self._get_json("/campaigns", {"f": "name", "t": "distinct"})
 
-    def __get_testcases(self, filters=None):
-        url = self.__resolve_apiuri("/testcases")
-        return self.__transport.get_json(url, params=filters if filters else None)
+    @requires_logged_in
+    def get_testcases(self, filters=None):
+        """
+        Get testcases
+        :param filters:
+        :return:
+        """
+        data = self._get_json("/testcases", filters)
+        return map(Testcase, data)
 
-    def __get_campaigns(self):
-        url = self.__resolve_apiuri("/campaigns")
-        return self.__transport.get_json(url, params={"f": "name"})
+    @requires_logged_in
+    def get_resources(self, filters=None):
+        data = self._get_json('/resources', params=filters)
+        return map(Resource, data)
 
-    def __get_suite(self, suite, options=''):
-        url = self.__resolve_apiuri("/campaigns/" + suite + "/suite" + options)
-        return self.__transport.get_json(url)
+    @requires_logged_in
+    def update_testcase(self, testcase):
+        """
+        update test case
+        :param metadata:
+        :return:
+        """
+        testcase = self.__lookup_testcase(testcase.tcid)
+        if testcase:
+            test_id = testcase._id
+            self.logger.info("Update existing TC (%s)", test_id)
+            return self.__update_testcase(test_id, testcase)
+        else:
+            self.logger.info("Create new TC")
+            return self._post_json("/testcases", testcase.data)
+
+    @requires_logged_in
+    @setter_rules(value_type=Result)
+    def post_result(self, result) -> Result:
+        """
+        Post Result object
+        :param result: Result or plain dictionary
+        :return:
+        """
+        files = None
+        # hasLogs, logFiles = result.hasLogs()
+        # if hasLogs:
+        #    zipFile = self.__archiveLogs(logFiles)
+        #    self.logger.debug(zipFile)
+        #    files = {"file": ("logs.zip", open(zipFile), 'rb') }
+        #    self.logger.debug(files)
+        data = self._post_json("/results", result.data, files=files)
+        self.logger.debug("result uploaded successfully, _id: %s", data.get("_id"))
+        return Result.from_data(data)
+
+    @deprecation.deprecated(deprecated_in="v0.7.0", removed_in="v0.8.0",
+                            details="Use post_result(Result) instead")
+    def upload_results(self, result):
+        tc_meta = self.__tc_converter(result.tc_metadata) if self.__tc_converter else result
+        result_dict = self.__result_converter(result) if self.__result_converter else result
+        the_test = Testcase.from_data(tc_meta)
+        the_result = Result.from_data(result_dict)
+        self.upload_result_and_ensure_test_exists(the_result, the_test)
+
+    def upload_result_and_ensure_test_exists(self, result: Result, test: Testcase):
+        """
+        Upload result, and test case if not stored already
+        :param result: Result
+        :param test: Testcase
+        :return: Dictionary
+        """
+        db_test = self.__lookup_testcase(test.tcid)
+        if not db_test:
+            db_test = self._post_json("/testcases", test.data)
+        if not db_test:
+            raise OpentmiException("Cannot create test case")
+        return self.post_result(result)
+
+    # Private members
+    def _post_json(self, url, payload):
+        url = self.__resolve_apiuri(url)
+        try:
+            data = self.__transport.post_json(url, payload)
+            self.logger.debug("Post successfully, _id: %s", payload.get("_id"))
+            return data
+        except TransportException as error:
+            self.logger.warning("Post failed: %s (status: %s)",
+                                error.message, error.code)
+            raise
+
+    def _put_json(self, url, payload):
+        url = self.__resolve_apiuri(url)
+        try:
+            data = self.__transport.put_json(url, payload)
+            self.logger.debug("Put successfully, _id: %s", payload.get("_id"))
+            return data
+        except TransportException as error:
+            self.logger.warning("Put failed: %s (status: %s)",
+                                error.message, error.code)
+            raise
+
+    def _get_json(self, url, params=None):
+        url = self.__resolve_apiuri(url)
+        try:
+            data = self.__transport.get_json(url, params=params)
+            self.logger.debug("Get successfully")
+            return data
+        except TransportException as error:
+            self.logger.warning("Get failed: %s (status: %s)",
+                                error.message, error.code)
+            raise
 
     def __lookup_testcase(self, tcid):
         url = self.__resolve_apiuri("/testcases")
@@ -425,7 +401,7 @@ class OpenTmiClient(object):
             if len(data) == 1:
                 doc = data[0]
                 self.logger.debug("testcase '%s' exists in DB (%s)", tcid, doc.get('_id'))
-                return doc
+                return Testcase.from_data(doc)
         except TransportException as error:
             if error.code == 404:
                 self.logger.warning("testcase '%s' not found form DB", tcid)
@@ -436,38 +412,19 @@ class OpenTmiClient(object):
 
         return None
 
-    def __update_testcase(self, test_id, metadata):
-        url = self.__resolve_apiuri("/testcases/" + test_id)
+    def __update_testcase(self, testcase: Testcase) -> Testcase:
+        url = self.__resolve_apiuri(f"/testcases/{testcase._id}")
         try:
             self.logger.debug("Update TC: %s", url)
-            payload = metadata
-            data = self.__transport.put_json(url, payload)
+            data = self.__transport.put_json(url, testcase.data)
             self.logger.debug("testcase metadata uploaded successfully")
-            return data
+            return Testcase.from_data(data)
         except TransportException as error:
             self.logger.debug(error)
         except OpentmiException as error:
             self.logger.debug(error)
 
         self.logger.warning("testcase metadata upload failed")
-        return None
-
-    def __create_testcase(self, metadata):
-        url = self.__resolve_apiuri("/testcases")
-        try:
-            self.logger.debug("Create TC: %s", url)
-            payload = metadata
-            data = self.__transport.post_json(url, payload)
-            self.logger.debug("new testcase metadata uploaded successfully with id: %s",
-                              json.dumps(data))
-            return data
-        except TransportException as error:
-            self.logger.warning(error)
-        except OpentmiException as error:
-            self.logger.warning('createTestcase throw exception:')
-            self.logger.warning(error)
-
-        self.logger.warning("new testcase metadata upload failed")
         return None
 
     def __resolve_url(self, path):
