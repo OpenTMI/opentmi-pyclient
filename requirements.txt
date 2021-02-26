@@ -2,4 +2,4 @@ requests>=2.13.0
 jsonmerge
 six
 pydash
-junitparser
+junitparser<2.0.0
