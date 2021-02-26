@@ -27,7 +27,7 @@ class TestResult(unittest.TestCase):
 
     def test_execution_metadata(self):
         result = Result()
-        result.execution.metadata.append('key', 'value')
+        result.execution.metadata['key'] = 'value'
         self.assertEqual(result.execution.metadata.get('key'), 'value')
 
     def test_dut(self):
