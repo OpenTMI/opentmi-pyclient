@@ -20,8 +20,7 @@ class Execution(BaseApi):
                  verdict=None,
                  note=None,
                  duration=None,
-                 environment=None,
-                 metadata=None):
+                 environment=None):
         """
         Execution constructor
         :param verdict: String
@@ -37,7 +36,7 @@ class Execution(BaseApi):
         if duration:
             self.duration = duration
         self.environment = environment or Environment()
-        self.metadata = metadata or Metadata()
+        self.metadata = dict()
         self.sut = Sut()
 
     @property
@@ -158,16 +157,18 @@ class Execution(BaseApi):
     def metadata(self):
         """
         Getter for metadata
-        :return: Metadata
+        :return: dict
         """
         return self.get("metadata")
 
     @metadata.setter
-    @setter_rules(value_type=Metadata)
+    @setter_rules(value_type=dict)
     def metadata(self, value):
         """
-        Setter for metadata
-        :param value: Metadata
+        Setter for metadata.
+        Metadata could contains eg key-value pairs:
+        eg: {"key": "value"}
+        :param value: dict
         """
         self.set("metadata", value)
 
