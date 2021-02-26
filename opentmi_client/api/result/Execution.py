@@ -5,10 +5,12 @@ from opentmi_client.utils.Base import BaseApi
 from opentmi_client.utils.decorators import setter_rules
 from opentmi_client.api.result.File import File
 from opentmi_client.api.result.Environment import Environment
+from opentmi_client.api.result.Metadata import Metadata
 from opentmi_client.api.result.Sut import Sut
 from opentmi_client.api.result.Dut import Dut
 
 
+# pylint: disable-msg=too-many-arguments too-many-instance-attributes
 class Execution(BaseApi):
     """
     Execution class,
@@ -18,7 +20,8 @@ class Execution(BaseApi):
                  verdict=None,
                  note=None,
                  duration=None,
-                 environment=None):
+                 environment=None,
+                 metadata=None):
         """
         Execution constructor
         :param verdict: String
@@ -33,10 +36,8 @@ class Execution(BaseApi):
             self.note = note
         if duration:
             self.duration = duration
-        if environment:
-            self.environment = environment
-        else:
-            self.environment = Environment()
+        self.environment = environment or Environment()
+        self.metadata = metadata or Metadata()
         self.sut = Sut()
 
     @property
@@ -152,6 +153,23 @@ class Execution(BaseApi):
         :param value: Environment
         """
         self.set("env", value)
+
+    @property
+    def metadata(self):
+        """
+        Getter for metadata
+        :return: Metadata
+        """
+        return self.get("metadata")
+
+    @metadata.setter
+    @setter_rules(value_type=Metadata)
+    def metadata(self, value):
+        """
+        Setter for metadata
+        :param value: Metadata
+        """
+        self.set("metadata", value)
 
     @property
     def sut(self):

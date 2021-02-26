@@ -25,6 +25,11 @@ class TestResult(unittest.TestCase):
         self.assertEqual(result.execution.note, 'notes')
         self.assertEqual(result.execution.duration, None)
 
+    def test_execution_metadata(self):
+        result = Result()
+        result.execution.metadata.append('key', 'value')
+        self.assertEqual(result.execution.metadata.get('key'), 'value')
+
     def test_dut(self):
         result = Result()
         dut = Dut()

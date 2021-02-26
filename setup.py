@@ -50,7 +50,7 @@ setup(name='opentmi_client',
       tests_require=[
           "coverage",
           "mock",
-          "pylint",
+          "pylint==2.5.2",
           "Sphinx",
           "nose"
       ],
@@ -66,7 +66,7 @@ setup(name='opentmi_client',
           "jsonmerge",
           "six",
           "pydash",
-          "junitparser"
+          "junitparser<2.0.0"
       ],
       classifiers=[
           "Programming Language :: Python :: 3.6",
