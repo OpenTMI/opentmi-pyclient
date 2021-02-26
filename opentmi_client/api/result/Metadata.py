@@ -6,13 +6,8 @@ from opentmi_client.utils.Base import BaseApi
 
 class Metadata(BaseApi):
     """
-    Environment class
+    Metadata class
     """
-    def __init__(self):
-        """
-        constructor for Metadata
-        """
-        super(Metadata, self).__init__()
 
     def append(self, key: str, value: str):
         """

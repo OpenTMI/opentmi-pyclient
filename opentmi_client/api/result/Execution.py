@@ -10,6 +10,7 @@ from opentmi_client.api.result.Sut import Sut
 from opentmi_client.api.result.Dut import Dut
 
 
+# pylint: disable-msg=too-many-arguments too-many-instance-attributes
 class Execution(BaseApi):
     """
     Execution class,
