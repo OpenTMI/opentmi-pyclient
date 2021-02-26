@@ -5,7 +5,6 @@ from opentmi_client.utils.Base import BaseApi
 from opentmi_client.utils.decorators import setter_rules
 from opentmi_client.api.result.File import File
 from opentmi_client.api.result.Environment import Environment
-from opentmi_client.api.result.Metadata import Metadata
 from opentmi_client.api.result.Sut import Sut
 from opentmi_client.api.result.Dut import Dut
 
@@ -37,6 +36,7 @@ class Execution(BaseApi):
             self.duration = duration
         self.environment = environment or Environment()
         self.metadata = dict()
+        self.profiling = dict()
         self.sut = Sut()
 
     @property
