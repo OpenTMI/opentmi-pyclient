@@ -59,20 +59,25 @@ def archive_files(files, zip_filename, base_path=""):
     zip_file.close()
     return zip_filename
 
+
 def remove_empty_from_dict(dictionary):
     """
     Remove all empty items from nested object
     :param dictionary: dict
     :return: dict
     """
+    def is_not_empty(value):
+        if isinstance(value, int) and value == 0:
+            return True
+        return remove_empty_from_dict(value)
     if isinstance(dictionary, dict):
         try:
             return dict((k, remove_empty_from_dict(v)) for k, v in dictionary.iteritems() if
-                        v and remove_empty_from_dict(v))
+                        is_not_empty(v))
         except AttributeError:
             return dict((k, remove_empty_from_dict(v)) for k, v in dictionary.items() if
-                        v and remove_empty_from_dict(v))
+                        is_not_empty(v))
     elif isinstance(dictionary, list):
-        return [remove_empty_from_dict(v) for v in dictionary if v and remove_empty_from_dict(v)]
+        return [remove_empty_from_dict(v) for v in dictionary if is_not_empty(v)]
     else:
         return dictionary
