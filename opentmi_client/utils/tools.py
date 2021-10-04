@@ -69,7 +69,7 @@ def remove_empty_from_dict(dictionary):
     def is_not_empty(value):
         if isinstance(value, int) and value == 0:
             return True
-        return remove_empty_from_dict(value)
+        return value and remove_empty_from_dict(value)
     if isinstance(dictionary, dict):
         try:
             return dict((k, remove_empty_from_dict(v)) for k, v in dictionary.iteritems() if
