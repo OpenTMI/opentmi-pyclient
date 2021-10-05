@@ -69,5 +69,14 @@ class TestTools(unittest.TestCase):
         data = {"a": {"b": {}, "c": [], "d": 1}}
         self.assertEqual(remove_empty_from_dict(data), {"a": {"d": 1}})
 
+    def test_remove_empty_from_dict_keep_zero(self):
+        data = {"a": {"b": {}, "c": [], "d": 0}}
+        self.assertEqual(remove_empty_from_dict(data), {"a": {"d": 0}})
+
+    def test_remove_empty_from_dict_keep_zero_2(self):
+        data = {"a": {"b": {}, "c": [], "d": 0, "e": ""}}
+        self.assertEqual(remove_empty_from_dict(data), {"a": {"d": 0}})
+
+
 if __name__ == '__main__':
     unittest.main()
