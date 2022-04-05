@@ -40,7 +40,6 @@ def create_http_session(base_url: str) -> requests.Session:
     session = requests.Session()
     session.mount(base_url, retry_adapter)
     session.headers.update({"content-type": "application/json",
-                            "Connection": "keep-alive"
-    })
+                            "Connection": "keep-alive"})
     session.base_url_join = lambda path: urllib.parse.urljoin(base_url, path)
     return session

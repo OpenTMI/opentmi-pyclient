@@ -2,7 +2,6 @@
 Transport module for Opentmi python client
 """
 import json
-import requests
 from requests import Response, RequestException
 
 from opentmi_client.transport.HttpAdapter import create_http_session
