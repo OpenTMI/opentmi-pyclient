@@ -4,6 +4,9 @@ Transport module for Opentmi python client
 import json
 import requests
 from requests import Response, RequestException
+
+from opentmi_client.transport.HttpAdapter import create_http_session
+
 try:
     # python2
     from urllib import urlencode, quote
@@ -12,7 +15,6 @@ except ImportError:
     from urllib.parse import urlencode, quote
 from opentmi_client.utils import get_logger, resolve_host, resolve_token, TransportException
 
-REQUEST_TIMEOUT = 30
 NOT_FOUND = 404
 
 
@@ -34,6 +36,7 @@ class Transport(object):
         self.logger = get_logger()
         self.__token = None
         self.__host = None
+        self._session = None
         if token:
             self.set_token(token)
 
@@ -49,6 +52,7 @@ class Transport(object):
         """
         self.__host = resolve_host(host, port)
         token = resolve_token(host)
+        self._session = create_http_session(self.__host)
         if token:
             self.__host = self.__host.replace(token + "@", "")
             self.set_token(token)
@@ -76,6 +80,7 @@ class Transport(object):
         :return: Transport
         """
         self.__token = token
+        self._session.headers.update({"Authorization": f"Bearer {token}"})
         return self
 
     def has_token(self):
@@ -91,17 +96,7 @@ class Transport(object):
         :param path: string, e.g. "/auth/login"
         :return: url as a string
         """
-        return self.__host + path
-
-    @property
-    def __headers(self):
-        headers = {
-            "content-type": "application/json",
-            "Connection": "close"
-        }
-        if self.__token:
-            headers["Authorization"] = "Bearer " + self.__token
-        return headers
+        return self._session.base_url_join(path)
 
     @staticmethod
     def _params_encode(params):
@@ -124,10 +119,7 @@ class Transport(object):
         """
         try:
             self.logger.debug("GET: %s?%s", url, urlencode(params) if params else '')
-            response = requests.get(url,
-                                    headers=self.__headers,
-                                    timeout=REQUEST_TIMEOUT,
-                                    params=Transport._params_encode(params))
+            response = self._session.get(url, params=Transport._params_encode(params))
             if Transport.is_success(response):
                 return response.json()
             if response.status_code == NOT_FOUND:
@@ -152,11 +144,7 @@ class Transport(object):
         :return: response as dict
         """
         try:
-            response = requests.post(url,
-                                     json=payload,
-                                     headers=self.__headers,
-                                     files=files if not None else [],
-                                     timeout=REQUEST_TIMEOUT)
+            response = self._session.post(url, json=payload, files=files if not None else [])
             if Transport.is_success(response):
                 return response.json()
             self.logger.warning("status_code: %s", str(response.status_code))
@@ -176,10 +164,7 @@ class Transport(object):
         :return: response as a dict
         """
         try:
-            response = requests.put(url,
-                                    json=payload,
-                                    headers=self.__headers,
-                                    timeout=REQUEST_TIMEOUT)
+            response = self._session.put(url, json=payload)
             if Transport.is_success(response):
                 data = json.loads(response.text)
                 return data
