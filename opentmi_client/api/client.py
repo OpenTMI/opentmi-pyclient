@@ -344,27 +344,6 @@ class OpenTmiClient(object):
             self.logger.warning(error)
         return None
 
-    # @deprecation.deprecated(deprecated_in="v0.4.0", removed_in="v0.5.0",
-    #                        details="Use post_result(Result) instead")
-    def upload_results(self, result):
-        """
-        Upload result, and test case if not stored already
-        :param result: dictionary
-        :return: Dictionary
-        """
-        tc_meta = self.__tc_converter(result.tc_metadata) if self.__tc_converter else result
-        test_case = self.__lookup_testcase(tc_meta['tcid'])
-        if not test_case:
-            test_case = self.__create_testcase(tc_meta)
-            if not test_case:
-                self.logger.warning("TC creation failed")
-                return None
-
-        result_dict = self.__result_converter(result) if self.__result_converter else result
-        result = Result()
-        result.set_data(result_dict)
-        return self.post_result(result)
-
     def try_login(self, raise_if_fail=False):
         """
         function to check if login is done.
