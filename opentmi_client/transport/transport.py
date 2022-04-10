@@ -51,7 +51,7 @@ class Transport(object):
         """
         self.__host = resolve_host(host, port)
         token = resolve_token(host)
-        self._session = create_http_session(self.__host)
+        self._session = create_http_session(self.__host, self.logger)
         if token:
             self.__host = self.__host.replace(token + "@", "")
             self.set_token(token)

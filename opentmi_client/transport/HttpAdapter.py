@@ -1,11 +1,11 @@
 """
 HTTPAdapter
 """
+import logging
 import urllib.parse
 from urllib3.util.retry import Retry
 import requests
 from requests.adapters import HTTPAdapter
-
 
 DEFAULT_TIMEOUT = 30  # seconds
 
@@ -14,6 +14,7 @@ class TimeoutHTTPAdapter(HTTPAdapter):
     """
     Timeout adapter that pass default timeout
     """
+
     def __init__(self, *args, **kwargs):
         """
         Constructor for TimeoutHTTPAdapter
@@ -34,20 +35,37 @@ class TimeoutHTTPAdapter(HTTPAdapter):
         return super().send(request, **kwargs)
 
 
-def create_http_session(base_url: str) -> requests.Session:
+class LogRetry(Retry):
+    """
+    Adding extra logs before making a retry request
+    """
+    logger = logging.getLogger(__name__)
+
+    def __init__(self, *args, **kwargs):
+        if "logger" in kwargs:
+            LogRetry.logger = kwargs["logger"]
+            del kwargs["logger"]
+        LogRetry.logger.debug(f'Retry (total: {kwargs.get("total")})')
+        super().__init__(*args, **kwargs)
+
+
+def create_http_session(base_url: str, logger: logging.Logger) -> requests.Session:
     """
     Create requests session
     @example
     > s = create_http_session('http://localhost', 'mytoken')
     > s.get(s.base_url_join('/api'))
+    :param logger: logger instance
     :param base_url: base url
     :return: Session instance
     """
-    retry_strategy = Retry(
-        total=3,
-        backoff_factor=1,
+    retry_strategy = LogRetry(
+        logger=logger,
+        redirect=2,
+        total=4,
+        backoff_factor=2,
         status_forcelist=[429, 500, 502, 503, 504],
-        method_whitelist=["HEAD", "GET", "OPTIONS"]
+        method_whitelist=["HEAD", "GET", "OPTIONS"],
     )
     retry_adapter = TimeoutHTTPAdapter(max_retries=retry_strategy)
     session = requests.Session()
