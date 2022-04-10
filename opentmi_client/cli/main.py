@@ -11,7 +11,9 @@ import json
 import argparse
 import logging
 import pkg_resources  # part of setuptools
+
 from opentmi_client.api import OpenTmiClient
+from opentmi_client.api.result.Result import Result
 from opentmi_client.utils.exceptions import OpentmiException
 
 EXIT_CODE_SUCCESS = 0
@@ -294,7 +296,9 @@ class OpentTMIClientCLI(object):
         :return:
         """
         client = self.create_client(args)
-        client.upload_results(args.file)
+        result = Result()
+        result.set_data(args.file)
+        client.post_result(result)
         return EXIT_CODE_SUCCESS
 
     def subcmd_list_handler(self, args):
