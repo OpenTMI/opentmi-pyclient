@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-:copyright: (c) 2020 by Jussi Vatjus-Anttila
+:copyright: (c) 2022 by Jussi Vatjus-Anttila
 :license: MIT, see LICENSE for more details.
 """
 import os
@@ -13,7 +13,7 @@ from setuptools.command.install import install
 DESCRIPTION = "opentmi-client"
 OWNER_NAMES = 'Jussi Vatjus-Anttila'
 OWNER_EMAILS = 'jussiva@gmail.com'
-VERSION = '0.10.1'
+VERSION = '0.10.2'
 
 
 # Utility function to cat in a file (used for the README)
