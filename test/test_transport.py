@@ -79,21 +79,21 @@ class TestRequest(unittest.TestCase):
         with self.assertRaises(TransportException):
             transport.put_json("localhost", {})
 
-    @patch('requests.get', side_effect=mocked_requests)
+    @patch('requests.Session.get', side_effect=mocked_requests)
     def test_get_json(self, mock_post):
         transport = Transport()
         transport.set_token("mytoken")
         url = "https://localhost"
         self.assertIsInstance(transport.get_json(url), dict)
 
-    @patch('requests.post', side_effect=mocked_requests)
+    @patch('requests.Session.post', side_effect=mocked_requests)
     def test_post_json(self, mock_post):
         transport = Transport()
         url = "https://localhost"
         data = {}
         self.assertIsInstance(transport.post_json(url, data), dict)
 
-    @patch('requests.put', side_effect=mocked_requests)
+    @patch('requests.Session.put', side_effect=mocked_requests)
     def test_put_json(self, mock_put):
         transport = Transport()
         url = "https://localhost"
@@ -104,7 +104,7 @@ class TestRequest(unittest.TestCase):
         }
         self.assertIsInstance(transport.put_json(url, data), dict)
 
-    @patch('requests.get', side_effect=mocked_requests)
+    @patch('requests.Session.get', side_effect=mocked_requests)
     def test_get_json_exceptions(self, mock_get):
         transport = Transport()
         with self.assertRaises(TransportException):
@@ -116,7 +116,7 @@ class TestRequest(unittest.TestCase):
         with self.assertRaises(TransportException):
             transport.get_json("status_300")
 
-    @patch('requests.post', side_effect=mocked_requests)
+    @patch('requests.Session.post', side_effect=mocked_requests)
     def test_post_json_exceptions(self, mock_get):
         transport = Transport()
         with self.assertRaises(TransportException):
@@ -128,7 +128,7 @@ class TestRequest(unittest.TestCase):
         with self.assertRaises(TransportException):
             transport.post_json("status_300", {})
 
-    @patch('requests.put', side_effect=mocked_requests)
+    @patch('requests.Session.put', side_effect=mocked_requests)
     def test_put_json_exceptions(self, mock_get):
         transport = Transport()
         with self.assertRaises(TransportException):
