@@ -67,25 +67,7 @@ class OpenTmiClient(object):
         self.__logger = logger or get_logger()
         self.__transport = Transport(host, port) if not transport else transport
         # backward compatibility
-        self.__result_converter = None
-        self.__tc_converter = None
         self.try_login()
-
-    def set_result_converter(self, func):
-        """
-        Set custom result converter
-        :param func: conversion function
-        :return: None
-        """
-        self.__result_converter = func
-
-    def set_tc_converter(self, func):
-        """
-        Set custom test case converter
-        :param func: conversion function
-        :return: None
-        """
-        self.__tc_converter = func
 
     def login(self, username, password):
         """
