@@ -27,20 +27,15 @@ ENV_OPENTMI_PASSWORD = "OPENTMI_PASSWORD"
 
 
 # pylint: disable-msg=too-many-arguments
-def create(host='localhost', port=None, result_converter=None,
-           testcase_converter=None, logger=None):
+def create(host='localhost', port=None, logger=None):
     """
     Generic create -api for Client
     :param host:
     :param port:
-    :param result_converter: optional converter function
-    :param testcase_converter: optional converter function
     :param logger: optional logging instance
     :return: OpenTmiClient
     """
     client = OpenTmiClient(host, port, logger)
-    client.set_result_converter(result_converter)
-    client.set_tc_converter(testcase_converter)
     return client
 
 
