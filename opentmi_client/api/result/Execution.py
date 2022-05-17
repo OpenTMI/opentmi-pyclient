@@ -69,9 +69,11 @@ class Execution(BaseApi):
     def note(self, value):
         """
         Setter for test notes
+        API truncate long strings to 1000 first characters to avoid long crash logs storing to logs.
         :param value: String
         """
-        self.set("note", value)
+        
+        self.set("note", value[:1000])
 
     @property
     def duration(self):
