@@ -72,7 +72,6 @@ class Execution(BaseApi):
         API truncate long strings to 1000 first characters to avoid long crash logs storing to logs.
         :param value: String
         """
-        
         self.set("note", value[:1000])
 
     @property
