@@ -65,7 +65,7 @@ def create_http_session(base_url: str, logger: logging.Logger) -> requests.Sessi
         total=4,
         backoff_factor=2,
         status_forcelist=[429, 500, 502, 503, 504],
-        method_whitelist=["HEAD", "GET", "OPTIONS"],
+        allowed_methods=["HEAD", "GET", "OPTIONS"],
     )
     retry_adapter = TimeoutHTTPAdapter(max_retries=retry_strategy)
     session = requests.Session()
