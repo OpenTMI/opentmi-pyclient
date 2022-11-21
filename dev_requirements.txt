@@ -1,6 +1,6 @@
 coverage
 coveralls
 mock
-pylint==2.5.2
+pylint==2.15.6
 Sphinx
 nose
