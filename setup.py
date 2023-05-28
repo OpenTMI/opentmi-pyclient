@@ -13,7 +13,7 @@ from setuptools.command.install import install
 DESCRIPTION = "opentmi-client"
 OWNER_NAMES = 'Jussi Vatjus-Anttila'
 OWNER_EMAILS = 'jussiva@gmail.com'
-VERSION = '0.10.2'
+VERSION = '0.10.3'
 
 
 # Utility function to cat in a file (used for the README)
@@ -63,6 +63,7 @@ setup(name='opentmi_client',
       },
       install_requires=[
           "requests>=2.13.0",
+          "urllib3>=1.26.0,<2",
           "jsonmerge",
           "six",
           "pydash",
