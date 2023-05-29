@@ -67,7 +67,7 @@ setup(name='opentmi_client',
           "jsonmerge",
           "six",
           "pydash",
-          "junitparser<2.0.0"
+          "junitparser<4.0.0"
       ],
       classifiers=[
           "Programming Language :: Python :: 3.6",
