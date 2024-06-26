@@ -3,4 +3,4 @@ jsonmerge
 six
 pydash
 junitparser<2.0.0
-urllib3>=1.26.0,<2
+urllib3>=2.2.2
