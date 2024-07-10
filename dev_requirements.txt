@@ -4,3 +4,4 @@ mock
 pylint==2.5.2
 Sphinx
 nose
+zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
