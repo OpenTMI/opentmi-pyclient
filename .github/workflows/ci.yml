@@ -37,6 +37,7 @@ jobs:
           source venv/bin/activate
           python setup.py develop
           pip install -r dev_requirements.txt
+          pip install wheel
 
       - name: Run tests
         env: 
