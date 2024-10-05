@@ -90,7 +90,7 @@ jobs:
           source venv/bin/activate
           python setup.py develop
           pip install -r dev_requirements.txt
-          pip install wheel
+          pip install wheel twine
 
       - name: Verify git tag vs. version
         run: |
@@ -104,7 +104,12 @@ jobs:
           python setup.py bdist_wheel
 
       - name: Publish package distributions to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
+        env:
+          TWINE_USERNAME: "__token__"
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          source venv/bin/activate
+          export PATH=$HOME/.local/bin:$PATH
+          twine upload dist/*
+          
       
