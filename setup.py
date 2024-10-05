@@ -52,7 +52,7 @@ setup(name='opentmi_client',
           "mock",
           "pylint==2.5.2",
           "Sphinx",
-          "nose"
+          "pynose"
       ],
       test_suite='test',
       keywords='opentmi ci cd api sdk',
