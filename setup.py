@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-:copyright: (c) 2022 by Jussi Vatjus-Anttila
+:copyright: (c) 2024 by Jussi Vatjus-Anttila
 :license: MIT, see LICENSE for more details.
 """
 import os
@@ -70,8 +70,10 @@ setup(name='opentmi_client',
           "junitparser<2.0.0"
       ],
       classifiers=[
-          "Programming Language :: Python :: 3.6",
-          "Programming Language :: Python :: 3.7",
+          "Programming Language :: Python :: 3.8",
+          "Programming Language :: Python :: 3.9",
+          "Programming Language :: Python :: 3.10",
+          "Programming Language :: Python :: 3.11",
           "License :: OSI Approved :: MIT License",
           "Operating System :: OS Independent",
       ],
