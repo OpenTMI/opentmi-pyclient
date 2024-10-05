@@ -1,6 +1,6 @@
 # Python Client library for OpenTMI
 
-[![CircleCI](https://circleci.com/gh/OpenTMI/opentmi-pyclient/tree/master.svg?style=svg)](https://circleci.com/gh/OpenTMI/opentmi-pyclient/tree/master)
+[![CI Pipeline](https://github.com/OpenTMI/opentmi-pyclient/actions/workflows/ci.yml/badge.svg)](https://github.com/OpenTMI/opentmi-pyclient/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/OpenTMI/opentmi-pyclient/badge.svg)](https://coveralls.io/github/OpenTMI/opentmi-pyclient)
 [![PyPI version](https://badge.fury.io/py/opentmi-client.svg)](https://badge.fury.io/py/opentmi-client)
 
