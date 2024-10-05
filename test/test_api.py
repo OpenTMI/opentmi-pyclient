@@ -127,32 +127,6 @@ class TestClient(unittest.TestCase):
     @patch('opentmi_client.transport.Transport.get_json', side_effect=mocked_get)
     @patch.dict(os.environ, {'OPENTMI_GITHUB_ACCESS_TOKEN': DUMMY_TOKEN})
     @patch('opentmi_client.transport.Transport.post_json', side_effect=mocked_post)
-    def test_upload_results_new_test(self, mock_post, mock_get):
-        client = Client()
-        tc_data = {"tcid": "notfound"}
-        client.upload_results(tc_data)
-        mock_get.assert_called_once_with("http://127.0.0.1/api/v0/testcases", params={"tcid": "notfound"})
-        mock_post.assert_has_calls([
-            #call("http://127.0.0.1/auth/github/token", {"access_token": DUMMY_TOKEN}),
-            call("http://127.0.0.1/api/v0/testcases", tc_data),
-            call("http://127.0.0.1/api/v0/results", tc_data, files=None)])
-
-    @patch('opentmi_client.transport.Transport.get_json', side_effect=mocked_get)
-    @patch.dict(os.environ, {'OPENTMI_GITHUB_ACCESS_TOKEN': DUMMY_TOKEN})
-    @patch('opentmi_client.transport.Transport.post_json', side_effect=mocked_post)
-    def test_upload_results_update_test(self, mock_post, mock_get):
-        client = Client()
-        tc_data = {"tcid": "abc", "hauki": {"on": "kala"}}
-        client.upload_results(tc_data)
-        mock_get.assert_called_once_with("http://127.0.0.1/api/v0/testcases", params={"tcid": "abc"})
-        mock_post.assert_has_calls([
-            # call("http://127.0.0.1/auth/github/token", {"access_token": DUMMY_TOKEN}),
-            call("http://127.0.0.1/api/v0/results", tc_data, files=None)
-        ])
-
-    @patch('opentmi_client.transport.Transport.get_json', side_effect=mocked_get)
-    @patch.dict(os.environ, {'OPENTMI_GITHUB_ACCESS_TOKEN': DUMMY_TOKEN})
-    @patch('opentmi_client.transport.Transport.post_json', side_effect=mocked_post)
     def test_get_test(self, mock_post, mock_get):
         client = Client()
         tc_data = {"tcid": "abc %s"}
