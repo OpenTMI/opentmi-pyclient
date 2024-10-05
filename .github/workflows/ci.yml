@@ -90,6 +90,7 @@ jobs:
           source venv/bin/activate
           python setup.py develop
           pip install -r dev_requirements.txt
+          pip install wheel
 
       - name: Verify git tag vs. version
         run: |
