@@ -57,7 +57,7 @@ setup(name='opentmi_client',
       tests_require=[
           "coverage",
           "mock",
-          "pylint==2.5.2",
+          "pylint==3.3.1",
           "Sphinx",
           "pynose"
       ],
