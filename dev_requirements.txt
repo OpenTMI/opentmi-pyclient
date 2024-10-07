@@ -1,6 +1,6 @@
 coverage
 coveralls
 mock
-pylint==2.5.2
+pylint==3.3.1
 Sphinx
 pynose
