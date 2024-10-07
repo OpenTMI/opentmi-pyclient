@@ -70,7 +70,7 @@ setup(name='opentmi_client',
       },
       install_requires=[
           "requests>=2.13.0",
-          "urllib3>=1.26.0,<2",
+          "urllib3>=1.26.0,<3",
           "jsonmerge",
           "six",
           "pydash",
