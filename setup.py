@@ -51,7 +51,7 @@ setup(name='opentmi_client',
       maintainer=OWNER_NAMES,
       maintainer_email=OWNER_EMAILS,
       url='https://github.com/OpenTMI/opentmi-pyclient.git',
-      packages=find_packages(exclude=['test', 'log', 'htmlcov', 'docs']),
+      packages=find_packages(exclude=['test', 'log', 'examples', 'htmlcov', 'docs']),
       include_package_data=True,
       license="MIT",
       tests_require=[

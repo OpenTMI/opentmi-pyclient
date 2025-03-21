@@ -11,6 +11,30 @@ on:
       - '**'
 
 jobs:
+  static-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade setuptools
+          python setup.py develop
+          pip install -r dev_requirements.txt
+
+      - name: Run static analysis
+        run: |
+          source venv/bin/activate
+          ruff check opentmi_client test
+
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -49,12 +73,6 @@ jobs:
           mkdir junit || true
           nosetests --with-xunit --with-coverage --cover-package=opentmi_client --cover-html --cover-html-dir=htmlcov --cover-xml-file=coverage.xml --xunit-file=junit/results.xml
           coveralls || true
-      
-      - name: lint
-        if: matrix.python-version == '3.10'
-        run: |
-          source venv/bin/activate
-          pylint opentmi_client
 
       - name: Upload coverage to Coveralls
         run: coveralls || true

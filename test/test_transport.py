@@ -2,7 +2,7 @@
 
 import json
 import unittest
-from mock import patch
+from unittest.mock import patch
 from requests import Response, RequestException
 from opentmi_client.transport import Transport
 from opentmi_client.utils.exceptions import TransportException
