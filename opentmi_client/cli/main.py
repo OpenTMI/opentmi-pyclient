@@ -10,8 +10,10 @@ import sys
 import json
 import argparse
 import logging
-import pkg_resources  # part of setuptools
+from importlib.metadata import version
+
 from opentmi_client.api import OpenTmiClient
+from opentmi_client.api.result.Result import Result
 from opentmi_client.utils.exceptions import OpentmiException
 
 EXIT_CODE_SUCCESS = 0
@@ -20,6 +22,8 @@ EXIT_CODE_CONNECTION_ERROR = 60
 EXIT_CODE_OPERATION_TIMEOUT = 61
 EXIT_CODE_INVALID_PARAMETERS = 62
 EXIT_CODE_OPERATION_FAILED = 63
+
+logger = logging.getLogger(__name__)
 
 
 def get_subparser(subparsers, name, func=None, **kwargs):
@@ -48,8 +52,7 @@ class OpentTMIClientCLI(object):
         :param args:
         """
         self.console_handler = logging.StreamHandler()
-        self.logger = logging.getLogger("opentmi")
-        self.logger.handlers = [self.console_handler]
+        logger.handlers = [self.console_handler]
         if args is None:
             args = sys.argv[1:]
         self.args = self.argparser_setup(args)
@@ -64,7 +67,7 @@ class OpentTMIClientCLI(object):
             try:
                 return self.args.func(self.args)
             except NotImplementedError as error:
-                self.logger.error("Not implemented %s", str(error))
+                logger.error("Not implemented %s", str(error))
                 return EXIT_CODE_NOT_IMPLEMENTED
         self.parser.print_usage()
         return EXIT_CODE_SUCCESS
@@ -204,7 +207,7 @@ class OpentTMIClientCLI(object):
             with open(filename) as data_file:
                 return json.load(data_file)
         except IOError as error:
-            self.logger.error("Given file (%s) is not valid! %s", filename, error)
+            logger.error("Given file (%s) is not valid! %s", filename, error)
             raise argparse.ArgumentTypeError(error)
 
     def set_log_level_from_verbose(self):
@@ -215,16 +218,16 @@ class OpentTMIClientCLI(object):
         """
         if self.args.silent or not self.args.verbose:
             self.console_handler.setLevel('ERROR')
-            self.logger.setLevel('ERROR')
+            logger.setLevel('ERROR')
         elif self.args.verbose == 1:
             self.console_handler.setLevel('WARNING')
-            self.logger.setLevel('WARNING')
+            logger.setLevel('WARNING')
         elif self.args.verbose == 2:
             self.console_handler.setLevel('INFO')
-            self.logger.setLevel('INFO')
+            logger.setLevel('INFO')
         elif self.args.verbose >= 3:
             self.console_handler.setLevel('DEBUG')
-            self.logger.setLevel('DEBUG')
+            logger.setLevel('DEBUG')
 
     def subcmd_version_handler(self, _args):
         """
@@ -232,12 +235,8 @@ class OpentTMIClientCLI(object):
         :param _args:
         :return:
         """
-        versions = pkg_resources.require("opentmi_client")
-        if self.args.verbose:
-            for ver in versions:
-                print(ver)
-        else:
-            print(versions[0].version)
+        versio = version("opentmi_client")
+        print(versio)
         return EXIT_CODE_SUCCESS
 
     def subcmd_store_handler(self, _args):
@@ -294,7 +293,9 @@ class OpentTMIClientCLI(object):
         :return:
         """
         client = self.create_client(args)
-        client.upload_results(args.file)
+        result = Result()
+        result.set_data(args.file)
+        client.post_result(result)
         return EXIT_CODE_SUCCESS
 
     def subcmd_list_handler(self, args):
