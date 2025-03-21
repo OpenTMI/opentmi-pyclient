@@ -2,7 +2,7 @@
 
 import os
 import unittest
-from mock import patch
+from unittest.mock import patch
 from opentmi_client.utils import is_object_id, resolve_host, resolve_token, archive_files, remove_empty_from_dict, requires_logged_in
 
 

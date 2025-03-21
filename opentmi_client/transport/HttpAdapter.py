@@ -9,6 +9,8 @@ from requests.adapters import HTTPAdapter
 
 DEFAULT_TIMEOUT = 30  # seconds
 
+logger = logging.getLogger(__name__)
+
 
 class TimeoutHTTPAdapter(HTTPAdapter):
     """
@@ -39,28 +41,22 @@ class LogRetry(Retry):
     """
     Adding extra logs before making a retry request
     """
-    logger = logging.getLogger(__name__)
 
     def __init__(self, *args, **kwargs):
-        if "logger" in kwargs:
-            LogRetry.logger = kwargs["logger"]
-            del kwargs["logger"]
-        LogRetry.logger.debug(f'Retry (total: {kwargs.get("total")})')
+        logger.debug(f'Retry (total: {kwargs.get("total")})')
         super().__init__(*args, **kwargs)
 
 
-def create_http_session(base_url: str, logger: logging.Logger) -> requests.Session:
+def create_http_session(base_url: str) -> requests.Session:
     """
     Create requests session
     @example
     > s = create_http_session('http://localhost', 'mytoken')
     > s.get(s.base_url_join('/api'))
-    :param logger: logger instance
     :param base_url: base url
     :return: Session instance
     """
     retry_strategy = LogRetry(
-        logger=logger,
         redirect=2,
         total=4,
         backoff_factor=2,

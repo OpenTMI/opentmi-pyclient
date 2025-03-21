@@ -4,11 +4,11 @@ OpenTmiClient module
 """
 # standard imports
 import json
+import logging
 import os
 # 3rd party imports
-# import deprecation
 # Application imports
-from opentmi_client.utils import is_object_id, get_logger
+from opentmi_client.utils import is_object_id
 from opentmi_client.utils import requires_logged_in
 from opentmi_client.utils import OpentmiException, TransportException
 from opentmi_client.utils.decorators import setter_rules
@@ -25,6 +25,7 @@ ENV_GITHUB_ACCESS_TOKEN = "OPENTMI_GITHUB_ACCESS_TOKEN"
 ENV_OPENTMI_USERNAME = "OPENTMI_USERNAME"
 ENV_OPENTMI_PASSWORD = "OPENTMI_PASSWORD"
 
+logger = logging.getLogger(__name__)
 
 # pylint: disable-msg=too-many-arguments
 def create(host='localhost', port=None, logger=None):
@@ -32,10 +33,9 @@ def create(host='localhost', port=None, logger=None):
     Generic create -api for Client
     :param host:
     :param port:
-    :param logger: optional logging instance
     :return: OpenTmiClient
     """
-    client = OpenTmiClient(host, port, logger)
+    client = OpenTmiClient(host, port)
     return client
 
 
@@ -50,8 +50,7 @@ class OpenTmiClient(object):
     def __init__(self,
                  host='127.0.0.1',
                  port=None,
-                 transport=None,
-                 logger=None):
+                 transport=None):
         """
         Constructor for OpenTMI client
         :param host: opentmi host address (default="localhost")
@@ -59,7 +58,6 @@ class OpenTmiClient(object):
         :param transport: optional Transport layer. Mostly for testing purpose
         :param logger: optional Logging instance.
         """
-        self.__logger = logger or get_logger()
         self.__transport = Transport(host, port) if not transport else transport
         # backward compatibility
         self.try_login()
@@ -78,7 +76,7 @@ class OpenTmiClient(object):
         url = self.__resolve_url("/auth/login")
         response = self.__transport.post_json(url, payload)
         token = response.get("token")
-        self.logger.info("Login success. Token: %s", token)
+        logger.info("Login success. Token: %s", token)
         self.set_token(token)
         return self
 
@@ -93,10 +91,10 @@ class OpenTmiClient(object):
             "access_token": access_token
         }
         url = "{}/auth/{}/token".format(self.__transport.host, service)
-        self.logger.debug("Login using %s token", service)
+        logger.debug("Login using %s token", service)
         response = self.__transport.post_json(url, payload)
         token = response.get("token")
-        self.logger.info("Login success. Token: %s", token)
+        logger.info("Login success. Token: %s", token)
         self.set_token(token)
         return self
 
@@ -107,23 +105,6 @@ class OpenTmiClient(object):
         :return: boolean true if logged in.
         """
         return self.__transport.has_token()
-
-    def set_logger(self, logger):
-        """
-        Set custom logger
-        :param logger: logging.Logger instance
-        :return: OpenTmiClient
-        """
-        self.__logger = logger
-        return self
-
-    @property
-    def logger(self):
-        """
-        getter for logger
-        :return: Logger
-        """
-        return self.__logger
 
     def logout(self):
         """
@@ -161,12 +142,12 @@ class OpenTmiClient(object):
         url = self.__resolve_apiuri("/events")
         try:
             data = self.__transport.post_json(url, payload)
-            self.logger.debug("Event uploaded successfully, _id: %s", data.get("_id"))
+            logger.debug("Event uploaded successfully, _id: %s", data.get("_id"))
             return data
         except TransportException as error:
-            self.logger.warning("Event upload failed: %s (status: %s)", error.message, error.code)
+            logger.warning("Event upload failed: %s (status: %s)", error.message, error.code)
         except OpentmiException as error:
-            self.logger.warning(error)
+            logger.warning(error)
         return None
 
     # @requires_logged_in
@@ -181,12 +162,12 @@ class OpenTmiClient(object):
         url = self.__resolve_apiuri("/duts/builds")
         try:
             data = self.__transport.post_json(url, payload)
-            self.logger.debug("build uploaded successfully, _id: %s", data.get("_id"))
+            logger.debug("build uploaded successfully, _id: %s", data.get("_id"))
             return data
         except TransportException as error:
-            self.logger.warning("Result upload failed: %s (status: %s)", error.message, error.code)
+            logger.warning("Result upload failed: %s (status: %s)", error.message, error.code)
         except OpentmiException as error:
-            self.logger.warning(error)
+            logger.warning(error)
         return None
 
     @setter_rules(value_type=Resource)
@@ -200,13 +181,13 @@ class OpenTmiClient(object):
         url = self.__resolve_apiuri("/resources")
         try:
             data = self.__transport.post_json(url, payload)
-            self.logger.debug("resource uploaded successfully, _id: %s", data.get("_id"))
+            logger.debug("resource uploaded successfully, _id: %s", data.get("_id"))
             return data
         except TransportException as error:
-            self.logger.warning("Resource upload failed: %s (status: %s)",
+            logger.warning("Resource upload failed: %s (status: %s)",
                                 error.message, error.code)
         except OpentmiException as error:
-            self.logger.warning(error)
+            logger.warning(error)
         return None
 
     # @requires_logged_in
@@ -233,12 +214,12 @@ class OpenTmiClient(object):
         try:
             campaign_id = self.__get_campaign_id(suite)
         except OpentmiException as error:
-            self.logger.warning("exception happened while resolving suite: %s, %s",
+            logger.warning("exception happened while resolving suite: %s, %s",
                                 suite, error)
             return None
 
         if campaign_id is None:
-            self.logger.warning("could not resolve campaign id for suite: %s",
+            logger.warning("could not resolve campaign id for suite: %s",
                                 suite)
             return None
 
@@ -286,10 +267,10 @@ class OpenTmiClient(object):
         testcase = self.__lookup_testcase(metadata['tcid'])
         if testcase:
             test_id = testcase.get('_id')
-            self.logger.info("Update existing TC (%s)", test_id)
+            logger.info("Update existing TC (%s)", test_id)
             self.__update_testcase(test_id, metadata)
         else:
-            self.logger.info("Create new TC")
+            logger.info("Create new TC")
             self.__create_testcase(metadata)
         return self
 
@@ -308,17 +289,17 @@ class OpenTmiClient(object):
             # hasLogs, logFiles = result.hasLogs()
             # if hasLogs:
             #    zipFile = self.__archiveLogs(logFiles)
-            #    self.logger.debug(zipFile)
+            #    logger.debug(zipFile)
             #    files = {"file": ("logs.zip", open(zipFile), 'rb') }
-            #    self.logger.debug(files)
+            #    logger.debug(files)
             data = self.__transport.post_json(url, payload, files=files)
-            self.logger.debug("result uploaded successfully, _id: %s", data.get("_id"))
+            logger.debug("result uploaded successfully, _id: %s", data.get("_id"))
             return data
         except TransportException as error:
-            self.logger.warning("result uploaded failed: %s. status_code: %d",
+            logger.warning("result uploaded failed: %s. status_code: %d",
                                 error.message, error.code)
         except OpentmiException as error:
-            self.logger.warning(error)
+            logger.warning(error)
         return None
 
     def try_login(self, raise_if_fail=False):
@@ -333,12 +314,12 @@ class OpenTmiClient(object):
         # use environment variables if available
         token = os.getenv(ENV_GITHUB_ACCESS_TOKEN)
         if token:
-            self.logger.info("Using github access token from environment variable")
+            logger.info("Using github access token from environment variable")
             return self.login_with_access_token(access_token=token, service="github")
         username = os.getenv(ENV_OPENTMI_USERNAME)
         password = os.getenv(ENV_OPENTMI_PASSWORD)
         if username and password:
-            self.logger.info("Using opentmi credentials from environment variable")
+            logger.info("Using opentmi credentials from environment variable")
             return self.login(username, password)
         if raise_if_fail:
             raise OpentmiException("login required")
@@ -375,55 +356,55 @@ class OpenTmiClient(object):
 
     def __lookup_testcase(self, tcid):
         url = self.__resolve_apiuri("/testcases")
-        self.logger.debug("Search TC: %s", tcid)
+        logger.debug("Search TC: %s", tcid)
         try:
             data = self.__transport.get_json(url, params={"tcid": tcid})
             if len(data) == 1:
                 doc = data[0]
-                self.logger.debug("testcase '%s' exists in DB (%s)", tcid, doc.get('_id'))
+                logger.debug("testcase '%s' exists in DB (%s)", tcid, doc.get('_id'))
                 return doc
         except TransportException as error:
             if error.code == 404:
-                self.logger.warning("testcase '%s' not found form DB", tcid)
+                logger.warning("testcase '%s' not found form DB", tcid)
             else:
-                self.logger.warning("Test case find failed: %s", error.message)
+                logger.warning("Test case find failed: %s", error.message)
         except OpentmiException as error:
-            self.logger.warning(error)
+            logger.warning(error)
 
         return None
 
     def __update_testcase(self, test_id, metadata):
         url = self.__resolve_apiuri("/testcases/" + test_id)
         try:
-            self.logger.debug("Update TC: %s", url)
+            logger.debug("Update TC: %s", url)
             payload = metadata
             data = self.__transport.put_json(url, payload)
-            self.logger.debug("testcase metadata uploaded successfully")
+            logger.debug("testcase metadata uploaded successfully")
             return data
         except TransportException as error:
-            self.logger.debug(error)
+            logger.debug(error)
         except OpentmiException as error:
-            self.logger.debug(error)
+            logger.debug(error)
 
-        self.logger.warning("testcase metadata upload failed")
+        logger.warning("testcase metadata upload failed")
         return None
 
     def __create_testcase(self, metadata):
         url = self.__resolve_apiuri("/testcases")
         try:
-            self.logger.debug("Create TC: %s", url)
+            logger.debug("Create TC: %s", url)
             payload = metadata
             data = self.__transport.post_json(url, payload)
-            self.logger.debug("new testcase metadata uploaded successfully with id: %s",
+            logger.debug("new testcase metadata uploaded successfully with id: %s",
                               json.dumps(data))
             return data
         except TransportException as error:
-            self.logger.warning(error)
+            logger.warning(error)
         except OpentmiException as error:
-            self.logger.warning('createTestcase throw exception:')
-            self.logger.warning(error)
+            logger.warning('createTestcase throw exception:')
+            logger.warning(error)
 
-        self.logger.warning("new testcase metadata upload failed")
+        logger.warning("new testcase metadata upload failed")
         return None
 
     def __resolve_url(self, path):

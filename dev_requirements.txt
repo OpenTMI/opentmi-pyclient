@@ -1,6 +1,6 @@
 coverage
 coveralls
 mock
-pylint==2.5.2
+ruff
 Sphinx
-nose
+pynose
