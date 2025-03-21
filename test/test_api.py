@@ -102,13 +102,13 @@ class TestClient(unittest.TestCase):
     @mock.patch.dict(os.environ, {'OPENTMI_GITHUB_ACCESS_TOKEN': 'a.b.c'})
     @patch('opentmi_client.transport.Transport.post_json', side_effect=mocked_post)
     def test_try_login_token(self,  mock_post):
-        client = Client()
-        mock_post.assert_called_once_with("http://127.0.0.1/auth/github/token", {"token": "a.b.c"})
+        _ = Client()
+        mock_post.assert_called_once_with("http://127.0.0.1/auth/github/token", {"access_token": "a.b.c"})
 
     @mock.patch.dict(os.environ, {'OPENTMI_USERNAME': 'username', "OPENTMI_PASSWORD": "passw"})
     @patch('opentmi_client.transport.Transport.post_json', side_effect=mocked_post)
-    def test_try_login_token(self, mock_post):
-        client = Client()
+    def test_try_login_username_password(self, mock_post):
+        _ = Client()
         mock_post.assert_called_once_with("http://127.0.0.1/auth/login", {"email": "username", "password": "passw"})
 
     @patch('opentmi_client.transport.Transport.post_json', side_effect=mocked_post)

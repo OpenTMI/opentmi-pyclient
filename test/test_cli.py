@@ -39,19 +39,19 @@ class TestCli(unittest.TestCase):
 
         fake_args = ["opentmi", "-v", "version"]
         with patch('sys.argv', fake_args):
-            cli = OpentTMIClientCLI()
+            OpentTMIClientCLI()
 
         fake_args = ["opentmi", "-vv", "version"]
         with patch('sys.argv', fake_args):
-            cli = OpentTMIClientCLI()
+            OpentTMIClientCLI()
 
         fake_args = ["opentmi", "-vvv", "version"]
         with patch('sys.argv', fake_args):
-            cli = OpentTMIClientCLI()
+            OpentTMIClientCLI()
 
         fake_args = ["opentmi", "-vvvv", "version"]
         with patch('sys.argv', fake_args):
-            cli = OpentTMIClientCLI()
+            OpentTMIClientCLI()
 
     @patch('opentmi_client.transport.Transport.get_json', returns=[{"tcid": "b", "name": "c"}])
     @patch('opentmi_client.transport.Transport.post_json', returns={"token": "a.b.c"})
@@ -77,7 +77,7 @@ class TestCli(unittest.TestCase):
     @patch('opentmi_client.transport.Transport.post_json', returns={"token": "a.b.c"})
     @patch('sys.stdout', new_callable=Mock())
     @patch("sys.exit")
-    def test_list_results_json(self, mock_exit, _mock_stdout, mock_token, mock_list):
+    def test_list_results_json_testcases(self, mock_exit, _mock_stdout, mock_token, mock_list):
         fake_args = ["opentmi", "--token", FAKE_TOKEN, "list", "--testcases", "--json"]
         with patch('sys.argv', fake_args):
             opentmiclient_main()
@@ -87,7 +87,7 @@ class TestCli(unittest.TestCase):
     @patch('opentmi_client.transport.Transport.post_json', returns={"token": "a.b.c"})
     @patch('sys.stdout', new_callable=Mock())
     @patch("sys.exit")
-    def test_list_results_json(self, mock_exit, _mock_stdout, mock_token, mock_list):
+    def test_list_results_json_campaigns(self, mock_exit, _mock_stdout, mock_token, mock_list):
         fake_args = ["opentmi", "--token", FAKE_TOKEN, "list", "--campaigns", "--json"]
         with patch('sys.argv', fake_args):
             opentmiclient_main()
