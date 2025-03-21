@@ -2,19 +2,18 @@
 Transport module for Opentmi python client
 """
 import json
+import logging
+
 from requests import Response, RequestException
 
 from opentmi_client.transport.HttpAdapter import create_http_session
 
-try:
-    # python2
-    from urllib import urlencode, quote
-except ImportError:
-    # python3
-    from urllib.parse import urlencode, quote
-from opentmi_client.utils import get_logger, resolve_host, resolve_token, TransportException
+from urllib.parse import urlencode, quote
+from opentmi_client.utils import resolve_host, resolve_token, TransportException
 
 NOT_FOUND = 404
+
+logger = logging.getLogger(__name__)
 
 
 class Transport(object):
@@ -32,7 +31,6 @@ class Transport(object):
         :param port: optional port as a positive Integer
         :param token: optional token
         """
-        self.logger = get_logger()
         self.__token = None
         self.__host = None
         self._session = None
@@ -40,7 +38,7 @@ class Transport(object):
             self.set_token(token)
 
         self.set_host(host, port)
-        self.logger.info("OpenTMI host: %s", self.host)
+        logger.info("OpenTMI host: %s", self.host)
 
     def set_host(self, host, port=None):
         """
@@ -51,7 +49,7 @@ class Transport(object):
         """
         self.__host = resolve_host(host, port)
         token = resolve_token(host)
-        self._session = create_http_session(self.__host, self.logger)
+        self._session = create_http_session(self.__host)
         if token:
             self.__host = self.__host.replace(token + "@", "")
             self.set_token(token)
@@ -117,18 +115,18 @@ class Transport(object):
         :return: dict object or None if not found
         """
         try:
-            self.logger.debug("GET: %s?%s", url, urlencode(params) if params else '')
+            logger.debug("GET: %s?%s", url, urlencode(params) if params else '')
             response = self._session.get(url, params=Transport._params_encode(params))
             if Transport.is_success(response):
                 return response.json()
             if response.status_code == NOT_FOUND:
-                self.logger.warning("not found")
+                logger.warning("not found")
             else:
-                self.logger.warning("Request failed: %s (code: %s)",
+                logger.warning("Request failed: %s (code: %s)",
                                     response.text, str(response.status_code))
                 raise TransportException(response.text, response.status_code)
         except RequestException as error:
-            self.logger.warning("Connection error %s", error)
+            logger.warning("Connection error %s", error)
             raise TransportException(str(error))
         except (ValueError, TypeError) as error:
             raise TransportException(str(error))
@@ -146,11 +144,11 @@ class Transport(object):
             response = self._session.post(url, json=payload, files=files if not None else [])
             if Transport.is_success(response):
                 return response.json()
-            self.logger.warning("status_code: %s", str(response.status_code))
-            self.logger.warning(response.text)
+            logger.warning("status_code: %s", str(response.status_code))
+            logger.warning(response.text)
             raise TransportException(response.text, response.status_code)
         except RequestException as error:
-            self.logger.warning(error)
+            logger.warning(error)
             raise TransportException(str(error))
         except (ValueError, TypeError, KeyError) as error:
             raise TransportException(error)
@@ -167,16 +165,16 @@ class Transport(object):
             if Transport.is_success(response):
                 data = json.loads(response.text)
                 return data
-            self.logger.warning("status_code: %s", str(response.status_code))
-            self.logger.warning(response.text)
+            logger.warning("status_code: %s", str(response.status_code))
+            logger.warning(response.text)
             raise TransportException(response.text, response.status_code)
         except RequestException as error:
-            self.logger.warning(error)
+            logger.warning(error)
             raise TransportException(str(error))
         except (ValueError, TypeError) as error:
             raise TransportException(error)
         except Exception as error:
-            self.logger.warning(error)
+            logger.warning(error)
             raise TransportException(str(error))
 
     @staticmethod

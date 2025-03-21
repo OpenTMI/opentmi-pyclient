@@ -2,7 +2,8 @@
 
 import unittest
 import os
-from mock import mock, MagicMock, patch, call
+from unittest import mock
+from unittest.mock import MagicMock, patch, call
 from opentmi_client.api import Client, create, Event
 from opentmi_client.utils import TransportException, OpentmiException
 from opentmi_client.transport.transport import Transport
