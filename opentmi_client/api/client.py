@@ -7,7 +7,6 @@ import json
 import logging
 import os
 # 3rd party imports
-# import deprecation
 # Application imports
 from opentmi_client.utils import is_object_id
 from opentmi_client.utils import requires_logged_in
@@ -29,19 +28,14 @@ ENV_OPENTMI_PASSWORD = "OPENTMI_PASSWORD"
 logger = logging.getLogger(__name__)
 
 # pylint: disable-msg=too-many-arguments
-def create(host='localhost', port=None, result_converter=None,
-           testcase_converter=None):
+def create(host='localhost', port=None, logger=None):
     """
     Generic create -api for Client
     :param host:
     :param port:
-    :param result_converter: optional converter function
-    :param testcase_converter: optional converter function
     :return: OpenTmiClient
     """
     client = OpenTmiClient(host, port)
-    client.set_result_converter(result_converter)
-    client.set_tc_converter(testcase_converter)
     return client
 
 
@@ -66,25 +60,7 @@ class OpenTmiClient(object):
         """
         self.__transport = Transport(host, port) if not transport else transport
         # backward compatibility
-        self.__result_converter = None
-        self.__tc_converter = None
         self.try_login()
-
-    def set_result_converter(self, func):
-        """
-        Set custom result converter
-        :param func: conversion function
-        :return: None
-        """
-        self.__result_converter = func
-
-    def set_tc_converter(self, func):
-        """
-        Set custom test case converter
-        :param func: conversion function
-        :return: None
-        """
-        self.__tc_converter = func
 
     def login(self, username, password):
         """
@@ -325,27 +301,6 @@ class OpenTmiClient(object):
         except OpentmiException as error:
             logger.warning(error)
         return None
-
-    # @deprecation.deprecated(deprecated_in="v0.4.0", removed_in="v0.5.0",
-    #                        details="Use post_result(Result) instead")
-    def upload_results(self, result):
-        """
-        Upload result, and test case if not stored already
-        :param result: dictionary
-        :return: Dictionary
-        """
-        tc_meta = self.__tc_converter(result.tc_metadata) if self.__tc_converter else result
-        test_case = self.__lookup_testcase(tc_meta['tcid'])
-        if not test_case:
-            test_case = self.__create_testcase(tc_meta)
-            if not test_case:
-                logger.warning("TC creation failed")
-                return None
-
-        result_dict = self.__result_converter(result) if self.__result_converter else result
-        result = Result()
-        result.set_data(result_dict)
-        return self.post_result(result)
 
     def try_login(self, raise_if_fail=False):
         """
