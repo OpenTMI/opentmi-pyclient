@@ -53,8 +53,8 @@ class TestCli(unittest.TestCase):
         with patch('sys.argv', fake_args):
             OpentTMIClientCLI()
 
-    @patch('opentmi_client.transport.Transport.get_json', returns=[{"tcid": "b", "name": "c"}])
-    @patch('opentmi_client.transport.Transport.post_json', returns={"token": "a.b.c"})
+    @patch('opentmi_client.transport.Transport.get_json', return_value=[{"tcid": "b", "name": "c"}])
+    @patch('opentmi_client.transport.Transport.post_json', return_value={"token": "a.b.c"})
     @patch('sys.stdout', new_callable=Mock())
     @patch("sys.exit")
     def test_list_testcases(self, mock_exit, _mock_stdout, mock_list, mock_token):
@@ -63,8 +63,8 @@ class TestCli(unittest.TestCase):
             opentmiclient_main()
         mock_exit.assert_called_with(0)
 
-    @patch('opentmi_client.transport.Transport.get_json', returns=[{"tcid": "b", "name": "c"}])
-    @patch('opentmi_client.transport.Transport.post_json', returns={"token": "a.b.c"})
+    @patch('opentmi_client.transport.Transport.get_json', return_value=[{"tcid": "b", "name": "c"}])
+    @patch('opentmi_client.transport.Transport.post_json', return_value={"token": "a.b.c"})
     @patch('sys.stdout', new_callable=Mock())
     @patch("sys.exit")
     def test_list_campaigns(self, mock_exit, _mock_stdout, mock_token, mock_list):
@@ -73,8 +73,8 @@ class TestCli(unittest.TestCase):
             opentmiclient_main()
         mock_exit.assert_called_with(0)
 
-    @patch('opentmi_client.transport.Transport.get_json', returns=[{"tcid": "b", "name": "c"}])
-    @patch('opentmi_client.transport.Transport.post_json', returns={"token": "a.b.c"})
+    @patch('opentmi_client.transport.Transport.get_json', return_value=[{"tcid": "b", "name": "c"}])
+    @patch('opentmi_client.transport.Transport.post_json', return_value={"token": "a.b.c"})
     @patch('sys.stdout', new_callable=Mock())
     @patch("sys.exit")
     def test_list_results_json_testcases(self, mock_exit, _mock_stdout, mock_token, mock_list):
@@ -83,8 +83,8 @@ class TestCli(unittest.TestCase):
             opentmiclient_main()
         mock_exit.assert_called_with(0)
 
-    @patch('opentmi_client.transport.Transport.get_json', returns=[{"tcid": "b", "name": "c"}])
-    @patch('opentmi_client.transport.Transport.post_json', returns={"token": "a.b.c"})
+    @patch('opentmi_client.transport.Transport.get_json', return_value=[{"tcid": "b", "name": "c"}])
+    @patch('opentmi_client.transport.Transport.post_json', return_value={"token": "a.b.c"})
     @patch('sys.stdout', new_callable=Mock())
     @patch("sys.exit")
     def test_list_results_json_campaigns(self, mock_exit, _mock_stdout, mock_token, mock_list):
